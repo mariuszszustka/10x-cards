@@ -1,4 +1,4 @@
-import { Database } from '@/db/database.types'
+import type { Database } from '@/db/database.types'
 
 type DBTables = Database['public']['Tables']
 
@@ -153,4 +153,33 @@ export const validateFrontText = (text: string): ValidatedFrontText => {
 export const validateBackText = (text: string): ValidatedBackText => {
   if (text.length > 500) throw new Error('Back text cannot be longer than 500 characters')
   return text as ValidatedBackText
-} 
+}
+
+/**
+ * Typ dla standardowej odpowiedzi błędu
+ */
+export interface ErrorResponse {
+  error: {
+    code: 'validation_error' | 'not_found' | 'unauthorized' | 'forbidden' | 'conflict' | 'server_error'
+    message: string
+    details?: Array<{
+      field: string
+      message: string
+    }>
+  }
+}
+
+/**
+ * Pomocnicza funkcja do tworzenia standardowych odpowiedzi błędów
+ */
+export const createErrorResponse = (
+  code: ErrorResponse['error']['code'],
+  message: string,
+  details?: ErrorResponse['error']['details']
+): ErrorResponse => ({
+  error: {
+    code,
+    message,
+    ...(details && { details })
+  }
+}) 

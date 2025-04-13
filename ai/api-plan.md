@@ -215,7 +215,7 @@
 ```json
 {
   "id": "integer",
-  "status": "string",
+  "status": "processing" | "completed" | "error",
   "generated_count": "integer",
   "accepted_unedited_count": "integer",
   "accepted_edited_count": "integer",
@@ -293,8 +293,8 @@
 ## 4. Validation and Business Logic
 
 ### User Resource
-- Email must be valid format
-- Password must meet minimum security requirements
+- Email must be valid format (e.g., "user@example.com")
+- Password must meet minimum security requirements (min. 8 characters, at least one uppercase letter, one lowercase letter, one number)
 - Email must be unique
 
 ### Flashcard Resource
@@ -304,12 +304,39 @@
 
 ### Generation Resource
 - Source text length must be between 1000 and 10000 characters
-- Model must be one of supported AI models
+- Model must be one of supported AI models (e.g., 'gpt-3.5-turbo', 'gpt-4')
 - Generation process timeout after 5 minutes
 - Maximum 50 flashcards per generation
 
+### Data Formats
+- Timestamps use ISO 8601 format: `YYYY-MM-DDTHH:mm:ss.sssZ` (e.g., "2023-07-15T14:30:45.123Z")
+- UUIDs use standard format: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (e.g., "123e4567-e89b-12d3-a456-426614174000")
+- Boolean values represented as `true` or `false`
+- Numeric IDs represented as integers without quotation marks
+
 ### Error Handling
-- Standardized error response format
+- Standardized error response format:
+  ```json
+  {
+    "error": {
+      "code": "string",
+      "message": "string",
+      "details": [
+        {
+          "field": "string",
+          "message": "string"
+        }
+      ]
+    }
+  }
+  ```
+- Error codes:
+  - `validation_error`: Invalid input data
+  - `not_found`: Resource not found
+  - `unauthorized`: Authentication required
+  - `forbidden`: Permission denied
+  - `conflict`: Resource conflict (e.g., duplicate email)
+  - `server_error`: Internal server error
 - Detailed validation error messages
 - Proper HTTP status codes
 - Error logging for debugging
