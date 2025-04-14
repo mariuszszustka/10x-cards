@@ -6,12 +6,28 @@
  */
 
 // Typy danych
-interface GeneratedFlashcard {
+export interface GeneratedFlashcard {
   front: string;
   back: string;
 }
 
-// Przykładowa instrukcja dla modelu AI
+// Konfiguracja serwera Ollama
+const OLLAMA_SERVER_URL = 'http://192.168.0.11:11434/api/generate'
+
+// Dostępne modele Ollama
+export const AVAILABLE_OLLAMA_MODELS = [
+  'gemma3:27b',
+  'llama3.2:3b',
+  'deepseek-r1:32b',
+  'llama3.3:latest'
+]
+
+// Funkcja do wyboru domyślnego modelu
+export function getDefaultModel(): string {
+  return 'llama3.2:3b' // Mniejszy model jako domyślny dla szybszego działania
+}
+
+// Instrukcja dla modelu AI do generowania fiszek
 const FLASHCARD_GENERATION_PROMPT = `
 Wygeneruj fiszki edukacyjne na podstawie podanego tekstu. 
 Każda fiszka powinna zawierać pytanie (front) i odpowiedź (back).
@@ -19,7 +35,9 @@ Pytanie powinno być zwięzłe i skupiać się na kluczowych pojęciach lub info
 Odpowiedź powinna być dokładna, ale nie przekraczać 2-3 zdań.
 Fiszki powinny pokrywać najważniejsze informacje z tekstu.
 
-Format odpowiedzi:
+Wygeneruj maksymalnie 10 fiszek.
+
+Format odpowiedzi musi być ściśle w formacie JSON:
 [
   {
     "front": "Pytanie 1?",
@@ -36,39 +54,148 @@ Tekst źródłowy:
 `;
 
 /**
+ * Wywołuje API Ollama do generowania tekstu
+ * 
+ * @param prompt - Instrukcja dla modelu
+ * @param model - Nazwa modelu Ollama do wykorzystania
+ * @returns Odpowiedź modelu jako string
+ */
+async function callOllamaAPI(prompt: string, model: string): Promise<string> {
+  try {
+    const response = await fetch(OLLAMA_SERVER_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: model,
+        prompt: prompt,
+        stream: false,
+        options: {
+          temperature: 0.7,
+          top_p: 0.9,
+          top_k: 40
+        }
+      }),
+    })
+
+    if (!response.ok) {
+      throw new Error(`Błąd API Ollama: ${response.status} ${response.statusText}`)
+    }
+
+    const data = await response.json()
+    return data.response
+  } catch (error) {
+    console.error('Błąd podczas wywoływania API Ollama:', error)
+    throw error
+  }
+}
+
+/**
  * Generuje fiszki na podstawie tekstu źródłowego
  * 
  * @param sourceText - Tekst źródłowy do analizy
- * @param model - Model AI do wykorzystania (np. 'gpt-4', 'gpt-3.5-turbo')
+ * @param model - Model Ollama do wykorzystania
  * @returns Tablica wygenerowanych fiszek
  */
 export async function generateFlashcards(
   sourceText: string,
   model: string
 ): Promise<GeneratedFlashcard[]> {
-  // W rzeczywistej implementacji, tutaj byłoby wywołanie API OpenAI lub innego serwisu AI
+  console.log(`Generowanie fiszek dla tekstu o długości ${sourceText.length} znaków przy użyciu modelu ${model}`)
   
-  console.log(`Generowanie fiszek dla tekstu o długości ${sourceText.length} znaków przy użyciu modelu ${model}`);
+  try {
+    // Utwórz instrukcję ze źródłowym tekstem
+    const prompt = FLASHCARD_GENERATION_PROMPT.replace('{{SOURCE_TEXT}}', sourceText)
+    
+    // Wywołaj API Ollama
+    const responseText = await callOllamaAPI(prompt, model)
+    
+    // Wyodrębnij JSON z odpowiedzi
+    const jsonMatch = responseText.match(/\[[\s\S]*\]/)
+    if (!jsonMatch) {
+      console.error('Nie udało się znaleźć prawidłowego JSON w odpowiedzi:', responseText)
+      return parseDefaultFlashcards(sourceText)
+    }
+    
+    // Parsowanie JSON do tablicy fiszek
+    try {
+      const rawFlashcards = JSON.parse(jsonMatch[0])
+      const formattedFlashcards = formatFlashcards(rawFlashcards)
+      console.log(`Wygenerowano ${formattedFlashcards.length} fiszek`)
+      return formattedFlashcards
+    } catch (parseError) {
+      console.error('Błąd parsowania JSON:', parseError)
+      return parseDefaultFlashcards(sourceText)
+    }
+  } catch (error) {
+    console.error('Błąd generowania fiszek:', error)
+    // W przypadku błędu generujemy podstawowe fiszki
+    return parseDefaultFlashcards(sourceText)
+  }
+}
+
+/**
+ * Generuje domyślne fiszki w przypadku błędu
+ */
+function parseDefaultFlashcards(sourceText: string): GeneratedFlashcard[] {
+  const numberOfFlashcards = Math.min(Math.ceil(sourceText.length / 500), 10)
   
-  // Symulacja czasu przetwarzania
-  await new Promise(resolve => setTimeout(resolve, 3000));
-  
-  // W rzeczywistej implementacji, zwrócone dane pochodziłyby z odpowiedzi API
-  // Tu dla uproszczenia generujemy przykładowe fiszki
-  const numberOfFlashcards = Math.min(Math.ceil(sourceText.length / 500), 20);
-  
-  const generatedFlashcards: GeneratedFlashcard[] = [];
-  
-  for (let i = 0; i < numberOfFlashcards; i++) {
-    generatedFlashcards.push({
-      front: `Przykładowe pytanie ${i + 1} z tekstu?`,
-      back: `Przykładowa odpowiedź ${i + 1} zawierająca informacje z tekstu źródłowego.`
-    });
+  return Array.from({ length: numberOfFlashcards }, (_, i) => ({
+    front: `Przykładowe pytanie ${i + 1} z tekstu?`,
+    back: `Przykładowa odpowiedź ${i + 1} zawierająca informacje z tekstu źródłowego.`
+  }))
+}
+
+/**
+ * Formatuje wygenerowane fiszki do standardowego formatu
+ * 
+ * @param rawFlashcards - Surowe dane fiszek z API
+ * @returns Sformatowane fiszki
+ */
+export function formatFlashcards(rawFlashcards: any[]): GeneratedFlashcard[] {
+  if (!Array.isArray(rawFlashcards)) {
+    console.error('Nieprawidłowy format danych fiszek:', rawFlashcards)
+    return []
   }
   
-  console.log(`Wygenerowano ${generatedFlashcards.length} fiszek`);
+  return rawFlashcards
+    .filter(card => typeof card === 'object' && card !== null && 'front' in card && 'back' in card)
+    .map(card => ({
+      front: String(card.front || 'Brak pytania').trim(),
+      back: String(card.back || 'Brak odpowiedzi').trim()
+    }))
+    .filter(card => card.front.length > 0 && card.back.length > 0)
+}
+
+/**
+ * Dzieli długi tekst na mniejsze fragmenty dla lepszego przetwarzania przez API
+ * 
+ * @param text - Tekst do podziału
+ * @param maxChunkSize - Maksymalny rozmiar fragmentu
+ * @returns Tablica fragmentów tekstu
+ */
+export function splitTextIntoChunks(text: string, maxChunkSize: number = 4000): string[] {
+  const chunks: string[] = []
   
-  return generatedFlashcards;
+  // Podział na akapity
+  const paragraphs = text.split(/\n\s*\n/)
+  let currentChunk = ''
+  
+  for (const paragraph of paragraphs) {
+    if (currentChunk.length + paragraph.length + 2 > maxChunkSize) {
+      chunks.push(currentChunk)
+      currentChunk = paragraph
+    } else {
+      currentChunk += (currentChunk ? '\n\n' : '') + paragraph
+    }
+  }
+  
+  if (currentChunk) {
+    chunks.push(currentChunk)
+  }
+  
+  return chunks
 }
 
 /**
@@ -88,50 +215,4 @@ export function extractKeyTerms(text: string): string[] {
   ];
   
   return terms;
-}
-
-/**
- * Formatuje wygenerowane fiszki do standardowego formatu
- * 
- * @param rawFlashcards - Surowe dane fiszek z API
- * @returns Sformatowane fiszki
- */
-export function formatFlashcards(rawFlashcards: any[]): GeneratedFlashcard[] {
-  // W rzeczywistej implementacji, tutaj byłoby formatowanie odpowiedzi z API
-  // Dla uproszczenia, zakładamy że dane są już w odpowiednim formacie
-  
-  return rawFlashcards.map(card => ({
-    front: card.front || 'Brak pytania',
-    back: card.back || 'Brak odpowiedzi'
-  }));
-}
-
-/**
- * Dzieli długi tekst na mniejsze fragmenty dla lepszego przetwarzania przez API
- * 
- * @param text - Tekst do podziału
- * @param maxChunkSize - Maksymalny rozmiar fragmentu
- * @returns Tablica fragmentów tekstu
- */
-export function splitTextIntoChunks(text: string, maxChunkSize: number = 4000): string[] {
-  const chunks: string[] = [];
-  
-  // Podział na akapity
-  const paragraphs = text.split(/\n\s*\n/);
-  let currentChunk = '';
-  
-  for (const paragraph of paragraphs) {
-    if (currentChunk.length + paragraph.length + 2 > maxChunkSize) {
-      chunks.push(currentChunk);
-      currentChunk = paragraph;
-    } else {
-      currentChunk += (currentChunk ? '\n\n' : '') + paragraph;
-    }
-  }
-  
-  if (currentChunk) {
-    chunks.push(currentChunk);
-  }
-  
-  return chunks;
 } 

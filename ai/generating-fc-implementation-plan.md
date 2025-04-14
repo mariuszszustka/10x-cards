@@ -3,6 +3,14 @@
 ## 1. Przegląd punktów końcowych
 Endpointy generowania fiszek umożliwiają użytkownikom tworzenie fiszek automatycznie przy pomocy AI, sprawdzanie statusu procesu generacji oraz akceptację wygenerowanych fiszek.
 
+### Wykorzystanie lokalnego serwera Ollama
+W wersji MVP system korzysta z lokalnego serwera Ollama dostępnego pod adresem http://192.168.0.11:11434.
+Wykorzystywane modele:
+- gemma3:27b - duży model o wysokiej jakości generacji
+- llama3.2:3b - mniejszy model (domyślny) zapewniający szybsze działanie
+- deepseek-r1:32b - zaawansowany model z rozszerzonym kontekstem
+- llama3.3:latest - najnowsza wersja modelu llama
+
 ### Endpoint tworzenia generacji
 - Rozpoczyna proces generowania fiszek przez AI
 - Zapisuje początkowe dane generacji w bazie danych

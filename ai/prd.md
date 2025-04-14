@@ -128,3 +128,16 @@ Kryteria akceptacji:
 2. Zaangażowanie i jakość:
    - Analiza stosunku liczby wygenerowanych fiszek do liczby zatwierdzonych propozycji ocenia użyteczność systemu.
    - Monitorowanie opinii użytkowników i zgłaszanych błędów pozwala na ciągłe doskonalenie funkcjonalności aplikacji.
+
+## AI do generowania fiszek
+
+### Modele AI w MVP
+W wersji MVP aplikacja będzie korzystać z lokalnego serwera Ollama działającego pod adresem http://192.168.0.11:11434 z następującymi dostępnymi modelami:
+- gemma3:27b - duży model o wysokiej jakości generacji
+- llama3.2:3b - mniejszy model (domyślny) zapewniający szybsze działanie
+- deepseek-r1:32b - zaawansowany model z rozszerzonym kontekstem
+- llama3.3:latest - najnowsza wersja modelu llama
+
+Domyślnie system będzie używał modelu llama3.2:3b ze względu na jego mniejszy rozmiar i szybsze działanie.
+
+W przyszłych wersjach możliwe będzie rozszerzenie o bardziej zaawansowane modele komercyjne jak GPT-4 lub Claude 3.

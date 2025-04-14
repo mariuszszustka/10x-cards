@@ -1,5 +1,4 @@
-import type { GeneratedFlashcard } from './ai-service'
-import { generateFlashcards, splitTextIntoChunks } from './ai-service'
+import { generateFlashcards, splitTextIntoChunks, type GeneratedFlashcard } from './ai-service'
 import crypto from 'crypto'
 
 // Typy dla mechanizmu kolejki zadań
