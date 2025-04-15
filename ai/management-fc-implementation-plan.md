@@ -243,3 +243,94 @@ Endpointy zarządzania fiszkami umożliwiają użytkownikom pobieranie, tworzeni
 4. Implementacja obsługi błędów
 5. Testy jednostkowe i integracyjne
 6. Dokumentacja API
+
+## Uzupełnienie PRD o system Leitnera
+
+4. Integracja z algorytmem powtórek:
+   - Fiszki są przypisywane do harmonogramu powtórek według Systemu Leitnera, popularnej metody spaced repetition.
+   - System Leitnera kategoryzuje fiszki do 5 poziomów (pudełek) w zależności od znajomości materiału:
+     - Poziom 1: Fiszki nowe lub często niepoprawnie odpowiadane (powtarzane codziennie)
+     - Poziom 2: Fiszki z podstawową znajomością (powtarzane co 2 dni)
+     - Poziom 3: Fiszki dobrze znane (powtarzane co 5 dni)
+     - Poziom 4: Fiszki bardzo dobrze znane (powtarzane co 8 dni)
+     - Poziom 5: Fiszki opanowane (powtarzane co 14 dni)
+   - Po poprawnej odpowiedzi, fiszka przechodzi poziom wyżej, po niepoprawnej - wraca do poziomu 1.
+   - Integracja umożliwia efektywne stosowanie metody spaced repetition.
+
+## Propozycja struktury bazy danych dla systemu Leitnera
+
+### Tabela: flashcard_learning_progress
+- `id` SERIAL PRIMARY KEY
+- `user_id` UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE
+- `flashcard_id` INTEGER NOT NULL REFERENCES flashcards(id) ON DELETE CASCADE
+- `leitner_box` INTEGER NOT NULL DEFAULT 1 CHECK (leitner_box BETWEEN 1 AND 5)
+- `last_reviewed_at` TIMESTAMP WITH TIME ZONE
+- `next_review_at` TIMESTAMP WITH TIME ZONE
+- `consecutive_correct_answers` INTEGER NOT NULL DEFAULT 0
+- `created_at` TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+- `updated_at` TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+
+### Tabela: review_history
+- `id` SERIAL PRIMARY KEY
+- `user_id` UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE
+- `flashcard_id` INTEGER NOT NULL REFERENCES flashcards(id) ON DELETE CASCADE
+- `is_correct` BOOLEAN NOT NULL
+- `previous_box` INTEGER NOT NULL
+- `new_box` INTEGER NOT NULL
+- `review_time_ms` INTEGER  -- czas odpowiedzi w milisekundach (opcjonalnie)
+- `created_at` TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+
+### Tabela: review_sessions
+- `id` SERIAL PRIMARY KEY
+- `user_id` UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE
+- `started_at` TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+- `completed_at` TIMESTAMP WITH TIME ZONE
+- `cards_reviewed` INTEGER NOT NULL DEFAULT 0
+- `correct_answers` INTEGER NOT NULL DEFAULT 0
+- `incorrect_answers` INTEGER NOT NULL DEFAULT 0
+- `total_review_time_ms` INTEGER  -- łączny czas sesji w milisekundach (opcjonalnie)
+
+### Indeksy dla tabel powtórek:
+
+- **Tabela flashcard_learning_progress:**
+  - `CREATE INDEX idx_flashcard_learning_progress_user_id ON flashcard_learning_progress(user_id);`
+  - `CREATE INDEX idx_flashcard_learning_progress_flashcard_id ON flashcard_learning_progress(flashcard_id);`
+  - `CREATE INDEX idx_flashcard_learning_progress_leitner_box ON flashcard_learning_progress(leitner_box);`
+  - `CREATE INDEX idx_flashcard_learning_progress_next_review_at ON flashcard_learning_progress(next_review_at);`
+
+- **Tabela review_history:**
+  - `CREATE INDEX idx_review_history_user_id ON review_history(user_id);`
+  - `CREATE INDEX idx_review_history_flashcard_id ON review_history(flashcard_id);`
+  - `CREATE INDEX idx_review_history_created_at ON review_history(created_at);`
+
+- **Tabela review_sessions:**
+  - `CREATE INDEX idx_review_sessions_user_id ON review_sessions(user_id);`
+  - `CREATE INDEX idx_review_sessions_started_at ON review_sessions(started_at);`
+
+### RLS dla tabel powtórek:
+
+- **RLS dla flashcard_learning_progress:**
+  ```sql
+  ALTER TABLE flashcard_learning_progress ENABLE ROW LEVEL SECURITY;
+  CREATE POLICY user_flashcard_learning_progress_policy ON flashcard_learning_progress 
+    FOR ALL 
+    USING (user_id = current_setting('app.current_user_id')::uuid);
+  ```
+
+- **RLS dla review_history:**
+  ```sql
+  ALTER TABLE review_history ENABLE ROW LEVEL SECURITY;
+  CREATE POLICY user_review_history_policy ON review_history 
+    FOR ALL 
+    USING (user_id = current_setting('app.current_user_id')::uuid);
+  ```
+
+- **RLS dla review_sessions:**
+  ```sql
+  ALTER TABLE review_sessions ENABLE ROW LEVEL SECURITY;
+  CREATE POLICY user_review_sessions_policy ON review_sessions 
+    FOR ALL 
+    USING (user_id = current_setting('app.current_user_id')::uuid);
+  ```
+
+Te zmiany zapewnią kompletną strukturę bazy danych do implementacji systemu Leitnera, umożliwiając śledzenie postępów użytkownika, planowanie sesji powtórek i generowanie statystyk nauki.

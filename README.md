@@ -13,14 +13,14 @@ A modern web application for creating, managing, and reviewing educational flash
 
 ## Project Description
 
-10x-cards is a web application that allows users to create, manage, and review educational flashcards. The application leverages LLM models (via API) to generate flashcard suggestions based on input text and integrates with a ready-made spaced repetition algorithm for effective learning.
+10x-cards is a web application that allows users to create, manage, and review educational flashcards. The application leverages LLM models (via API) to generate flashcard suggestions based on input text and integrates with the Leitner system for spaced repetition, ensuring effective learning.
 
 ### Key Features:
 - **AI-powered flashcard generation**: Automatically generate high-quality flashcards from pasted text
 - **Manual flashcard management**: Create, edit, and organize your own flashcards
 - **User authentication**: Secure access to personalized flashcard sets
-- **Spaced repetition integration**: Efficiently learn using proven learning methods
-- **Performance tracking**: Monitor your learning progress and effectiveness
+- **Leitner system integration**: Learn efficiently with a five-level spaced repetition algorithm that automatically adjusts review frequency based on your knowledge level
+- **Performance tracking**: Monitor your learning progress and effectiveness with statistics for each Leitner level
 
 ## Tech Stack
 
@@ -90,21 +90,22 @@ npm run dev
 - Automatic flashcard generation from pasted text (1,000-10,000 characters)
 - Manual flashcard creation and management
 - User authentication and account management
-- Integration with an open-source spaced repetition algorithm
+- Integration with the Leitner system for effective spaced repetition
+- User progress tracking through five Leitner levels
 - User statistics and AI generation logging
 
 ### Out of Scope for MVP:
-- Custom, advanced spaced repetition algorithm (using open-source solution instead)
+- Custom, advanced spaced repetition algorithms beyond the basic Leitner system
 - Document import (PDF, DOCX) - only manually pasted text supported
 - Flashcard sharing between users
 - Mobile applications (web version only initially)
 - Public API
-- Gamification and advanced notification features
+- Advanced gamification and notification features
 - Advanced keyword search (standard full-text search with pagination only)
 
 ## Project Status
 
-This project is currently in development. The MVP is being actively built with a focus on core flashcard functionality and AI integration.
+This project is currently in development. The MVP is being actively built with a focus on core flashcard functionality, AI integration, and implementing the Leitner system for effective learning.
 
 ## License
 

@@ -187,6 +187,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      flashcard_learning_progress: {
+        Row: {
+          id: number
+          user_id: string
+          flashcard_id: number
+          leitner_box: number
+          last_reviewed_at: string | null
+          next_review_at: string | null
+          consecutive_correct_answers: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          user_id: string
+          flashcard_id: number
+          leitner_box?: number
+          last_reviewed_at?: string | null
+          next_review_at?: string | null
+          consecutive_correct_answers?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          user_id?: string
+          flashcard_id?: number
+          leitner_box?: number
+          last_reviewed_at?: string | null
+          next_review_at?: string | null
+          consecutive_correct_answers?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "flashcard_learning_progress_flashcard_id_fkey"
+            columns: ["flashcard_id"]
+            isOneToOne: false
+            referencedRelation: "flashcards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "flashcard_learning_progress_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       flashcards: {
         Row: {
           back: string
@@ -329,6 +380,101 @@ export type Database = {
           },
         ]
       }
+      review_history: {
+        Row: {
+          id: number
+          user_id: string
+          flashcard_id: number
+          is_correct: boolean
+          previous_box: number
+          new_box: number
+          review_time_ms: number | null
+          created_at: string
+        }
+        Insert: {
+          id?: number
+          user_id: string
+          flashcard_id: number
+          is_correct: boolean
+          previous_box: number
+          new_box: number
+          review_time_ms?: number | null
+          created_at?: string
+        }
+        Update: {
+          id?: number
+          user_id?: string
+          flashcard_id?: number
+          is_correct?: boolean
+          previous_box?: number
+          new_box?: number
+          review_time_ms?: number | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_history_flashcard_id_fkey"
+            columns: ["flashcard_id"]
+            isOneToOne: false
+            referencedRelation: "flashcards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "review_history_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      review_sessions: {
+        Row: {
+          id: number
+          user_id: string
+          started_at: string
+          completed_at: string | null
+          cards_reviewed: number
+          correct_answers: number
+          incorrect_answers: number
+          total_review_time_ms: number | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          user_id: string
+          started_at?: string
+          completed_at?: string | null
+          cards_reviewed?: number
+          correct_answers?: number
+          incorrect_answers?: number
+          total_review_time_ms?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          user_id?: string
+          started_at?: string
+          completed_at?: string | null
+          cards_reviewed?: number
+          correct_answers?: number
+          incorrect_answers?: number
+          total_review_time_ms?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_sessions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       users: {
         Row: {
           confirmed_at: string | null
@@ -358,6 +504,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_next_review_date: {
+        Args: { leitner_box: number }
+        Returns: string
+      }
       unaccent: {
         Args: { "": string }
         Returns: string

@@ -144,6 +144,82 @@ export interface FlashcardFilters {
   generation_id?: number
 }
 
+/**
+ * Poziomy systemu Leitnera
+ */
+export enum LeitnerBox {
+  /** Poziom 1: Fiszki nowe lub często niepoprawnie odpowiadane (powtarzane codziennie) */
+  BOX_1 = 1,
+  /** Poziom 2: Fiszki z podstawową znajomością (powtarzane co 2 dni) */
+  BOX_2 = 2,
+  /** Poziom 3: Fiszki dobrze znane (powtarzane co 5 dni) */
+  BOX_3 = 3,
+  /** Poziom 4: Fiszki bardzo dobrze znane (powtarzane co 8 dni) */
+  BOX_4 = 4,
+  /** Poziom 5: Fiszki opanowane (powtarzane co 14 dni) */
+  BOX_5 = 5
+}
+
+/**
+ * DTO reprezentujące postęp nauki fiszki w systemie Leitnera
+ */
+export type FlashcardLearningProgressDTO = Omit<DBTables['flashcard_learning_progress']['Row'], 'user_id'>
+
+/**
+ * DTO dla listy fiszek do nauki z paginacją
+ */
+export type FlashcardsToReviewDTO = PaginatedResponse<FlashcardDTO & {
+  learning_progress: Pick<FlashcardLearningProgressDTO, 'leitner_box' | 'consecutive_correct_answers'>
+}>
+
+/**
+ * DTO dla zapisania wyniku przeglądu fiszki
+ */
+export interface ReviewResultDTO {
+  flashcard_id: number
+  is_correct: boolean
+  review_time_ms?: number
+}
+
+/**
+ * DTO dla utworzenia nowej sesji nauki
+ */
+export interface CreateReviewSessionDTO {
+  session_id?: number // opcjonalne, jeśli kontynuujemy istniejącą sesję
+}
+
+/**
+ * DTO dla aktualizacji sesji nauki
+ */
+export interface UpdateReviewSessionDTO {
+  session_id: number
+  completed?: boolean
+  results: ReviewResultDTO[]
+}
+
+/**
+ * DTO reprezentujące sesję nauki
+ */
+export type ReviewSessionDTO = Omit<DBTables['review_sessions']['Row'], 'user_id'>
+
+/**
+ * DTO dla historii przeglądów fiszek
+ */
+export type ReviewHistoryDTO = Omit<DBTables['review_history']['Row'], 'user_id'>
+
+/**
+ * DTO dla statystyk nauki użytkownika
+ */
+export interface LearningStatsDTO {
+  total_cards: number
+  cards_by_box: Record<LeitnerBox, number>
+  cards_to_review_today: number
+  review_success_rate: number
+  avg_cards_per_session: number
+  total_review_sessions: number
+  total_reviews: number
+}
+
 // Funkcje pomocnicze do walidacji tekstu
 export const validateFrontText = (text: string): ValidatedFrontText => {
   if (text.length > 200) throw new Error('Front text cannot be longer than 200 characters')

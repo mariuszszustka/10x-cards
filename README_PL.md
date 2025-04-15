@@ -13,14 +13,14 @@ Nowoczesna aplikacja webowa do tworzenia, zarządzania i przeglądania fiszek ed
 
 ## Opis projektu
 
-10x-cards to aplikacja webowa umożliwiająca tworzenie, zarządzanie oraz przeglądanie fiszek edukacyjnych. Aplikacja wykorzystuje modele LLM (poprzez API) do generowania sugestii fiszek na podstawie wprowadzonego tekstu oraz integruje się z gotowym algorytmem powtórek, co pozwala na efektywne zastosowanie metody spaced repetition.
+10x-cards to aplikacja webowa umożliwiająca tworzenie, zarządzanie oraz przeglądanie fiszek edukacyjnych. Aplikacja wykorzystuje modele LLM (poprzez API) do generowania sugestii fiszek na podstawie wprowadzonego tekstu oraz integruje się z algorytmem powtórek opartym na systemie Leitnera, co pozwala na efektywne zastosowanie metody spaced repetition.
 
 ### Główne funkcjonalności:
 - **Generowanie fiszek wspierane przez AI**: Automatyczne tworzenie wysokiej jakości fiszek z wklejonego tekstu
 - **Ręczne zarządzanie fiszkami**: Tworzenie, edycja i organizacja własnych fiszek
 - **Uwierzytelnianie użytkowników**: Bezpieczny dostęp do spersonalizowanych zestawów fiszek
-- **Integracja z metodą spaced repetition**: Efektywna nauka dzięki sprawdzonym metodom uczenia
-- **Śledzenie postępów**: Monitorowanie postępów i efektywności nauki
+- **Integracja z systemem Leitnera**: Efektywna nauka dzięki pięciopoziomowemu algorytmowi powtórek, który automatycznie dostosowuje częstotliwość powtarzania fiszek w zależności od poziomu ich znajomości
+- **Śledzenie postępów**: Monitorowanie postępów i efektywności nauki z analizą statystyk dla każdego poziomu systemu Leitnera
 
 ## Stack technologiczny
 
@@ -90,21 +90,22 @@ npm run dev
 - Automatyczne generowanie fiszek z wklejonego tekstu (1000-10000 znaków)
 - Ręczne tworzenie i zarządzanie fiszkami
 - Uwierzytelnianie użytkowników i zarządzanie kontem
-- Integracja z algorytmem powtórek typu open-source
+- Integracja z systemem Leitnera dla efektywnego planowania powtórek
+- Śledzenie postępów użytkownika w ramach pięciu poziomów systemu Leitnera
 - Statystyki użytkownika i logowanie generacji AI
 
 ### Poza zakresem MVP:
-- Własny, zaawansowany algorytm powtórek (wykorzystujemy gotowe rozwiązanie open-source)
+- Własny, zaawansowany algorytm powtórek wykraczający poza podstawowy system Leitnera
 - Import dokumentów (PDF, DOCX) - obsługiwany jest jedynie tekst wklejany ręcznie
 - Współdzielenie fiszek między użytkownikami
 - Aplikacje mobilne (początkowo dostępna jest jedynie wersja web)
 - Publiczne API
-- Mechanizmy gamifikacji oraz zaawansowane funkcje powiadomień
+- Rozbudowane mechanizmy gamifikacji oraz zaawansowane funkcje powiadomień
 - Zaawansowane wyszukiwanie fiszek po słowach kluczowych (standardowe pełnotekstowe wyszukiwanie z paginacją)
 
 ## Status projektu
 
-Projekt jest obecnie w fazie rozwoju. MVP jest aktywnie budowane z naciskiem na podstawową funkcjonalność fiszek i integrację AI.
+Projekt jest obecnie w fazie rozwoju. MVP jest aktywnie budowane z naciskiem na podstawową funkcjonalność fiszek, integrację AI oraz implementację systemu Leitnera dla efektywnej nauki.
 
 ## Licencja
 
