@@ -248,12 +248,10 @@ Endpointy zarządzania fiszkami umożliwiają użytkownikom pobieranie, tworzeni
 
 4. Integracja z algorytmem powtórek:
    - Fiszki są przypisywane do harmonogramu powtórek według Systemu Leitnera, popularnej metody spaced repetition.
-   - System Leitnera kategoryzuje fiszki do 5 poziomów (pudełek) w zależności od znajomości materiału:
+   - System Leitnera kategoryzuje fiszki do 3 poziomów (pudełek) w zależności od znajomości materiału:
      - Poziom 1: Fiszki nowe lub często niepoprawnie odpowiadane (powtarzane codziennie)
-     - Poziom 2: Fiszki z podstawową znajomością (powtarzane co 2 dni)
-     - Poziom 3: Fiszki dobrze znane (powtarzane co 5 dni)
-     - Poziom 4: Fiszki bardzo dobrze znane (powtarzane co 8 dni)
-     - Poziom 5: Fiszki opanowane (powtarzane co 14 dni)
+     - Poziom 2: Fiszki z podstawową znajomością (powtarzane co 3 dni)
+     - Poziom 3: Fiszki dobrze opanowane (powtarzane co 7 dni)
    - Po poprawnej odpowiedzi, fiszka przechodzi poziom wyżej, po niepoprawnej - wraca do poziomu 1.
    - Integracja umożliwia efektywne stosowanie metody spaced repetition.
 
@@ -263,7 +261,7 @@ Endpointy zarządzania fiszkami umożliwiają użytkownikom pobieranie, tworzeni
 - `id` SERIAL PRIMARY KEY
 - `user_id` UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE
 - `flashcard_id` INTEGER NOT NULL REFERENCES flashcards(id) ON DELETE CASCADE
-- `leitner_box` INTEGER NOT NULL DEFAULT 1 CHECK (leitner_box BETWEEN 1 AND 5)
+- `leitner_box` INTEGER NOT NULL DEFAULT 1 CHECK (leitner_box BETWEEN 1 AND 3)
 - `last_reviewed_at` TIMESTAMP WITH TIME ZONE
 - `next_review_at` TIMESTAMP WITH TIME ZONE
 - `consecutive_correct_answers` INTEGER NOT NULL DEFAULT 0

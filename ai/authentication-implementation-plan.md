@@ -150,3 +150,14 @@ Endpointy autentykacji umożliwiają rejestrację nowych użytkowników oraz log
 7. Testy jednostkowe serwisu i kontrolera
 8. Testy integracyjne całego endpointu
 9. Dokumentacja API
+
+## 10. Uwagi dotyczące MVP
+
+### Weryfikacja maili
+- W wersji MVP nie będzie implementowana weryfikacja adresów e-mail.
+- Użytkownik może podać dowolny adres e-mail podczas rejestracji (wymagana jedynie walidacja formatu).
+- Pole `confirmed_at` w bazie danych pozostaje na potrzeby przyszłej implementacji weryfikacji.
+
+### Rate Limiting i JWT
+- W MVP możemy pominąć implementację rate limitingu.
+- Szczegóły implementacji JWT (w tym mechanizm refresh tokena) zostaną doprecyzowane w późniejszych etapach projektu.

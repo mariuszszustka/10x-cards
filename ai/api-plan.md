@@ -22,6 +22,16 @@
 - Records errors during AI generation process
 - Used for monitoring and debugging
 
+### System Error Logs
+- Maps to `system_error_logs` table
+- Records system-wide errors and exceptions
+- Used for monitoring and debugging by administrators
+
+### Leitner System
+- Maps to `flashcard_learning_progress`, `review_history`, and `review_sessions` tables
+- Tracks learning progress for flashcards using Leitner system
+- Contains information about review history and learning sessions
+
 ## 2. Endpoints
 
 ### Authentication
@@ -276,6 +286,178 @@
   - 401 Unauthorized
   - 404 Not Found
 
+### Leitner System
+
+#### Get Leitner Flashcards
+- Method: GET
+- Path: /api/leitner/flashcards
+- Description: Get flashcards for learning based on Leitner box and due date
+- Query Parameters:
+  - box: integer (optional, 1-3, if not provided returns cards from all boxes due for review)
+  - limit: integer (optional, max number of cards to return, default: 10)
+- Response Body:
+```json
+{
+  "items": [
+    {
+      "id": "integer",
+      "front": "string",
+      "back": "string",
+      "leitner_box": "integer",
+      "next_review_at": "timestamp",
+      "consecutive_correct_answers": "integer"
+    }
+  ],
+  "total": "integer",
+  "counts_by_box": {
+    "box_1": "integer",
+    "box_2": "integer",
+    "box_3": "integer"
+  }
+}
+```
+- Success: 200 OK
+- Errors:
+  - 400 Bad Request (Invalid parameters)
+  - 401 Unauthorized
+
+#### Record Flashcard Review
+- Method: POST
+- Path: /api/leitner/reviews
+- Description: Record the result of a flashcard review and update its Leitner box
+- Request Body:
+```json
+{
+  "flashcard_id": "integer",
+  "is_correct": "boolean",
+  "review_time_ms": "integer" 
+}
+```
+- Response Body:
+```json
+{
+  "id": "integer",
+  "flashcard_id": "integer",
+  "previous_box": "integer",
+  "new_box": "integer",
+  "next_review_at": "timestamp",
+  "consecutive_correct_answers": "integer",
+  "created_at": "timestamp"
+}
+```
+- Success: 201 Created
+- Errors:
+  - 400 Bad Request (Invalid input)
+  - 401 Unauthorized
+  - 404 Not Found (Flashcard not found)
+
+#### Start Learning Session
+- Method: POST
+- Path: /api/leitner/sessions
+- Description: Start a new learning session with cards from a specific Leitner box
+- Request Body:
+```json
+{
+  "box": "integer",
+  "limit": "integer"
+}
+```
+- Response Body:
+```json
+{
+  "id": "integer",
+  "started_at": "timestamp",
+  "flashcards": [
+    {
+      "id": "integer",
+      "front": "string",
+      "back": "string",
+      "leitner_box": "integer"
+    }
+  ],
+  "total_cards": "integer"
+}
+```
+- Success: 201 Created
+- Errors:
+  - 400 Bad Request (Invalid input)
+  - 401 Unauthorized
+
+#### Complete Learning Session
+- Method: PUT
+- Path: /api/leitner/sessions/{id}/complete
+- Description: Complete a learning session and record statistics
+- Request Body:
+```json
+{
+  "correct_answers": "integer",
+  "incorrect_answers": "integer",
+  "total_review_time_ms": "integer"
+}
+```
+- Response Body:
+```json
+{
+  "id": "integer",
+  "started_at": "timestamp",
+  "completed_at": "timestamp",
+  "cards_reviewed": "integer",
+  "correct_answers": "integer", 
+  "incorrect_answers": "integer",
+  "total_review_time_ms": "integer",
+  "summary": {
+    "moved_up": "integer",
+    "moved_down": "integer",
+    "remained": "integer"
+  }
+}
+```
+- Success: 200 OK
+- Errors:
+  - 400 Bad Request (Invalid input)
+  - 401 Unauthorized
+  - 404 Not Found (Session not found)
+
+### User Management
+
+#### Change Password
+- Method: PUT
+- Path: /api/users/password
+- Description: Change user's password
+- Request Body:
+```json
+{
+  "current_password": "string",
+  "new_password": "string"
+}
+```
+- Response Body:
+```json
+{
+  "success": "boolean",
+  "message": "string"
+}
+```
+- Success: 200 OK
+- Errors:
+  - 400 Bad Request (Invalid input or incorrect current password)
+  - 401 Unauthorized
+
+#### Delete Account
+- Method: DELETE
+- Path: /api/users/me
+- Description: Delete user's account and all associated data
+- Request Body:
+```json
+{
+  "password": "string"
+}
+```
+- Success: 204 No Content
+- Errors:
+  - 400 Bad Request (Invalid input or incorrect password)
+  - 401 Unauthorized
+
 ## 3. Authentication and Authorization
 
 ### Authentication Mechanism
@@ -307,6 +489,15 @@
 - Model must be one of supported AI models (e.g., 'gpt-3.5-turbo', 'gpt-4')
 - Generation process timeout after 5 minutes
 - Maximum 50 flashcards per generation
+
+### Leitner System
+- Three Leitner boxes (1, 2, 3) for spaced repetition
+- Box 1: Cards reviewed daily
+- Box 2: Cards reviewed every 3 days
+- Box 3: Cards reviewed every 7 days
+- Cards move up to next box on correct answer, back to box 1 on incorrect answer
+- Learning sessions limited to maximum 10 cards by default
+- Review history tracked for analytics and progress monitoring
 
 ### Data Formats
 - Timestamps use ISO 8601 format: `YYYY-MM-DDTHH:mm:ss.sssZ` (e.g., "2023-07-15T14:30:45.123Z")
@@ -345,3 +536,26 @@
 - Generation endpoints: 10 requests per hour per user
 - Authentication endpoints: 5 attempts per minute per IP
 - General API endpoints: 100 requests per minute per user 
+
+## 5. MVP Implementation Notes
+
+### Authentication and Authorization
+- Email verification will not be implemented in MVP (users can register with any valid email format)
+- JWT refresh token mechanism will be simplified in MVP, details to be specified in later development phases
+- Token expiration of 24 hours will be implemented in MVP
+
+### Rate Limiting
+- Rate limiting may be omitted in MVP phase
+- If implemented, will focus only on critical endpoints like generation to prevent abuse
+- Simple in-memory implementation may be used instead of distributed rate limiting
+
+### Error Logging
+- All system errors will be logged in the `system_error_logs` table
+- Generation-specific errors will be logged in `generation_error_logs` table
+- Both tables will have appropriate RLS policies to protect sensitive information
+
+### System Leitnera
+- MVP używa uproszczonego wariantu z 3 pudełkami zamiast standardowych 5:
+  - Poziom 1: Fiszki nowe lub często niepoprawnie odpowiadane (powtarzane codziennie)
+  - Poziom 2: Fiszki z podstawową znajomością (powtarzane co 3 dni)
+  - Poziom 3: Fiszki dobrze opanowane (powtarzane co 7 dni) 

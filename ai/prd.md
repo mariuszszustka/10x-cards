@@ -24,7 +24,12 @@ Manualne tworzenie wysokiej jakości fiszek wymaga dużych nakładów czasu i wy
    - Dane są szyfrowane i przechowywane według najlepszych praktyk bezpieczeństwa.
 
 4. Integracja z algorytmem powtórek:
-   - Fiszki są przypisywane do harmonogramu powtórek według gotowego, open-source'owego rozwiązania.
+   - Fiszki są przypisywane do harmonogramu powtórek według Systemu Leitnera, popularnej metody spaced repetition.
+   - System Leitnera kategoryzuje fiszki do 3 poziomów (pudełek) w zależności od znajomości materiału:
+     - Poziom 1: Fiszki nowe lub często niepoprawnie odpowiadane (powtarzane codziennie)
+     - Poziom 2: Fiszki z podstawową znajomością (powtarzane co 3 dni)
+     - Poziom 3: Fiszki dobrze opanowane (powtarzane co 7 dni)
+   - Po poprawnej odpowiedzi, fiszka przechodzi poziom wyżej, po niepoprawnej - wraca do poziomu 1.
    - Integracja umożliwia efektywne stosowanie metody spaced repetition.
 
 5. Przechowywanie i skalowalność:
@@ -33,6 +38,7 @@ Manualne tworzenie wysokiej jakości fiszek wymaga dużych nakładów czasu i wy
 6. Statystyki i logowanie:
    - System zbiera statystyki dotyczące generowania fiszek, w tym liczbę wygenerowanych propozycji oraz ich akceptację przez użytkowników.
    - Logi operacji generowania przez AI są zapisywane w dedykowanej tabeli.
+   - Błędy systemowe są zapisywane w dedykowanej tabeli, dostępnej tylko dla administratorów.
 
 7. Wymagania prawne i ograniczenia:
    - Dane osobowe oraz informacje o fiszkach są przechowywane zgodnie z RODO.
@@ -47,6 +53,8 @@ Poza zakresem MVP:
 - Aplikacje mobilne – początkowo dostępna jest jedynie wersja web.
 - Publicznie dostępne API, mechanizmy gamifikacji oraz zaawansowane funkcje powiadomień.
 - Rozbudowane wyszukiwanie fiszek po słowach kluczowych – obecnie wdrożone jest standardowe pełnotekstowe wyszukiwanie z paginacją.
+- Weryfikacja adresów email – w MVP użytkownik może podać dowolny adres email przy rejestracji.
+- Zaawansowane mechanizmy rate limitingu – w MVP mogą zostać pominięte.
 
 ## 5. Historyjki użytkowników
 
@@ -141,3 +149,11 @@ W wersji MVP aplikacja będzie korzystać z lokalnego serwera Ollama działając
 Domyślnie system będzie używał modelu llama3.2:3b ze względu na jego mniejszy rozmiar i szybsze działanie.
 
 W przyszłych wersjach możliwe będzie rozszerzenie o bardziej zaawansowane modele komercyjne jak GPT-4 lub Claude 3.
+
+## Uwagi dotyczące MVP
+
+### Ograniczenia i uproszczenia
+1. **Weryfikacja adresów email** - w MVP użytkownicy mogą podać dowolny adres email podczas rejestracji bez konieczności jego weryfikacji. System nie będzie wysyłał maili potwierdzających.
+2. **Ograniczenia bezpieczeństwa** - szczegółowe mechanizmy JWT (w tym refresh token) i rate limiting zostaną doprecyzowane w późniejszych etapach, w MVP mogą zostać pominięte.
+3. **Logowanie błędów** - aplikacja będzie logować błędy w dedykowanej tabeli w bazie danych, dostępnej tylko dla administratorów.
+4. **System Leitnera** - w MVP używamy uproszczonego wariantu z 3 pudełkami zamiast 5, które są standardem w pełnej wersji systemu Leitnera.

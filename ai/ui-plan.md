@@ -1,66 +1,269 @@
-# Plan interfejsu użytkownika (UI) - 10x-cards
+# Architektura UI dla 10x-cards
 
-## Decyzje projektowe
+## 1. Przegląd struktury UI
 
-1. Ustalono, że główne widoki interfejsu będą obejmować ekran autoryzacji, dashboard, widok generowania fiszek, widok listy fiszek z modalem do edycji (umożliwiający zapis pojedynczej fiszki) oraz opcją "Zapisz wszystkie", panel użytkownika i ekran sesji powtórkowych.
-2. Przepływ użytkownika rozpocznie się od logowania, a następnie użytkownik zostanie skierowany do widoku generowania, gdzie wprowadza tekst, recenzuje propozycje fiszek i dokonuje zatwierdzenia lub edycji, a finalny zapis może być wykonany zbiorczo.
-3. Nawigacja zostanie oparta na topbarze wykorzystującym Navigation Menu z Shadcn/ui, z dropdownem zawierającym opcje zarządzania kontem użytkownika.
-4. W panelu użytkownika dostępne będą dane: avatar (wspólny dla wszystkich na etapie MVP), nazwa użytkownika, adres email oraz link do edycji profilu.
-5. Implementacja komunikatów inline oraz wskaźników stanu (spinnerów) dla operacji takich jak generowanie, edycja i usuwanie fiszek.
-6. Początkowo zarządzanie stanem aplikacji oparte będzie o React Context z możliwością rozbudowy o React Query lub Zustand w przyszłości.
-7. Wymagania dotyczące responsywności i dostępności zostaną spełnione zgodnie z wytycznymi WCAG AA.
-8. Mechanizmy autoryzacji (JWT) zostaną wdrożone na kolejnych etapach, najpierw podstawowa funkcjonalność.
+Aplikacja 10x-cards zostanie zbudowana jako aplikacja webowa z ciemnym motywem i minimalistycznym interfejsem. Struktura UI będzie oparta na sześciu głównych widokach, które będą połączone logiczną nawigacją. Podstawowa struktura aplikacji składa się z:
 
-## Rekomendacje
+- **Ekranu autoryzacji** - dla logowania i rejestracji
+- **Dashboardu** - centralnego punktu nawigacji
+- **Widoku generowania fiszek** - z opcjami tworzenia ręcznego i generowania przez AI
+- **Listy fiszek** - do przeglądania, wyszukiwania i zarządzania fiszkami
+- **Sesji nauki** - implementującej metodę Leitnera z trzema pudełkami
+- **Panelu użytkownika** - z podstawowymi informacjami o profilu
 
-1. Ustanowienie jednolitego schematu stanów (loading, success, error) dla wszystkich widoków.
-2. Zaprojektowanie prototypu interfejsu z wyraźnym podziałem na ekrany autoryzacji, generowania, listy fiszek, panelu użytkownika oraz sesji powtórkowych.
-3. Wykorzystanie topbaru z Navigation Menu z Shadcn/ui, wraz z dropdownem do zarządzania kontem.
-4. Implementacja jednolitej logiki walidacji i komunikatów błędów inline.
-5. Przyjęcie strategii zarządzania stanem opartej na React Context, z możliwością rozszerzenia o bardziej zaawansowane narzędzia.
-6. Uwzględnienie mechanizmów buforowania i pre-fetchingu danych jako opcji do rozważenia w przyszłości.
-7. Zapewnienie spełnienia wymagań responsywności oraz standardów dostępności WCAG AA.
+Aplikacja będzie korzystać z komponentów Shadcn/ui dla spójnego wyglądu, z naciskiem na prostotę interfejsu i intuicyjną nawigację.
 
-## Podsumowanie architektury UI
+## 2. Lista widoków
 
-Główne wymagania dotyczące architektury UI obejmują stworzenie interfejsu z kluczowymi widokami: ekran autoryzacji, dashboard, widok generowania fiszek, widok listy fiszek z modalem do edycji (umożliwiający zarówno pojedyncze zapisy, jak i bulkowy zapis zatwierdzonych zmian), panel użytkownika oraz ekran sesji powtórkowych. Przepływ użytkownika zakłada, że po logowaniu, użytkownik przechodzi do widoku generowania, gdzie poprzez interakcję z modelem AI recenzuje i modyfikuje propozycje fiszek. Nawigacja zostanie oparta na topbarze wykorzystującym Navigation Menu z Shadcn/ui, w tym dropdown do zarządzania kontem.
+### Ekran Autoryzacji
+- **Ścieżka**: `/auth`
+- **Główny cel**: Umożliwienie użytkownikom rejestracji lub logowania
+- **Kluczowe informacje**:
+  - Przełączane zakładki logowania i rejestracji
+  - Formularze z polami e-mail i hasło
+  - Komunikaty o błędach autoryzacji
+- **Kluczowe komponenty**:
+  - Przełącznik zakładek
+  - Formularze z walidacją
+  - Przyciski logowania/rejestracji
+  - Wskaźnik ładowania podczas przetwarzania
+- **UX, dostępność i bezpieczeństwo**:
+  - Jasne komunikaty błędów bez ujawniania szczegółów technicznych
+  - Walidacja hasła z informacją o wymaganiach
+  - Zabezpieczenie przed atakami brute force poprzez limitowanie prób
+  - Wsparcie dla czytników ekranu
 
-Integracja z API będzie obsługiwana przy użyciu dostępnych endpointów, a komunikaty o stanie operacji (spinner, komunikaty inline) zostaną zaimplementowane dla wszystkich akcji (generowanie, edycja, usuwanie). Zarządzanie stanem aplikacji początkowo oparte będzie o React Context, z możliwością rozbudowy o React Query lub Zustand na późniejszym etapie. Wymogi responsywności i dostępności będą realizowane zgodnie z WCAG AA, a kwestie bezpieczeństwa związane z autoryzacją (JWT) zostaną wdrożone na kolejnych etapach rozwoju.
+### Dashboard
+- **Ścieżka**: `/dashboard`
+- **Główny cel**: Centralna nawigacja do głównych funkcji aplikacji
+- **Kluczowe informacje**:
+  - Duże kafelki akcji dla głównych funkcji
+- **Kluczowe komponenty**:
+  - Kafelek "Generuj Fiszki"
+  - Kafelek "Rozpocznij Naukę"
+  - Kafelek "Przeglądaj Fiszki"
+- **UX, dostępność i bezpieczeństwo**:
+  - Minimalistyczny interfejs bez zbędnych informacji
+  - Duże, czytelne przyciski
+  - Wysoki kontrast dla czytelności
 
-## Otwarte kwestie
+### Widok Generowania Fiszek
+- **Ścieżka**: `/generate`
+- **Główny cel**: Tworzenie fiszek ręcznie lub za pomocą AI
+- **Kluczowe informacje**:
+  - Przełącznik między ręcznym tworzeniem a generowaniem AI
+  - Formularz ręcznego tworzenia z polami "Przód" i "Tył"
+  - Pole tekstowe do wprowadzania źródłowego tekstu dla AI
+  - Lista propozycji fiszek z opcjami akcji
+- **Kluczowe komponenty**:
+  - Przełącznik trybu tworzenia
+  - Formularz ręcznego tworzenia
+  - Pole tekstowe dla AI z licznikiem znaków (1000-10000)
+  - Przycisk generowania
+  - Lista wygenerowanych propozycji z kontrolkami akceptacji/edycji/odrzucenia
+  - Przyciski akcji zbiorczych
+  - Wskaźniki ładowania dla procesów AI
+- **UX, dostępność i bezpieczeństwo**:
+  - Jasne wskaźniki ładowania podczas generowania
+  - Informacja o wybranym modelu AI (gemma3:27b)
+  - Walidacja długości tekstu wejściowego
+  - Możliwość anulowania procesu generowania
+  - Zabezpieczenie przed przypadkową utratą danych
 
-Brak nierozwiązanych kwestii; wszystkie kluczowe decyzje zostały ustalone na etapie MVP.
+### Lista Fiszek
+- **Ścieżka**: `/flashcards`
+- **Główny cel**: Przeglądanie, wyszukiwanie, sortowanie i zarządzanie fiszkami
+- **Kluczowe informacje**:
+  - Lista fiszek w formie kart
+  - Informacja o przypisaniu do pudełka Leitnera
+  - Opcje wyszukiwania i filtrowania
+- **Kluczowe komponenty**:
+  - Pole wyszukiwania
+  - Filtry sortowania (alfabetycznie, wg pudełka)
+  - Karty fiszek z podglądem treści
+  - Wskaźniki pudełka Leitnera
+  - Przyciski edycji i usuwania dla każdej fiszki
+  - Kontrolki paginacji
+  - Modal potwierdzenia usuwania
+- **UX, dostępność i bezpieczeństwo**:
+  - Edycja inline bez przechodzenia do osobnego widoku
+  - Potwierdzenie przed usunięciem
+  - Kontekstowe powiadomienia o sukcesie/błędzie
+  - Efektywna paginacja dla dużych zbiorów fiszek
 
-## Priorytety implementacji widoków
-Podczas wdrażania MVP, implementacja widoków powinna odbywać się w następującej kolejności, aby skupić się na kluczowych funkcjonalnościach produktu:
+### Sesja Nauki
+- **Ścieżka**: `/learn`
+- **Główny cel**: Nauka fiszek metodą Leitnera
+- **Kluczowe informacje**:
+  - Pudełko Leitnera do nauki
+  - Aktualna fiszka (przód/tył)
+  - Postęp sesji (x/10)
+  - Przyciski oceny wiedzy
+- **Kluczowe komponenty**:
+  - Rozwijana lista wyboru pudełka przed rozpoczęciem
+  - Karta fiszki z animacją odkrywania
+  - Przycisk "Pokaż odpowiedź"
+  - Przyciski oceny: "Znam dobrze", "Jestem neutralny", "Nie znam"
+  - Wskaźnik postępu
+  - Przycisk wyjścia z sesji
+  - Ekran zakończenia sesji
+- **UX, dostępność i bezpieczeństwo**:
+  - Limit 10 fiszek na sesję
+  - Możliwość wyjścia w dowolnym momencie
+  - Wyraźne rozróżnienie przodu i tyłu fiszki
+  - Animacja odkrywania odpowiedzi
 
-1. **Widok generowania fiszek** - podstawowa funkcjonalność produktu, która dostarcza główną wartość
-2. **Widok listy fiszek z modalem do edycji** - umożliwia zarządzanie wygenerowanymi fiszkami
-3. **Ekran autoryzacji** - podstawowa funkcjonalność logowania i rejestracji
-4. **Ekran sesji powtórkowych** - implementacja algorytmu powtórek
-5. **Panel użytkownika** - zarządzanie kontem
+### Panel Użytkownika
+- **Ścieżka**: `/profile`
+- **Główny cel**: Wyświetlanie i zarządzanie podstawowymi informacjami o profilu
+- **Kluczowe informacje**:
+  - Avatar użytkownika
+  - Nazwa użytkownika
+  - Adres e-mail
+- **Kluczowe komponenty**:
+  - Wyświetlanie awatara (jednakowy dla wszystkich w MVP)
+  - Pola informacyjne
+  - Ograniczone opcje edycji (w MVP)
+- **UX, dostępność i bezpieczeństwo**:
+  - Proste pole do zmiany hasła
+  - Opcja usunięcia konta z potwierdzeniem
+  - Bezpieczne przechowywanie danych logowania
 
-## Standardy komunikatów i stanów aplikacji
-Dla zapewnienia spójności doświadczenia użytkownika, wszystkie widoki będą korzystać z jednolitego systemu komunikatów:
+## 3. Mapa podróży użytkownika
 
-- **Stan ładowania**: Jednolity spinner w miejscu wykonywania akcji
-- **Stan sukcesu**: Komunikat w kolorze zielonym (inline lub toast)
-- **Błąd walidacji**: Komunikat inline pod polem formularza w kolorze czerwonym
-- **Błąd operacji**: Komunikat toast w górnej części ekranu w kolorze czerwonym
-- **Informacja**: Neutralny komunikat w kolorze niebieskim dla powiadomień ogólnych
+### Główny przepływ użytkownika:
 
-Na etapie MVP implementujemy komunikaty inline dla błędów walidacji i powiadomienia toast dla ogólnych błędów operacji, co zapewni podstawowy feedback dla użytkownika.
+1. **Rejestracja i logowanie**
+   - Użytkownik trafia na ekran autoryzacji
+   - Wybiera zakładkę rejestracji lub logowania
+   - Wypełnia formularz i przesyła dane
+   - Po pomyślnej autoryzacji jest przekierowywany do dashboardu
 
-## Mapowanie stanów API do interfejsu użytkownika
-Aby zapewnić spójne doświadczenie użytkownika, wprowadzamy mapowanie między stanami zwracanymi przez API a ich reprezentacją w interfejsie:
+2. **Generowanie fiszek przez AI**
+   - Z dashboardu użytkownik wybiera "Generuj Fiszki"
+   - Przełącza się na tryb AI
+   - Wkleja tekst źródłowy (1000-10000 znaków)
+   - Klika "Generuj"
+   - Podczas generowania widzi wskaźnik ładowania
+   - Po zakończeniu przegląda listę propozycji
+   - Dla każdej fiszki może:
+     - Zaakceptować bez zmian
+     - Edytować i zaakceptować
+     - Odrzucić
+   - Zatwierdza wybrane fiszki przyciskiem "Zapisz zatwierdzone"
+   - Otrzymuje powiadomienie o sukcesie
+   - Może wrócić do dashboardu lub kontynuować generowanie
 
-### Generowanie fiszek:
-- **API: processing** → UI: spinner + komunikat "Generowanie fiszek w toku..."
-- **API: completed** → UI: lista propozycji fiszek z opcjami zatwierdzenia/edycji
-- **API: error** → UI: komunikat błędu + opcja ponowienia
+3. **Ręczne tworzenie fiszek**
+   - Z dashboardu użytkownik wybiera "Generuj Fiszki"
+   - Przełącza się na tryb ręczny
+   - Wypełnia pola "Przód" (maks. 200 znaków) i "Tył" (maks. 500 znaków)
+   - Klika "Zapisz"
+   - Otrzymuje powiadomienie o sukcesie
+   - Może utworzyć kolejną fiszkę lub wrócić do dashboardu
 
-### Operacje na fiszkach:
-- **API: 201 Created** → UI: komunikat sukcesu "Fiszka dodana"
-- **API: 200 OK** (po edycji) → UI: komunikat sukcesu "Zmiany zapisane"
-- **API: 204 No Content** (po usunięciu) → UI: odświeżenie listy bez usuniętej fiszki
-- **API: 4xx/5xx** → UI: odpowiedni komunikat błędu z możliwością ponowienia akcji
+4. **Przeglądanie i zarządzanie fiszkami**
+   - Z dashboardu użytkownik wybiera "Przeglądaj Fiszki"
+   - Przegląda listę swoich fiszek
+   - Może wyszukiwać, filtrować lub sortować
+   - Dla wybranej fiszki może:
+     - Kliknąć "Edytuj" i zmodyfikować treść inline
+     - Kliknąć "Usuń" i potwierdzić usunięcie
+   - Po każdej akcji otrzymuje powiadomienie o sukcesie
+
+5. **Sesja nauki**
+   - Z dashboardu użytkownik wybiera "Rozpocznij Naukę"
+   - Opcjonalnie wybiera pudełko Leitnera (domyślnie pierwsze)
+   - Klika "Start"
+   - System wybiera maksymalnie 10 fiszek
+   - Dla każdej fiszki:
+     - Użytkownik widzi przód
+     - Klika "Pokaż odpowiedź"
+     - Widzi tył fiszki
+     - Ocenia swoją wiedzę jednym z trzech przycisków
+     - System przenosi fiszkę do odpowiedniego pudełka
+   - Po zakończeniu sesji widzi ekran podsumowania
+   - Wraca do dashboardu
+
+## 4. Układ i struktura nawigacji
+
+### Globalny pasek nawigacyjny
+Dostępny na wszystkich stronach po zalogowaniu, zawiera:
+- Logo (link do dashboardu)
+- Główne linki nawigacyjne:
+  - Dashboard
+  - Generuj Fiszki
+  - Moje Fiszki
+  - Nauka
+- Avatar użytkownika z rozwijanym menu:
+  - Profil
+  - Wyloguj
+
+### Nawigacja kontekstowa
+- W każdym widoku przyciski akcji specyficzne dla danego kontekstu
+- Przyciski powrotu do dashboardu
+- Przyciski zapisywania/anulowania w formularzach
+
+### Wizualna hierarchia
+- Dashboard jako centralny punkt nawigacji
+- Główne zadania (generowanie, nauka, przeglądanie) jako równorzędne opcje
+- Panel użytkownika jako funkcja poboczna
+
+### Przepływy wieloetapowe
+- Generowanie fiszek przez AI:
+  1. Wprowadzenie tekstu → 2. Przetwarzanie → 3. Przegląd propozycji → 4. Zapisywanie
+- Sesja nauki:
+  1. Wybór pudełka → 2. Nauka fiszek → 3. Podsumowanie
+
+## 5. Kluczowe komponenty
+
+### Karta Fiszki
+- Uniwersalny komponent do wyświetlania fiszek w różnych kontekstach
+- Właściwości:
+  - Przód i tył fiszki
+  - Wskaźnik pudełka Leitnera (kolorowy pasek/ikona)
+  - Przyciski akcji (edycja, usunięcie)
+  - Animacja odwracania w trybie nauki
+
+### Formularz Fiszki
+- Komponent do tworzenia i edycji fiszek
+- Właściwości:
+  - Pola tekstowe z limitami znaków
+  - Walidacja danych
+  - Przyciski akcji (zapisz, anuluj)
+
+### System Powiadomień
+- Komponent do wyświetlania informacji o wynikach akcji
+- Właściwości:
+  - Powiadomienia o sukcesie (zielone)
+  - Ostrzeżenia (żółte)
+  - Błędy (czerwone)
+  - Automatyczne znikanie po określonym czasie
+
+### Wskaźniki Ładowania
+- Kontekstowe spinnery dla operacji asynchronicznych
+- Właściwości:
+  - Spójny wygląd w całej aplikacji
+  - Informacja o trwającym procesie
+  - Możliwość anulowania długotrwałych operacji
+
+### Modalne Okna Potwierdzenia
+- Komponent do potwierdzania krytycznych akcji
+- Właściwości:
+  - Jasny komunikat
+  - Przyciski potwierdzenia i anulowania
+  - Blokada interakcji z tłem
+
+### Przełącznik Zakładek
+- Komponent do przełączania między zakładkami w ramach widoku
+- Właściwości:
+  - Wyraźne wizualne rozróżnienie aktywnej zakładki
+  - Płynne przełączanie zawartości
+  - Zachowanie stanu formularzy
+
+### Widok Pudełek Leitnera
+- Komponent wizualizujący system trzech pudełek
+- Właściwości:
+  - Kolorowy kod dla każdego pudełka
+  - Informacja o liczbie fiszek w pudełku
+  - Możliwość wyboru pudełka do nauki
