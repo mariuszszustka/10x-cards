@@ -50,15 +50,30 @@ export default function LoginForm() {
     setIsLoading(true);
     
     try {
-      // Tutaj będzie implementacja logiki logowania
-      console.log("Dane logowania:", formData);
+      // Wywołanie endpointu API logowania
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
       
-      // Symulacja opóźnienia - do usunięcia przy implementacji backendu
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const data = await response.json();
+      
+      if (!response.ok) {
+        // Błąd logowania
+        throw new Error(data.error || 'Wystąpił błąd podczas logowania');
+      }
+      
+      // Sukces - przekierowanie do strony głównej
+      window.location.href = '/dashboard';
       
     } catch (error) {
       console.error("Błąd logowania:", error);
-      setErrors({ form: "Wystąpił błąd podczas logowania" });
+      setErrors({ 
+        form: error instanceof Error ? error.message : "Wystąpił nieznany błąd podczas logowania" 
+      });
     } finally {
       setIsLoading(false);
     }
