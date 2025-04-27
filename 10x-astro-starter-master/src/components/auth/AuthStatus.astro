@@ -1,0 +1,11 @@
+---
+// W przyszłości, gdy zostanie zaimplementowany backend, sesja będzie pobierana z Astro.locals
+// Na razie używamy placeholder
+const isAuthenticated = false; // Astro.locals.session ? true : false;
+---
+
+{isAuthenticated ? (
+  <slot name="authenticated" />
+) : (
+  <slot name="unauthenticated" />
+)} 

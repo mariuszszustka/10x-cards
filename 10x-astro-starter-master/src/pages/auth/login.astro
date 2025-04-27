@@ -1,0 +1,17 @@
+---
+import AuthLayout from "../../layouts/AuthLayout.astro";
+import LoginForm from "../../components/auth/LoginForm";
+---
+
+<AuthLayout title="Logowanie | 10x Cards">
+  <Fragment slot="title">Zaloguj się</Fragment>
+  
+  <LoginForm client:load />
+  
+  <p slot="footer">
+    Nie masz jeszcze konta?
+    <a href="/auth/register" class="text-blue-300 hover:text-blue-200 font-medium ml-1">
+      Zarejestruj się
+    </a>
+  </p>
+</AuthLayout> 

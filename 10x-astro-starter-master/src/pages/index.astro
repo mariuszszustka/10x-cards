@@ -1,8 +1,17 @@
 ---
-import Welcome from "../components/Welcome.astro";
 import Layout from "../layouts/Layout.astro";
+import Welcome from "../components/Welcome.astro";
+import UserMenu from "../components/auth/UserMenu";
+import AuthStatus from "../components/auth/AuthStatus.astro";
 ---
 
-<Layout>
+<Layout title="10x Cards - Tworzenie i nauka z fiszkami napędzanymi przez AI">
+  <div class="fixed top-0 right-0 p-4 z-10">
+    <AuthStatus>
+      <UserMenu slot="authenticated" user={{ email: "użytkownik@przykład.pl" }} client:load />
+      <UserMenu slot="unauthenticated" user={null} client:load />
+    </AuthStatus>
+  </div>
+
   <Welcome />
 </Layout>
