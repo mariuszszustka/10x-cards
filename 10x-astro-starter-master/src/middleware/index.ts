@@ -38,7 +38,7 @@ export const onRequest = defineMiddleware(
       // Zapisujemy dane użytkownika do locals
       locals.user = {
         id: user.id,
-        email: user.email,
+        email: user.email || null,
       };
       return next();
     } else {

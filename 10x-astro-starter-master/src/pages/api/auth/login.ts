@@ -5,9 +5,12 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
   try {
     const formData = await request.json();
     const { email, password } = formData;
+    
+    console.log("Próba logowania dla:", email);
 
     // Walidacja danych wejściowych
     if (!email || !password) {
+      console.log("Brak email lub hasła");
       return new Response(
         JSON.stringify({
           success: false,
@@ -21,12 +24,14 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
     const supabase = createSupabaseServerInstance({ cookies, headers: request.headers });
 
     // Logowanie użytkownika
+    console.log("Wywołanie Supabase auth.signInWithPassword");
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (error) {
+      console.error("Błąd Supabase:", error.message);
       return new Response(
         JSON.stringify({
           success: false,
@@ -35,6 +40,8 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
         { status: 400 }
       );
     }
+
+    console.log("Zalogowano pomyślnie, user:", data.user.id);
 
     // Zwracamy dane użytkownika
     return new Response(

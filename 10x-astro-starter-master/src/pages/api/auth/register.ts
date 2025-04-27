@@ -6,8 +6,11 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
     const formData = await request.json();
     const { email, password, confirmPassword } = formData;
 
+    console.log("Próba rejestracji dla:", email);
+
     // Walidacja danych wejściowych
     if (!email || !password) {
+      console.log("Brak email lub hasła");
       return new Response(
         JSON.stringify({
           success: false,
@@ -18,6 +21,7 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
     }
     
     if (password !== confirmPassword) {
+      console.log("Hasła nie są zgodne");
       return new Response(
         JSON.stringify({
           success: false,
@@ -29,6 +33,7 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
 
     // Walidacja hasła
     if (password.length < 8) {
+      console.log("Hasło za krótkie");
       return new Response(
         JSON.stringify({
           success: false,
@@ -42,6 +47,7 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
     const supabase = createSupabaseServerInstance({ cookies, headers: request.headers });
 
     // Rejestracja użytkownika
+    console.log("Wywołanie Supabase auth.signUp");
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -51,6 +57,7 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
     });
 
     if (error) {
+      console.error("Błąd Supabase:", error.message);
       return new Response(
         JSON.stringify({
           success: false,
@@ -59,6 +66,9 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
         { status: 400 }
       );
     }
+
+    console.log("Zarejestrowano pomyślnie, user:", data.user?.id);
+    console.log("Status potwierdzenia:", data);
 
     // Zwracamy dane użytkownika
     return new Response(
