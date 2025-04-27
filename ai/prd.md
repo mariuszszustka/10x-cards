@@ -123,11 +123,20 @@ Kryteria akceptacji:
 
 ID: US-009  
 Tytuł: Bezpieczny dostęp i autoryzacja  
-Opis: Jako zalogowany użytkownik chcę mieć pewność, że moje fiszki są chronione przed nieautoryzowanym dostępem, aby zapewnić prywatność i bezpieczeństwo danych.  
+Opis: Jako użytkownik chcę mieć możliwość rejestracji i logowania się do systemu w sposób zapewniający bezpieczeństwo moich danych. Jako zalogowany użytkownik chcę mieć pewność, że moje fiszki są chronione przed nieautoryzowanym dostępem, aby zapewnić prywatność i bezpieczeństwo danych.  
 Kryteria akceptacji:
+- Logowanie i rejestracja odbywają się na dedykowanych stronach.
+- Logowanie wymaga podania adresu email i hasła.
+- Rejestracja wymaga podania adresu email, hasła i potwierdzenia hasła.
 - Tylko zalogowany użytkownik ma dostęp do swoich fiszek.
 - Niezalogowani użytkownicy nie mogą przeglądać ani modyfikować danych innych użytkowników.
+- NIezalogowani użytkownicy widzą jedynie zacęcającą stronę do założenia konta, nie mogą kożystać z żadnych funkcji aplikacji.
+- Użytkownik NIE MOŻE korzystać z funkcji Fiszek bez logowania się do systemu
 - Mechanizmy uwierzytelniania i autoryzacji zapewniają bezpieczeństwo danych.
+- Użytkownik może logować się do systemu poprzez przycisk w prawym górnym rogu.
+- Użytkownik może się wylogować z systemu poprzez przycisk w prawym górnym rogu w głównym @Layout.astro.
+- Nie korzystamy z zewnętrznych serwisów logowania (np. Google, GitHub).
+- Odzyskiwanie hasła powinno być możliwe.
 
 ## 6. Metryki sukcesu
 1. Efektywność generowania fiszek:

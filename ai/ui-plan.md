@@ -103,7 +103,7 @@ Aplikacja będzie korzystać z komponentów Shadcn/ui dla spójnego wyglądu, z 
   - Rozwijana lista wyboru pudełka przed rozpoczęciem
   - Karta fiszki z animacją odkrywania
   - Przycisk "Pokaż odpowiedź"
-  - Przyciski oceny: "Znam dobrze", "Jestem neutralny", "Nie znam"
+  - Przyciski oceny: "Znam dobrze", "Coś tam wiem", "Nie znam"
   - Wskaźnik postępu
   - Przycisk wyjścia z sesji
   - Ekran zakończenia sesji

@@ -1,0 +1,40 @@
+# Wytyczne dla migracji bazy danych w Supabase
+
+## Cel dokumentu
+Niniejszy dokument zawiera wytyczne dotyczące tworzenia i formatowania plików migracji dla bazy danych PostgreSQL używanej przez Supabase w projekcie 10x-cards.
+
+## Tworzenie pliku migracji
+
+Pliki migracji powinny być tworzone w folderze `supabase/migrations/` i muszą przestrzegać następującej konwencji nazewnictwa:
+
+Format: `YYYYMMDDHHmmss_short_description.sql` z odpowiednim formatowaniem dla miesięcy, minut i sekund w czasie UTC:
+
+1. `YYYY` - Cztery cyfry roku (np. `2024`)
+2. `MM` - Dwie cyfry miesiąca (01 do 12)
+3. `DD` - Dwie cyfry dnia miesiąca (01 do 31)
+4. `HH` - Dwie cyfry godziny w formacie 24-godzinnym (00 do 23)
+5. `mm` - Dwie cyfry minuty (00 do 59)
+6. `ss` - Dwie cyfry sekundy (00 do 59)
+7. Dodać odpowiedni opis migracji
+
+Przykład:
+```
+20240906123045_create_profiles.sql
+```
+
+## Wytyczne SQL
+
+Kod SQL dla plików migracji Supabase powinien:
+
+- Zawierać komentarz nagłówkowy z metadanymi o migracji, takimi jak cel, dotknięte tabele/kolumny i ewentualne specjalne uwagi
+- Zawierać dokładne komentarze wyjaśniające cel i oczekiwane zachowanie każdego kroku migracji
+- Używać małych liter we wszystkich komendach SQL
+- Zawierać obszerne komentarze dla wszelkich destrukcyjnych poleceń SQL, w tym truncate, drop czy zmiany kolumn
+- Przy tworzeniu nowej tabeli ZAWSZE włączać Row Level Security (RLS), nawet jeśli tabela jest przeznaczona do publicznego dostępu
+- Przy tworzeniu polityk RLS:
+  - Zapewnić, że polityki obejmują wszystkie istotne scenariusze dostępu (np. select, insert, update, delete) w oparciu o cel tabeli i wrażliwość danych
+  - Jeśli tabela jest przeznaczona do publicznego dostępu, polityka może po prostu zwracać `true`
+  - Polityki RLS powinny być granularne: jedna polityka dla `select`, jedna dla `insert` itd. i dla każdej roli supabase (`anon` i `authenticated`). NIE łączyć polityk, nawet jeśli funkcjonalność jest taka sama dla obu ról
+  - Dołączać komentarze wyjaśniające uzasadnienie i zamierzone zachowanie każdej polityki bezpieczeństwa
+
+Wygenerowany kod SQL powinien być gotowy do produkcji, dobrze udokumentowany i zgodny z najlepszymi praktykami Supabase.
