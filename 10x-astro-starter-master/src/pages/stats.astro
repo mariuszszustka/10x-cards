@@ -1,0 +1,66 @@
+import MainLayout from "../layouts/MainLayout.astro";
+
+// Wyłączenie prerenderowania
+export const prerender = false;
+
+// Sprawdzenie, czy użytkownik jest zalogowany
+const { user } = Astro.locals;
+if (!user) {
+  return Astro.redirect('/auth/login');
+}
+
+<MainLayout title="Statystyki | 10x Cards">
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-center mb-8">Twoje statystyki</h1>
+    
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+      <div class="bg-gray-800 p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold mb-4">Podsumowanie nauki</h2>
+        <div class="space-y-4">
+          <div class="flex justify-between items-center">
+            <span class="text-gray-300">Ukończone sesje</span>
+            <span class="font-bold">0</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-300">Przejrzane fiszki</span>
+            <span class="font-bold">0</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-300">Całkowity czas nauki</span>
+            <span class="font-bold">0 min</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-gray-800 p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold mb-4">Dystrybucja fiszek</h2>
+        <div class="space-y-4">
+          <div class="flex justify-between items-center">
+            <span class="text-gray-300">Pudełko 1 (trudne)</span>
+            <span class="font-bold">0</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-300">Pudełko 2 (średnie)</span>
+            <span class="font-bold">0</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-300">Pudełko 3 (łatwe)</span>
+            <span class="font-bold">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-gray-800 p-6 rounded-lg shadow-md mb-8">
+      <h2 class="text-xl font-semibold mb-4">Postęp w nauce</h2>
+      <div class="h-64 flex items-center justify-center">
+        <p class="text-gray-400">Brak danych do wyświetlenia. Ukończ sesje nauki, aby zobaczyć postęp.</p>
+      </div>
+    </div>
+    
+    <div class="bg-gray-800 p-6 rounded-lg shadow-md">
+      <h2 class="text-xl font-semibold mb-4">Najnowsze aktywności</h2>
+      <p class="text-center text-gray-400 py-8">Brak aktywności do wyświetlenia.</p>
+    </div>
+  </div>
+</MainLayout> 

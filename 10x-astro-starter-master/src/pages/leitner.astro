@@ -1,0 +1,52 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+
+// Wyłączenie prerenderowania
+export const prerender = false;
+
+// Sprawdzenie, czy użytkownik jest zalogowany
+const { user } = Astro.locals;
+if (!user) {
+  return Astro.redirect('/auth/login');
+}
+---
+
+<MainLayout title="System Leitnera | 10x Cards">
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-center mb-8">System Leitnera</h1>
+    
+    <div class="bg-gray-800 rounded-lg shadow-xl p-6 mb-8">
+      <h2 class="text-xl font-semibold mb-4">Rozpocznij sesję nauki</h2>
+      <p class="mb-6">System Leitnera to efektywna metoda powtarzania informacji z wykorzystaniem interwałów czasowych. Fiszki są przenoszone między pudełkami w zależności od poziomu znajomości.</p>
+      
+      <a href="/leitner/session" class="bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg text-center inline-block transition-colors">
+        Rozpocznij nową sesję
+      </a>
+    </div>
+    
+    <div class="grid md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-red-900/30 p-6 rounded-lg">
+        <h3 class="text-lg font-semibold mb-2">Pudełko 1</h3>
+        <p class="text-gray-300 mb-4">Fiszki, które sprawiają trudność - powtarzane codziennie.</p>
+        <p class="text-2xl font-bold">0</p>
+      </div>
+      
+      <div class="bg-yellow-900/30 p-6 rounded-lg">
+        <h3 class="text-lg font-semibold mb-2">Pudełko 2</h3>
+        <p class="text-gray-300 mb-4">Fiszki o średnim poziomie trudności - powtarzane co 3 dni.</p>
+        <p class="text-2xl font-bold">0</p>
+      </div>
+      
+      <div class="bg-green-900/30 p-6 rounded-lg">
+        <h3 class="text-lg font-semibold mb-2">Pudełko 3</h3>
+        <p class="text-gray-300 mb-4">Fiszki dobrze przyswojone - powtarzane co 7 dni.</p>
+        <p class="text-2xl font-bold">0</p>
+      </div>
+    </div>
+    
+    <div class="bg-gray-800 rounded-lg shadow-xl p-6">
+      <h2 class="text-xl font-semibold mb-4">Historia sesji</h2>
+      <p class="text-center text-gray-400 py-8">Nie masz jeszcze żadnych ukończonych sesji nauki.</p>
+    </div>
+  </div>
+</MainLayout> 

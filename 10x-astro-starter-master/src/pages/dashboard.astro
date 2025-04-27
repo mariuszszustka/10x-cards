@@ -1,0 +1,38 @@
+import MainLayout from "../layouts/MainLayout.astro";
+
+// Wyłączenie prerenderowania
+export const prerender = false;
+
+// Sprawdzenie, czy użytkownik jest zalogowany
+const { user } = Astro.locals;
+if (!user) {
+  return Astro.redirect('/auth/login');
+}
+
+<MainLayout title="Panel główny | 10x Cards">
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-center mb-8">Witaj w aplikacji 10x Cards!</h1>
+    
+    <div class="grid md:grid-cols-2 gap-6">
+      <a href="/generate" class="bg-blue-600 hover:bg-blue-700 p-6 rounded-lg shadow-md transition-colors">
+        <h2 class="text-xl font-bold mb-2">Generuj fiszki z AI</h2>
+        <p>Wykorzystaj sztuczną inteligencję do tworzenia fiszek na podstawie tekstów.</p>
+      </a>
+      
+      <a href="/flashcards" class="bg-purple-600 hover:bg-purple-700 p-6 rounded-lg shadow-md transition-colors">
+        <h2 class="text-xl font-bold mb-2">Zarządzaj fiszkami</h2>
+        <p>Przeglądaj, edytuj i organizuj swoje fiszki.</p>
+      </a>
+      
+      <a href="/leitner" class="bg-green-600 hover:bg-green-700 p-6 rounded-lg shadow-md transition-colors">
+        <h2 class="text-xl font-bold mb-2">Nauka z systemem Leitnera</h2>
+        <p>Rozpocznij sesję nauki z wykorzystaniem systemu interwałów.</p>
+      </a>
+      
+      <a href="/stats" class="bg-amber-600 hover:bg-amber-700 p-6 rounded-lg shadow-md transition-colors">
+        <h2 class="text-xl font-bold mb-2">Statystyki</h2>
+        <p>Sprawdź swoje postępy i skuteczność nauki.</p>
+      </a>
+    </div>
+  </div>
+</MainLayout> 

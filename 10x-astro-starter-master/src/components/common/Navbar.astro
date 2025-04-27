@@ -1,0 +1,61 @@
+---
+// Typy dla właściwości komponentu
+interface Props {
+  user?: {
+    email: string | null;
+    id: string;
+  };
+}
+
+// Przyjmowanie danych użytkownika z props
+const { user } = Astro.props;
+---
+
+<nav class="bg-gray-800 p-4 shadow-md">
+  <div class="container mx-auto flex justify-between items-center">
+    <a href="/" class="text-xl font-bold text-white">10x Cards</a>
+    
+    <div class="flex items-center space-x-6">
+      {user ? (
+        <>
+          <a href="/dashboard" class="text-gray-300 hover:text-white transition-colors">
+            Dashboard
+          </a>
+          <a href="/generate" class="text-gray-300 hover:text-white transition-colors">
+            Generuj fiszki
+          </a>
+          <a href="/flashcards" class="text-gray-300 hover:text-white transition-colors">
+            Moje fiszki
+          </a>
+          <div class="relative group">
+            <button class="flex items-center text-gray-300 hover:text-white">
+              <span class="mr-1">{user.email || "Użytkownik"}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+              </svg>
+            </button>
+            <div class="absolute right-0 mt-2 w-48 bg-gray-700 rounded-md shadow-lg py-1 z-10 hidden group-hover:block">
+              <a href="/profile" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-600">
+                Profil
+              </a>
+              <form action="/api/auth/logout" method="POST" class="w-full">
+                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-600">
+                  Wyloguj się
+                </button>
+              </form>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <a href="/auth/login" class="text-gray-300 hover:text-white transition-colors">
+            Zaloguj się
+          </a>
+          <a href="/auth/register" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors">
+            Zarejestruj się
+          </a>
+        </>
+      )}
+    </div>
+  </div>
+</nav> 

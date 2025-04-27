@@ -1,0 +1,52 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+
+// Wyłączenie prerenderowania
+export const prerender = false;
+
+// Sprawdzenie, czy użytkownik jest zalogowany
+const { user } = Astro.locals;
+if (!user) {
+  return Astro.redirect('/auth/login');
+}
+---
+
+<MainLayout title="Profil użytkownika | 10x Cards">
+  <div class="max-w-2xl mx-auto bg-gray-800 rounded-lg shadow-xl p-8">
+    <h1 class="text-3xl font-bold text-center mb-8">Profil użytkownika</h1>
+    
+    <div class="space-y-6">
+      <div class="bg-gray-700 p-4 rounded-lg">
+        <h2 class="text-lg font-medium text-gray-300 mb-2">Adres email</h2>
+        <p class="text-white text-xl">{user.email}</p>
+      </div>
+      
+      <div class="bg-gray-700 p-4 rounded-lg">
+        <h2 class="text-lg font-medium text-gray-300 mb-2">ID użytkownika</h2>
+        <p class="text-white text-sm font-mono">{user.id}</p>
+      </div>
+      
+      <div class="space-y-4 pt-4">
+        <h2 class="text-xl font-semibold mb-2">Zarządzanie kontem</h2>
+        
+        <a href="/auth/update-password" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded block text-center transition-colors">
+          Zmień hasło
+        </a>
+        
+        <button id="deleteAccount" class="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded block w-full text-center transition-colors">
+          Usuń konto
+        </button>
+      </div>
+    </div>
+  </div>
+</MainLayout>
+
+<script>
+  // Obsługa przycisku usuwania konta
+  document.getElementById('deleteAccount')?.addEventListener('click', () => {
+    if (confirm('Czy na pewno chcesz usunąć swoje konto? Ta operacja jest nieodwracalna.')) {
+      // Tu dodać logikę usuwania konta
+      alert('Funkcja usuwania konta nie została jeszcze zaimplementowana.');
+    }
+  });
+</script> 
