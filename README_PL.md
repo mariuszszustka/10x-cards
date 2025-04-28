@@ -37,6 +37,17 @@ Nowoczesna aplikacja webowa do tworzenia, zarządzania i przeglądania fiszek ed
 ### Integracja AI
 - Ollama, OpenAI API oraz Openrouter.ai dla funkcjonalności LLM
 
+### Testowanie
+- **Testy jednostkowe:**
+  - [Vitest](https://vitest.dev/) - szybki framework do testów jednostkowych, dobrze integrujący się z Astro
+  - [Testing Library](https://testing-library.com/) - do testowania komponentów React
+  - [Langchain Test Suite](https://js.langchain.com/docs/guides/testing/) - do testowania integracji AI
+
+- **Testy end-to-end:**
+  - [Playwright](https://playwright.dev/) - nowoczesny framework do testów E2E
+  - [Cypress](https://www.cypress.io/) - do testowania w różnych przeglądarkach
+  - [Allure Framework](https://allurereport.org/) - do raportowania i wizualizacji testów
+
 ### CI/CD i Hosting
 - GitHub Actions
 - Docker (lokalnie lub poprzez DigitalOcean)
@@ -83,6 +94,8 @@ npm run dev
 - `npm run lint` - Uruchomienie ESLint
 - `npm run lint:fix` - Naprawienie problemów ESLint
 - `npm run format` - Formatowanie kodu przy użyciu Prettier
+- `npm run test` - Uruchomienie testów jednostkowych z Vitest
+- `npm run test:e2e` - Uruchomienie testów E2E z Playwright
 
 ## Zakres projektu
 

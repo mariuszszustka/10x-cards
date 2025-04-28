@@ -37,6 +37,17 @@ A modern web application for creating, managing, and reviewing educational flash
 ### AI Integration
 - Ollama, OpenAI API, and Openrouter.ai for LLM capabilities
 
+### Testing
+- **Unit Testing:**
+  - [Vitest](https://vitest.dev/) - Fast unit test framework that integrates well with Astro
+  - [Testing Library](https://testing-library.com/) - For testing React components
+  - [Langchain Test Suite](https://js.langchain.com/docs/guides/testing/) - For testing AI integrations
+
+- **End-to-End Testing:**
+  - [Playwright](https://playwright.dev/) - Modern E2E testing framework
+  - [Cypress](https://www.cypress.io/) - For cross-browser testing
+  - [Allure Framework](https://allurereport.org/) - For test reporting and visualization
+
 ### CI/CD & Hosting
 - GitHub Actions
 - Docker (locally or via DigitalOcean)
@@ -83,6 +94,8 @@ npm run dev
 - `npm run lint` - Run ESLint
 - `npm run lint:fix` - Fix ESLint issues
 - `npm run format` - Format code with Prettier
+- `npm run test` - Run unit tests with Vitest
+- `npm run test:e2e` - Run E2E tests with Playwright
 
 ## Project Scope
 
