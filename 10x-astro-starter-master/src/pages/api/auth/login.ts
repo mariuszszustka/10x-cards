@@ -43,17 +43,8 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
 
     console.log("Zalogowano pomyślnie, user:", data.user.id);
 
-    // Zwracamy dane użytkownika
-    return new Response(
-      JSON.stringify({
-        success: true,
-        user: {
-          id: data.user.id,
-          email: data.user.email,
-        },
-      }),
-      { status: 200 }
-    );
+    // Po pomyślnym zalogowaniu, przekieruj użytkownika na dashboard
+    return redirect('/dashboard');
   } catch (error) {
     console.error('Błąd podczas logowania:', error);
     return new Response(

@@ -57,7 +57,14 @@ export default function LoginForm() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
+        redirect: 'follow', // Pozwalamy na przekierowania
       });
+      
+      if (response.redirected) {
+        // Serwer przekierował nas - podążamy za przekierowaniem
+        window.location.href = response.url;
+        return;
+      }
       
       const data = await response.json();
       
@@ -66,7 +73,7 @@ export default function LoginForm() {
         throw new Error(data.error || 'Wystąpił błąd podczas logowania');
       }
       
-      // Sukces - przekierowanie do strony głównej
+      // Na wszelki wypadek, gdyby nie było przekierowania
       window.location.href = '/dashboard';
       
     } catch (error) {
