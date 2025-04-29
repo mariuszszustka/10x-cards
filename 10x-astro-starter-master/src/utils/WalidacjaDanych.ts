@@ -2,8 +2,8 @@ export class WalidacjaDanych {
   static zweryfikujEmail(email: string): boolean {
     if (!email) return false;
     
-    // Podstawowa walidacja formatu email
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    // Walidacja formatu email zgodna ze standardem RFC 5322
+    const emailRegex = /^[a-zA-Z0-9](?:[a-zA-Z0-9.+_-]*[a-zA-Z0-9])?@[a-zA-Z0-9](?:[a-zA-Z0-9.-]*[a-zA-Z0-9])?(?:\.[a-zA-Z]{2,})+$/;
     return emailRegex.test(email);
   }
   

@@ -38,8 +38,14 @@ export class SystemLeitnera {
     
     return fiszki.filter(fiszka => {
       const dataPowtórki = new Date(fiszka.następnaPowtórka);
-      return dataPowtórki <= dzisiaj;
+      return this.porównajDaty(dataPowtórki, dzisiaj) <= 0;
     });
+  }
+  
+  private porównajDaty(data1: Date, data2: Date): number {
+    const d1 = new Date(data1.getFullYear(), data1.getMonth(), data1.getDate());
+    const d2 = new Date(data2.getFullYear(), data2.getMonth(), data2.getDate());
+    return d1.getTime() - d2.getTime();
   }
   
   obliczNastępnąPowtórkę(poziom: number): Date {

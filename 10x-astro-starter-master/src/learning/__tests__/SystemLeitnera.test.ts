@@ -1,16 +1,21 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { SystemLeitnera } from '../SystemLeitnera';
 
 describe('SystemLeitnera', () => {
-  let systemLeitnera;
-  let dzisiaj;
+  let systemLeitnera: SystemLeitnera;
+  let mockDate: Date;
   
   beforeEach(() => {
     // Ustaw stałą datę dla testów
-    dzisiaj = new Date('2023-08-15');
-    vi.spyOn(global, 'Date').mockImplementation(() => dzisiaj);
+    mockDate = new Date('2023-08-15T12:00:00.000Z');
+    vi.useFakeTimers();
+    vi.setSystemTime(mockDate);
     
     systemLeitnera = new SystemLeitnera();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
   
   describe('inicjalizacja fiszek', () => {
@@ -23,7 +28,7 @@ describe('SystemLeitnera', () => {
       
       // Assert
       expect(fiszkaZPoziomem.poziom).toBe(1);
-      expect(fiszkaZPoziomem.następnaPowtórka).toEqual(dzisiaj);
+      expect(fiszkaZPoziomem.następnaPowtórka).toEqual(mockDate);
     });
   });
   
@@ -35,7 +40,7 @@ describe('SystemLeitnera', () => {
         przód: 'Pytanie', 
         tył: 'Odpowiedź', 
         poziom: 1,
-        następnaPowtórka: dzisiaj
+        następnaPowtórka: mockDate
       };
       
       // Act
@@ -45,7 +50,7 @@ describe('SystemLeitnera', () => {
       expect(zaktualizowanaFiszka.poziom).toBe(2);
       
       // Sprawdź czy data następnej powtórki to dzisiaj + 3 dni (poziom 2)
-      const oczekiwanaData = new Date('2023-08-18');
+      const oczekiwanaData = new Date('2023-08-18T12:00:00.000Z');
       expect(zaktualizowanaFiszka.następnaPowtórka).toEqual(oczekiwanaData);
     });
     
@@ -56,7 +61,7 @@ describe('SystemLeitnera', () => {
         przód: 'Pytanie', 
         tył: 'Odpowiedź', 
         poziom: 3,
-        następnaPowtórka: dzisiaj
+        następnaPowtórka: mockDate
       };
       
       // Act
@@ -66,7 +71,7 @@ describe('SystemLeitnera', () => {
       expect(zaktualizowanaFiszka.poziom).toBe(3); // nadal poziom 3 (max)
       
       // Sprawdź czy data następnej powtórki to dzisiaj + 7 dni (poziom 3)
-      const oczekiwanaData = new Date('2023-08-22');
+      const oczekiwanaData = new Date('2023-08-22T12:00:00.000Z');
       expect(zaktualizowanaFiszka.następnaPowtórka).toEqual(oczekiwanaData);
     });
     
@@ -77,7 +82,7 @@ describe('SystemLeitnera', () => {
         przód: 'Pytanie', 
         tył: 'Odpowiedź', 
         poziom: 3,
-        następnaPowtórka: dzisiaj
+        następnaPowtórka: mockDate
       };
       
       // Act
@@ -85,7 +90,7 @@ describe('SystemLeitnera', () => {
       
       // Assert
       expect(zaktualizowanaFiszka.poziom).toBe(1);
-      expect(zaktualizowanaFiszka.następnaPowtórka).toEqual(dzisiaj);
+      expect(zaktualizowanaFiszka.następnaPowtórka).toEqual(mockDate);
     });
   });
   
@@ -93,9 +98,9 @@ describe('SystemLeitnera', () => {
     it('powinien wybrać tylko fiszki z dzisiejszą lub przeszłą datą powtórki', () => {
       // Arrange
       const fiszki = [
-        { id: 1, poziom: 1, następnaPowtórka: dzisiaj },
-        { id: 2, poziom: 2, następnaPowtórka: new Date('2023-08-14') }, // wczoraj
-        { id: 3, poziom: 3, następnaPowtórka: new Date('2023-08-16') }  // jutro
+        { id: 1, poziom: 1, następnaPowtórka: mockDate },
+        { id: 2, poziom: 2, następnaPowtórka: new Date('2023-08-14T12:00:00.000Z') }, // wczoraj
+        { id: 3, poziom: 3, następnaPowtórka: new Date('2023-08-16T12:00:00.000Z') }  // jutro
       ];
       
       // Act
@@ -110,8 +115,8 @@ describe('SystemLeitnera', () => {
     it('powinien zwrócić pustą tablicę gdy nie ma fiszek do powtórki', () => {
       // Arrange
       const fiszki = [
-        { id: 1, poziom: 1, następnaPowtórka: new Date('2023-08-16') }, // jutro
-        { id: 2, poziom: 2, następnaPowtórka: new Date('2023-08-18') }  // za 3 dni
+        { id: 1, poziom: 1, następnaPowtórka: new Date('2023-08-16T12:00:00.000Z') }, // jutro
+        { id: 2, poziom: 2, następnaPowtórka: new Date('2023-08-18T12:00:00.000Z') }  // za 3 dni
       ];
       
       // Act
@@ -128,16 +133,16 @@ describe('SystemLeitnera', () => {
       
       // Poziom 1 - codziennie
       const data1 = systemLeitnera.obliczNastępnąPowtórkę(1);
-      expect(data1).toEqual(dzisiaj);
+      expect(data1).toEqual(mockDate);
       
       // Poziom 2 - co 3 dni
       const data2 = systemLeitnera.obliczNastępnąPowtórkę(2);
-      const oczekiwanaData2 = new Date('2023-08-18');
+      const oczekiwanaData2 = new Date('2023-08-18T12:00:00.000Z');
       expect(data2).toEqual(oczekiwanaData2);
       
       // Poziom 3 - co 7 dni
       const data3 = systemLeitnera.obliczNastępnąPowtórkę(3);
-      const oczekiwanaData3 = new Date('2023-08-22');
+      const oczekiwanaData3 = new Date('2023-08-22T12:00:00.000Z');
       expect(data3).toEqual(oczekiwanaData3);
     });
     
@@ -152,9 +157,9 @@ describe('SystemLeitnera', () => {
     it('powinien przygotować sesję nauki z dostępnych fiszek', () => {
       // Arrange
       const wszystkieFiszki = [
-        { id: 1, poziom: 1, następnaPowtórka: dzisiaj },
-        { id: 2, poziom: 2, następnaPowtórka: dzisiaj },
-        { id: 3, poziom: 3, następnaPowtórka: new Date('2023-08-16') } // jutro
+        { id: 1, poziom: 1, następnaPowtórka: mockDate },
+        { id: 2, poziom: 2, następnaPowtórka: mockDate },
+        { id: 3, poziom: 3, następnaPowtórka: new Date('2023-08-16T12:00:00.000Z') } // jutro
       ];
       
       // Act
@@ -169,8 +174,8 @@ describe('SystemLeitnera', () => {
     it('powinien oznaczyć sesję jako zakończoną gdy nie ma fiszek do powtórki', () => {
       // Arrange
       const wszystkieFiszki = [
-        { id: 1, poziom: 1, następnaPowtórka: new Date('2023-08-16') }, // jutro
-        { id: 2, poziom: 2, następnaPowtórka: new Date('2023-08-18') }  // za 3 dni
+        { id: 1, poziom: 1, następnaPowtórka: new Date('2023-08-16T12:00:00.000Z') }, // jutro
+        { id: 2, poziom: 2, następnaPowtórka: new Date('2023-08-18T12:00:00.000Z') }  // za 3 dni
       ];
       
       // Act
