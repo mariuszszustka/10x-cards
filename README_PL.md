@@ -42,11 +42,26 @@ Nowoczesna aplikacja webowa do tworzenia, zarządzania i przeglądania fiszek ed
   - [Vitest](https://vitest.dev/) - szybki framework do testów jednostkowych, dobrze integrujący się z Astro
   - [Testing Library](https://testing-library.com/) - do testowania komponentów React
   - [Langchain Test Suite](https://js.langchain.com/docs/guides/testing/) - do testowania integracji AI
+  - [SuperTest](https://github.com/visionmedia/supertest) - do testowania API
+  - [Promptfoo](https://github.com/promptfoo/promptfoo) - do systematycznego testowania promptów
 
 - **Testy end-to-end:**
   - [Playwright](https://playwright.dev/) - nowoczesny framework do testów E2E
   - [Cypress](https://www.cypress.io/) - do testowania w różnych przeglądarkach
   - [Allure Framework](https://allurereport.org/) - do raportowania i wizualizacji testów
+
+- **Testy wydajnościowe:**
+  - WebPageTest API i Core Web Vitals Library
+  - Locust i k6 do testów obciążeniowych
+
+- **Testy bezpieczeństwa:**
+  - OWASP ZAP Automation Framework
+  - Snyk do testowania zależności
+  - TruffleHog do wykrywania wycieków poświadczeń
+
+- **Monitoring:**
+  - Datadog lub Grafana + Prometheus
+  - Supavisor do monitorowania wydajności Supabase
 
 ### CI/CD i Hosting
 - GitHub Actions
@@ -96,6 +111,12 @@ npm run dev
 - `npm run format` - Formatowanie kodu przy użyciu Prettier
 - `npm run test` - Uruchomienie testów jednostkowych z Vitest
 - `npm run test:e2e` - Uruchomienie testów E2E z Playwright
+- `npm run test:integration` - Uruchomienie testów integracyjnych
+- `npm run test:security` - Uruchomienie testów bezpieczeństwa
+- `npm run test:performance` - Uruchomienie testów wydajnościowych
+- `npm run test:all` - Uruchomienie wszystkich testów
+- `npm run test:watch` - Uruchomienie testów w trybie watch
+- `npm run test:coverage` - Generowanie raportu pokrycia testami
 
 ## Zakres projektu
 

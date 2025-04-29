@@ -42,11 +42,26 @@ A modern web application for creating, managing, and reviewing educational flash
   - [Vitest](https://vitest.dev/) - Fast unit test framework that integrates well with Astro
   - [Testing Library](https://testing-library.com/) - For testing React components
   - [Langchain Test Suite](https://js.langchain.com/docs/guides/testing/) - For testing AI integrations
+  - [SuperTest](https://github.com/visionmedia/supertest) - For API testing
+  - [Promptfoo](https://github.com/promptfoo/promptfoo) - For systematic prompt testing
 
 - **End-to-End Testing:**
   - [Playwright](https://playwright.dev/) - Modern E2E testing framework
   - [Cypress](https://www.cypress.io/) - For cross-browser testing
   - [Allure Framework](https://allurereport.org/) - For test reporting and visualization
+
+- **Performance Testing:**
+  - WebPageTest API and Core Web Vitals Library
+  - Locust and k6 for load testing
+
+- **Security Testing:**
+  - OWASP ZAP Automation Framework
+  - Snyk for dependency testing
+  - TruffleHog for credential leaks detection
+
+- **Monitoring:**
+  - Datadog or Grafana + Prometheus
+  - Supavisor for Supabase performance monitoring
 
 ### CI/CD & Hosting
 - GitHub Actions
@@ -96,6 +111,12 @@ npm run dev
 - `npm run format` - Format code with Prettier
 - `npm run test` - Run unit tests with Vitest
 - `npm run test:e2e` - Run E2E tests with Playwright
+- `npm run test:integration` - Run integration tests
+- `npm run test:security` - Run security tests
+- `npm run test:performance` - Run performance tests
+- `npm run test:all` - Run all tests
+- `npm run test:watch` - Run tests in watch mode
+- `npm run test:coverage` - Generate test coverage report
 
 ## Project Scope
 
