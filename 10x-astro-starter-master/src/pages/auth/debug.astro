@@ -22,9 +22,27 @@ const hasAuthSessionCookie = cookieHeader.includes('auth-session');
 
 // Szczegółowe informacje o sesji z Supabase
 let sessionDetails = null;
+let userDetails = null;
 if (supabase) {
-  const { data } = await supabase.auth.getSession();
-  sessionDetails = data.session;
+  // Pobierz sesję
+  const { data: sessionData } = await supabase.auth.getSession();
+  sessionDetails = sessionData.session;
+  
+  // Pobierz użytkownika bezpośrednio (bardziej niezawodna metoda)
+  if (sessionDetails) {
+    const { data: userData } = await supabase.auth.getUser();
+    userDetails = userData.user;
+    console.log("Debug: Pobrano użytkownika z getUser():", userDetails?.id);
+  }
+}
+
+// Jeśli mamy użytkownika z getUser(), ale nie z middleware
+if (userDetails && !user) {
+  console.log("Debug: Znaleziono użytkownika przez getUser(), ale nie przez middleware");
+  user = {
+    id: userDetails.id,
+    email: userDetails.email || null
+  };
 }
 
 // Funkcja pomocnicza do parsowania ciasteczek

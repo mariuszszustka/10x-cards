@@ -62,6 +62,15 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
         console.log("Sesja ustawiona pomyślnie dla użytkownika:", userData.user?.id);
       }
       
+      // Dodatkowa weryfikacja - pobierz użytkownika
+      const { data: verifiedUserData, error: verifiedUserError } = await supabase.auth.getUser();
+      
+      if (verifiedUserError) {
+        console.error("Błąd weryfikacji użytkownika:", verifiedUserError.message);
+      } else if (verifiedUserData.user) {
+        console.log("Weryfikacja użytkownika powodzenie:", verifiedUserData.user.id);
+      }
+      
       const { data: sessionData } = await supabase.auth.getSession();
       
       if (!sessionData.session) {

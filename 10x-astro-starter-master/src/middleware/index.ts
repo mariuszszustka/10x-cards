@@ -90,16 +90,23 @@ export const onRequest = defineMiddleware(
     const session = sessionData.session;
 
     if (session) {
-      // Użytkownik ma aktywną sesję
-      console.log("[Middleware] Znaleziono sesję użytkownika:", session.user.id);
-      console.log("[Middleware] Session expires at:", session.expires_at ? new Date(session.expires_at * 1000).toISOString() : "nie ustawiono");
+      // Dodatkowa weryfikacja - użyj getUser() aby upewnić się, że token jest ważny
+      const { data: userData } = await supabase.auth.getUser();
       
-      // Zapisujemy dane użytkownika do locals
-      locals.user = {
-        id: session.user.id,
-        email: session.user.email || null,
-      };
-      return next();
+      if (userData.user) {
+        // Użytkownik ma aktywną i zweryfikowaną sesję
+        console.log("[Middleware] Znaleziono sesję użytkownika:", userData.user.id);
+        console.log("[Middleware] Session expires at:", session.expires_at ? new Date(session.expires_at * 1000).toISOString() : "nie ustawiono");
+        
+        // Zapisujemy dane użytkownika do locals
+        locals.user = {
+          id: userData.user.id,
+          email: userData.user.email || null,
+        };
+        return next();
+      } else {
+        console.log("[Middleware] Sesja istnieje, ale weryfikacja użytkownika nie powiodła się");
+      }
     }
 
     // Jeśli nie ma sesji, ale jest cookie auth-session, spróbuj załadować sesję ręcznie

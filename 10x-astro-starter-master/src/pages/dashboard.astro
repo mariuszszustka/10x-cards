@@ -52,20 +52,66 @@ if (supabase) {
   
   <script>
     // Skrypt uruchamiany po stronie klienta
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       const userInfoEl = document.getElementById('user-info');
       
-      // Pobierz dane z localStorage
+      // Funkcja sprawdzająca sesję na serwerze
+      async function checkServerSession() {
+        try {
+          // Sprawdź sesję na serwerze
+          const response = await fetch('/api/auth/session', {
+            method: 'GET',
+            credentials: 'include' // Dołącz ciasteczka
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            return data.user || null;
+          }
+          return null;
+        } catch (error) {
+          console.error('Błąd sprawdzania sesji:', error);
+          return null;
+        }
+      }
+      
+      // Sprawdź sesję lokalną
       const userId = localStorage.getItem('userId');
       const userEmail = localStorage.getItem('userEmail');
       
-      if (userId && userEmail) {
+      // Sprawdź sesję na serwerze
+      const serverSession = await checkServerSession();
+      
+      // Jeśli mamy sesję na serwerze, użyj jej
+      if (serverSession) {
+        userInfoEl.innerHTML = `
+          <p class="text-xl">Zalogowany jako: <span class="font-semibold">${serverSession.email || 'Użytkownik'}</span></p>
+          <p class="text-sm text-gray-400">User ID: ${serverSession.id}</p>
+        `;
+        
+        // Aktualizuj localStorage, jeśli potrzeba
+        if (!userId || !userEmail) {
+          localStorage.setItem('userId', serverSession.id);
+          localStorage.setItem('userEmail', serverSession.email || '');
+        }
+        
+        // Zapisz dane użytkownika w window dla dostępu z innych skryptów
+        window.userSession = {
+          user: {
+            id: serverSession.id,
+            email: serverSession.email
+          },
+          isAuthenticated: true
+        };
+      }
+      // Jeśli mamy dane w localStorage, ale nie na serwerze
+      else if (userId && userEmail) {
         userInfoEl.innerHTML = `
           <p class="text-xl">Zalogowany jako: <span class="font-semibold">${userEmail}</span></p>
           <p class="text-sm text-gray-400">User ID: ${userId}</p>
+          <p class="text-sm text-yellow-500">Uwaga: Sesja serwerowa nie została znaleziona. Niektóre funkcje mogą nie działać.</p>
         `;
         
-        // Zapisz dane użytkownika w window dla dostępu z innych skryptów
         window.userSession = {
           user: {
             id: userId,
@@ -73,16 +119,23 @@ if (supabase) {
           },
           isAuthenticated: true
         };
-      } else {
+        
+        // Sprawdź ponownie po chwili
+        setTimeout(() => {
+          window.location.reload();
+        }, 5000);
+      } 
+      // Brak sesji
+      else {
         userInfoEl.innerHTML = `
-          <p class="text-yellow-500">Brak informacji o użytkowniku w localStorage.</p>
+          <p class="text-yellow-500">Brak informacji o użytkowniku. Wymagane zalogowanie.</p>
           <p class="text-sm"><a href="/auth/login" class="text-blue-400 hover:text-blue-300">Przejdź do logowania</a></p>
         `;
         
         // Przekieruj na stronę logowania po krótkiej chwili
         setTimeout(() => {
           window.location.href = '/auth/login';
-        }, 3000);
+        }, 2000);
       }
     });
   </script>

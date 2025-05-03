@@ -104,8 +104,8 @@ export default function LoginForm() {
           console.log("Nie znaleziono ciasteczka session - może być potrzebny dodatkowy plan odzyskiwania sesji");
         }
         
-        // Przekieruj do strony diagnostycznej
-        window.location.href = '/auth/debug';
+        // Przekieruj do dashboardu zamiast strony diagnostycznej
+        window.location.href = '/dashboard';
         return;
       }
       
