@@ -46,14 +46,11 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
     // Inicjalizacja klienta Supabase dla SSR
     const supabase = createSupabaseServerInstance({ cookies, headers: request.headers });
 
-    // Rejestracja użytkownika
-    console.log("Wywołanie Supabase auth.signUp");
+    // Rejestracja użytkownika - dla MVP bez potwierdzania email
+    console.log("Wywołanie Supabase auth.signUp w trybie automatycznego potwierdzenia");
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        emailRedirectTo: `${new URL(request.url).origin}/auth/login`,
-      },
     });
 
     if (error) {
@@ -67,20 +64,31 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
       );
     }
 
-    console.log("Zarejestrowano pomyślnie, user:", data.user?.id);
-    console.log("Status potwierdzenia:", data);
+    console.log("Zarejestrowano pomyślnie, user:", data.user?.id || "brak ID");
 
-    // Zwracamy dane użytkownika
-    return new Response(
-      JSON.stringify({
-        success: true,
-        user: {
-          id: data.user?.id,
-          email: data.user?.email,
-        },
-      }),
-      { status: 200 }
-    );
+    // Natychmiast po rejestracji logujemy użytkownika
+    console.log("Automatyczne logowanie po rejestracji...");
+    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (signInError) {
+      console.error("Błąd logowania po rejestracji:", signInError.message);
+      
+      // Dla MVP możemy zignorować błąd potwierdzania email i przekierować do strony logowania
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: "Rejestracja zakończona pomyślnie. Możesz teraz się zalogować.",
+        }),
+        { status: 200 }
+      );
+    }
+
+    console.log("Automatyczne logowanie udane, przekierowanie na dashboard");
+    // Przekieruj na dashboard po udanym logowaniu
+    return redirect('/dashboard');
   } catch (error) {
     console.error('Błąd podczas rejestracji:', error);
     return new Response(

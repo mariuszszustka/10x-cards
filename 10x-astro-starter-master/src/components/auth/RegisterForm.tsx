@@ -9,6 +9,7 @@ export default function RegisterForm() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -63,19 +64,58 @@ export default function RegisterForm() {
     setIsLoading(true);
     
     try {
-      // Tutaj będzie implementacja logiki rejestracji
-      console.log("Dane rejestracji:", formData);
+      // Wywołanie endpointu API rejestracji
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+        redirect: 'follow',
+      });
       
-      // Symulacja opóźnienia - do usunięcia przy implementacji backendu
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      if (response.redirected) {
+        // Jeśli serwer przekierował, podążamy za przekierowaniem
+        window.location.href = response.url;
+        return;
+      }
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        // Błąd rejestracji
+        throw new Error(data.error || 'Wystąpił błąd podczas rejestracji');
+      }
+      
+      // Jeśli nie było przekierowania, to pokazujemy sukces
+      setRegistrationSuccess(true);
+      setFormData({
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
       
     } catch (error) {
       console.error("Błąd rejestracji:", error);
-      setErrors({ form: "Wystąpił błąd podczas rejestracji" });
+      setErrors({ 
+        form: error instanceof Error ? error.message : "Wystąpił nieznany błąd podczas rejestracji" 
+      });
     } finally {
       setIsLoading(false);
     }
   };
+
+  if (registrationSuccess) {
+    return (
+      <div className="p-4 bg-green-500/20 border border-green-500/30 rounded-md text-center">
+        <h3 className="text-xl font-semibold mb-2">Rejestracja zakończona pomyślnie!</h3>
+        <p className="mb-4">Zostaniesz przekierowany do panelu głównego...</p>
+        <a href="/dashboard" className="text-blue-400 hover:text-blue-300 font-medium">
+          Przejdź do panelu
+        </a>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">

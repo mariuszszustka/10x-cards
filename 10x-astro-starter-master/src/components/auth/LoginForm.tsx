@@ -8,6 +8,8 @@ export default function LoginForm() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [magicLinkSent, setMagicLinkSent] = useState(false);
+  const [debugInfo, setDebugInfo] = useState<any>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -48,8 +50,11 @@ export default function LoginForm() {
     }
     
     setIsLoading(true);
+    setDebugInfo(null);
     
     try {
+      console.log("Próba logowania dla:", formData.email);
+      
       // Wywołanie endpointu API logowania
       const response = await fetch('/api/auth/login', {
         method: 'POST',
@@ -57,24 +62,68 @@ export default function LoginForm() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
-        redirect: 'follow', // Pozwalamy na przekierowania
+        credentials: 'include', // Ważne dla otrzymania cookies sesji
       });
       
-      if (response.redirected) {
-        // Serwer przekierował nas - podążamy za przekierowaniem
-        window.location.href = response.url;
+      console.log("Odpowiedź statusu:", response.status, response.type);
+      
+      // Odczytaj dane JSON z odpowiedzi
+      const data = await response.json();
+      
+      // Rejestracja informacji dla debugowania
+      setDebugInfo({
+        status: response.status,
+        type: response.type,
+        data: data
+      });
+      
+      // Jeśli logowanie się powiodło, zapisz sesję w localStorage
+      if (data.success && data.session) {
+        console.log("Zapisuję sesję w localStorage");
+        
+        // Zapisz sesję w localStorage
+        localStorage.setItem('authSession', JSON.stringify(data.session));
+        
+        // Zapisz czas wygaśnięcia sesji
+        if (data.session.expires_at) {
+          localStorage.setItem('sessionExpiresAt', data.session.expires_at.toString());
+        }
+        
+        // Zapisz podstawowe dane użytkownika
+        localStorage.setItem('userId', data.session.user_id);
+        localStorage.setItem('userEmail', data.session.email || '');
+        
+        // Spróbuj odczytać dane z ciasteczka session (jako weryfikacja)
+        const sessionCookie = document.cookie
+          .split(';')
+          .find(cookie => cookie.trim().startsWith('session='));
+        
+        if (sessionCookie) {
+          console.log("Znaleziono ciasteczko session - autoryzacja powinna być kompletna");
+        } else {
+          console.log("Nie znaleziono ciasteczka session - może być potrzebny dodatkowy plan odzyskiwania sesji");
+        }
+        
+        // Przekieruj do strony diagnostycznej
+        window.location.href = '/auth/debug';
         return;
       }
-      
-      const data = await response.json();
       
       if (!response.ok) {
         // Błąd logowania
         throw new Error(data.error || 'Wystąpił błąd podczas logowania');
       }
+
+      // Sprawdź, czy został wysłany magic link
+      if (data.message && data.message.includes("link do logowania")) {
+        setMagicLinkSent(true);
+        setErrors({});
+        return;
+      }
       
       // Na wszelki wypadek, gdyby nie było przekierowania
-      window.location.href = '/dashboard';
+      console.log("Logowanie udane, przechodzę do strony diagnostycznej");
+      window.location.href = '/auth/debug';
       
     } catch (error) {
       console.error("Błąd logowania:", error);
@@ -85,6 +134,59 @@ export default function LoginForm() {
       setIsLoading(false);
     }
   };
+
+  const handleSendMagicLink = async () => {
+    if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) {
+      setErrors({
+        email: "Podaj prawidłowy adres email, aby otrzymać link do logowania"
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/auth/magic-link', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: formData.email }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Nie udało się wysłać linku do logowania');
+      }
+
+      setMagicLinkSent(true);
+    } catch (error) {
+      console.error("Błąd wysyłania magicznego linku:", error);
+      setErrors({ 
+        form: error instanceof Error ? error.message : "Wystąpił nieznany błąd podczas wysyłania linku" 
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (magicLinkSent) {
+    return (
+      <div className="p-4 bg-green-500/20 border border-green-500/30 rounded-md text-center">
+        <h3 className="text-xl font-semibold mb-2">Sprawdź swoją skrzynkę odbiorczą</h3>
+        <p className="mb-4">
+          Wysłaliśmy link do logowania na podany adres email. Kliknij w link, aby się zalogować.
+        </p>
+        <button 
+          onClick={() => setMagicLinkSent(false)}
+          className="text-blue-400 hover:text-blue-300 font-medium"
+        >
+          Powrót do formularza logowania
+        </button>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -150,6 +252,15 @@ export default function LoginForm() {
         </div>
       )}
 
+      {debugInfo && (
+        <div className="p-3 bg-blue-500/20 border border-blue-500/30 rounded-md mb-4">
+          <p className="text-sm text-blue-300 font-semibold mb-1">Informacje diagnostyczne:</p>
+          <pre className="text-xs text-blue-200 overflow-auto max-h-40">
+            {JSON.stringify(debugInfo, null, 2)}
+          </pre>
+        </div>
+      )}
+
       <Button
         type="submit"
         className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-medium py-2 px-4 rounded-md"
@@ -157,6 +268,18 @@ export default function LoginForm() {
       >
         {isLoading ? "Logowanie..." : "Zaloguj się"}
       </Button>
+
+      <div className="text-center mt-4">
+        <p className="text-sm text-blue-200 mb-2">Problemy z logowaniem?</p>
+        <button 
+          type="button"
+          onClick={handleSendMagicLink}
+          className="text-sm text-blue-300 hover:text-blue-200"
+          disabled={isLoading}
+        >
+          Zaloguj się przez link wysłany na email
+        </button>
+      </div>
     </form>
   );
 } 

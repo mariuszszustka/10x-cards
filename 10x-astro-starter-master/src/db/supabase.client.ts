@@ -2,19 +2,22 @@ import type { AstroCookies } from 'astro';
 import { createServerClient, type CookieOptionsWithName, type CookieOptions } from '@supabase/ssr';
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './database.types.ts';
+import { getAdjustedSupabaseUrl, getCookieOptions } from '../utils/auth-helper.ts';
 
+// Pobieramy URL z zmiennych środowiskowych
 const supabaseUrl = import.meta.env.SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.SUPABASE_KEY;
 
 // Klient dla komponentów klienckich (bez cookies)
 export const supabaseClient = createClient<Database>(supabaseUrl, supabaseAnonKey);
 
-// Opcje cookie dla uwierzytelniania
+// Opcje cookie dla uwierzytelniania - domyślne
 export const cookieOptions: CookieOptionsWithName = {
   path: '/',
-  secure: true,
+  secure: false, // Wyłączamy dla lokalnego środowiska
   httpOnly: true,
   sameSite: 'lax',
+  maxAge: 60 * 60 * 24 * 7, // 7 dni
 };
 
 // Funkcja pomocnicza do parsowania nagłówka Cookie
@@ -30,11 +33,25 @@ export const createSupabaseServerInstance = (context: {
   headers: Headers;
   cookies: AstroCookies;
 }) => {
+  // Pobieramy host z nagłówków żądania
+  const requestHost = context.headers.get('host') || '';
+  
+  // Dostosowujemy URL na podstawie hosta żądania
+  const adjustedSupabaseUrl = getAdjustedSupabaseUrl(requestHost);
+  
+  // Pobieramy dostosowane opcje cookies
+  const adjustedCookieOptions = getCookieOptions(requestHost);
+  
+  console.log(`[Supabase Client] Inicjalizacja z URL: ${adjustedSupabaseUrl} dla hosta: ${requestHost}`);
+  
   const supabase = createServerClient<Database>(
-    supabaseUrl,
+    adjustedSupabaseUrl,
     supabaseAnonKey,
     {
-      cookieOptions,
+      cookieOptions: {
+        ...cookieOptions,
+        ...adjustedCookieOptions
+      },
       cookies: {
         getAll() {
           return parseCookieHeader(context.headers.get('Cookie') ?? '');

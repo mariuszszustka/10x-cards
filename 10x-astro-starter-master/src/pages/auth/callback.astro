@@ -1,0 +1,36 @@
+---
+// Ten plik obsługuje callback z Supabase Auth (magic links, oAuth)
+import { createSupabaseServerInstance } from '../../db/supabase.client.ts';
+
+export const prerender = false;
+
+// Pobierz kod autoryzacji z URL
+const code = Astro.url.searchParams.get('code');
+console.log("Auth callback - otrzymany kod:", code ? "tak" : "nie");
+
+// Pobierz klienta Supabase
+const supabase = createSupabaseServerInstance({ 
+  cookies: Astro.cookies,
+  headers: Astro.request.headers 
+});
+
+if (code) {
+  // Wymień kod na sesję
+  try {
+    console.log("Próba wymiany kodu na sesję...");
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+    
+    if (error) {
+      console.error("Błąd podczas wymiany kodu:", error.message);
+    } else {
+      console.log("Sesja utworzona pomyślnie, user:", data.session?.user.id || "brak ID");
+    }
+  } catch (err) {
+    console.error("Wyjątek podczas wymiany kodu:", err);
+  }
+}
+
+// Niezależnie od wyniku, przekieruj użytkownika
+console.log("Przekierowuję użytkownika na dashboard...");
+return Astro.redirect('/dashboard');
+--- 

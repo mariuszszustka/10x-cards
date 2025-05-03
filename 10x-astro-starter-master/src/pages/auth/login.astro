@@ -5,10 +5,26 @@ import LoginForm from "../../components/auth/LoginForm";
 // Wyłączenie prerenderowania
 export const prerender = false;
 
+// Diagnostyka - sprawdzenie sesji
+const { user, supabase } = Astro.locals;
+console.log("Login page - otrzymany użytkownik z middleware:", user ? `ID: ${user.id}` : "brak");
+
 // Sprawdzenie, czy użytkownik jest już zalogowany
-const { user } = Astro.locals;
 if (user) {
+  console.log("Użytkownik już zalogowany, przekierowuję na dashboard");
   return Astro.redirect('/dashboard');
+}
+
+// Dodatkowa weryfikacja sesji (diagnostyczna)
+if (supabase) {
+  const { data } = await supabase.auth.getSession();
+  console.log("Login page - sesja z Supabase:", data.session ? `Aktywna, user: ${data.session.user.id}` : "brak sesji");
+  
+  // Jeśli mamy sesję, ale nie mamy user z middleware, przekieruj na dashboard
+  if (data.session && !user) {
+    console.log("Wykryto sesję, ale brak user w middleware - przekierowuję na dashboard");
+    return Astro.redirect('/dashboard');
+  }
 }
 ---
 
