@@ -48,18 +48,18 @@
 
 ## 6. Narzędzia do testowania
 - **Frontend:** 
-  - Vitest zamiast Jest (szybszy i lepiej integruje się z Astro)
+  - Vitest do testów jednostkowych (szybszy i lepiej integruje się z Astro)
   - Testing Library do testowania komponentów React
-  - Playwright i Cypress do testów e2e i równoległego testowania na wielu przeglądarkach
+  - Playwright do testów e2e i równoległego testowania na wielu przeglądarkach
   
 - **Backend:** 
-  - Insomnia lub Hoppscotch zamiast Postman (lepsza integracja z CI/CD)
+  - Insomnia lub Hoppscotch do testowania API
   - SuperTest do testowania API
   - Supavisor do monitorowania wydajności Supabase
   
 - **Testy wydajnościowe:** 
-  - WebPageTest API i Core Web Vitals Library zamiast samego Lighthouse
-  - Locust obok k6 do bardziej złożonych scenariuszy testowych (w Pythonie)
+  - WebPageTest API i Core Web Vitals Library
+  - Locust do bardziej złożonych scenariuszy testowych (w Pythonie)
   
 - **Testy integracji AI:**
   - Langchain Test Suite do testowania interfejsów z modelami AI
@@ -128,5 +128,27 @@
 - Automatyczne powiadomienia o anomaliach i przekroczeniu progów wydajnościowych.
 - Regularne raporty z analizą trendów w wydajności i stabilności aplikacji.
 - Analiza doświadczeń użytkowników w oparciu o dane telemetryczne z Core Web Vitals.
+
+## 12. Aktualny stan testów jednostkowych
+- **Komponenty UI:**
+  - Przetestowany komponent Button ze Shadcn/ui
+  - Do zaimplementowania testy dla pozostałych komponentów UI
+
+- **Moduły funkcjonalne:**
+  - Zaimplementowane i przetestowane moduły:
+    - WalidacjaDanych: walidacja formularzy, emaili, haseł
+    - ObsługaJWT: zarządzanie tokenami JWT
+    - SerwisAutoryzacji: logowanie, rejestracja, zarządzanie sesją
+    - SystemLeitnera: algorytm nauki z użyciem systemu powtórek
+
+- **Pokrycie testami:**
+  - Aktualne pokrycie testami obejmuje kluczowe moduły funkcjonalne
+  - Planowane zwiększenie pokrycia testami dla komponentów UI i modułów integracji z AI
+
+- **Następne kroki:**
+  - Implementacja testów dla pozostałych komponentów UI
+  - Rozbudowa testów dla modułów integracji z Supabase
+  - Przygotowanie testów dla modułów AI po ukończeniu ich implementacji
+  - Konfiguracja i optymalizacja testów E2E z Playwright
 
 ---

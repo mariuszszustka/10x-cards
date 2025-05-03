@@ -1,150 +1,99 @@
-# Testowanie w projekcie 10x-cards
+# Testy w projekcie 10x-cards
 
-## Przegląd
+## Struktura testów
 
-Ten projekt wykorzystuje dwa główne rodzaje testów:
+Testy w projekcie są zorganizowane w następującej strukturze:
 
-1. **Testy jednostkowe** - używając Vitest + Testing Library
-2. **Testy E2E** - wykorzystując Playwright
+- `tests/unit/` - testy jednostkowe
+  - `components/` - testy komponentów UI
+  - `setup.ts` - konfiguracja środowiska testowego dla testów jednostkowych
+- `tests/e2e/` - testy end-to-end z użyciem Playwright
+- `src/**/__tests__/` - testy jednostkowe umieszczone bezpośrednio obok kodu źródłowego
 
-## Konfiguracja testów
+## Testy jednostkowe
 
-W projekcie skonfigurowano następujące elementy:
+Testy jednostkowe są realizowane przy użyciu:
+- **Vitest** - szybki framework testowy, kompatybilny z API Jest
+- **Testing Library** - biblioteka ułatwiająca testowanie komponentów React
+- **jsdom** - implementacja środowiska DOM dla testów w Node.js
 
-1. **Vitest** - do testów jednostkowych
-   - Plik konfiguracyjny: `vitest.config.ts`
-   - Setup testów: `tests/unit/setup.ts`
-   - Przykładowy test: `tests/unit/components/Button.test.tsx`
-
-2. **Playwright** - do testów E2E
-   - Plik konfiguracyjny: `playwright.config.ts`
-   - Przykładowy test: `tests/e2e/homepage.spec.ts`
-
-3. **GitHub Actions Workflow**
-   - Plik konfiguracyjny: `.github/workflows/tests.yml`
-   - Workflow uruchamia zarówno testy jednostkowe jak i E2E
-   - Generuje i archiwizuje raporty pokrycia kodu i wyniki testów
-
-## Testy jednostkowe (Vitest)
-
-### Uruchamianie testów
+### Jak uruchomić testy jednostkowe?
 
 ```bash
 # Uruchomienie wszystkich testów jednostkowych
 npm run test
 
-# Uruchomienie testów w trybie watch
+# Uruchomienie testów z obserwowaniem zmian
 npm run test:watch
 
-# Uruchomienie testów z interfejsem graficznym
+# Uruchomienie testów z interfejsem UI
 npm run test:ui
 
-# Uruchomienie testów z raportem pokrycia
+# Generowanie raportu pokrycia testami
 npm run test:coverage
 ```
 
-### Pisanie testów jednostkowych
+### Struktura testów jednostkowych
 
-- Testy jednostkowe znajdują się w katalogu `tests/unit`
-- Struktura katalogów testów powinna odzwierciedlać strukturę źródłową
-- Zgodnie z wytycznymi w `vitest-unit-testing.mdc`:
+Testy jednostkowe są zorganizowane w dwóch obszarach:
 
-1. Używaj `vi.fn()` do mockowania funkcji
-2. Używaj `vi.spyOn()` do monitorowania istniejących funkcji
-3. Preferuj spies zamiast mocków gdy potrzebujesz tylko zweryfikować interakcje
-4. Stosuj wzorce fabrykowe dla `vi.mock()` na poziomie testów
-5. Używaj plików konfiguracyjnych dla powtarzalnych ustawień
-6. Używaj inlineowych snapshottów dla czytelnych asercji
-7. Uruchamiaj testy w trybie watch podczas developmentu
-8. Grupuj testy dla utrzymywalności używając bloków `describe`
-9. Strukturyzuj testy wg. wzorca Arrange-Act-Assert
+1. **Testy komponentów UI** - znajdują się w katalogu `tests/unit/components/`
+   - Testują renderowanie i interakcje z komponentami UI
+   - Wszystkie komponenty Shadcn/ui powinny być pokryte testami
 
-## Testy E2E (Playwright)
+2. **Testy modułów funkcjonalnych** - znajdują się w katalogach `src/**/__tests__/`
+   - Testy znajdują się blisko kodu źródłowego, który testują
+   - Główne moduły przetestowane to:
+     - `src/auth/__tests__/` - funkcjonalność autoryzacji i zarządzania JWT
+     - `src/utils/__tests__/` - funkcje pomocnicze, w tym walidacja danych
+     - `src/learning/__tests__/` - system nauki i algorytm powtórek
 
-### Uruchamianie testów
+### Dodawanie nowych testów jednostkowych
 
-```bash
-# Uruchomienie wszystkich testów E2E
-npm run test:e2e
+Aby dodać nowy test jednostkowy:
 
-# Uruchomienie testów z interfejsem graficznym
-npm run test:e2e:ui
+1. Dla komponentów UI:
+   - Stwórz nowy plik w `tests/unit/components/` o nazwie `NazwaKomponentu.test.tsx`
+   - Użyj `render` z Testing Library do renderowania komponentu
+   - Wykorzystaj `screen` do wykonywania zapytań do wyrenderowanego DOM
+   - Używaj asercji `expect` do weryfikacji stanu i zachowania komponentu
 
-# Uruchomienie testów w trybie debug
-npm run test:e2e:debug
-```
+2. Dla modułów funkcjonalnych:
+   - Stwórz katalog `__tests__` w folderze zawierającym testowany moduł
+   - Nazwij plik testowy `NazwaModułu.test.ts`
+   - Wykorzystaj mocki do izolacji testowanego modułu od zależności zewnętrznych
 
-### Pisanie testów E2E
+### Przykład testu komponentu
 
-- Testy E2E znajdują się w katalogu `tests/e2e`
-- Zgodnie z wytycznymi w `playwright-e2e-testing.mdc`:
-
-1. Inicjalizuj testy tylko dla Chromium/Desktop Chrome
-2. Używaj kontekstów przeglądarki do izolowania środowisk testowych
-3. Implementuj wzorzec Page Object Model dla utrzymywalnych testów
-4. Używaj lokalizatorów dla odpornego wybierania elementów
-5. Wykorzystuj testy API do walidacji backendu
-6. Implementuj porównania wizualne z `expect(page).toHaveScreenshot()`
-7. Używaj narzędzia codegen do nagrywania testów
-8. Korzystaj z trace viewer do debugowania testów
-9. Implementuj hooki testowe do setup/teardown
-10. Wykorzystuj asercje expect z odpowiednimi matcherami
-11. Wykorzystuj równoległe wykonywanie dla szybszego działania testów
-
-## Przykłady
-
-### Przykład testu jednostkowego (Vitest + React Testing Library)
-
-```typescript
+```tsx
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { Button } from '../src/components/ui/button';
+import { MójKomponent } from '../../../src/components/MójKomponent';
 
-describe('Button component', () => {
-  it('renders correctly with default props', () => {
-    render(<Button>Test Button</Button>);
-    
-    const buttonElement = screen.getByRole('button', { name: /test button/i });
-    expect(buttonElement).toBeInTheDocument();
+describe('MójKomponent', () => {
+  it('renderuje się poprawnie', () => {
+    render(<MójKomponent />);
+    expect(screen.getByText('Oczekiwany tekst')).toBeInTheDocument();
   });
 });
 ```
 
-### Przykład testu E2E (Playwright)
+## Testy E2E
 
-```typescript
-import { test, expect } from '@playwright/test';
+Testy E2E (end-to-end) są realizowane przy użyciu Playwright. Pozwalają na testowanie aplikacji w rzeczywistych przeglądarkach, symulując interakcje użytkownika.
 
-test.describe('Strona główna', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-  });
+**Ważna informacja:** Na obecnym etapie rozwoju projektu, skupiamy się na testach jednostkowych. Testy E2E będą rozwijane w kolejnym etapie.
 
-  test('powinna wyświetlać główny nagłówek', async ({ page }) => {
-    const heading = await page.locator('h1').textContent();
-    expect(heading).toContain('Witaj w 10xDevs Astro Starter');
-  });
-});
-```
+## Ciągła integracja (CI)
 
-## CI/CD
+Testy są automatycznie uruchamiane przy każdym pull requeście do głównych gałęzi (main, master) za pomocą GitHub Actions. Konfiguracja znajduje się w pliku `.github/workflows/tests.yml`.
 
-Projekt ma skonfigurowany workflow GitHub Actions, który uruchamia testy w środowisku ciągłej integracji. Workflow:
+Proces CI obejmuje:
+1. Uruchomienie testów jednostkowych
+2. Generowanie raportu pokrycia testami
+3. Weryfikację typu TypeScript
+4. Uruchomienie analizy statycznej kodu (ESLint)
 
-1. Uruchamia się na:
-   - Push do gałęzi main/master
-   - Pull Request do gałęzi main/master
-   - Ręczne uruchomienie (workflow_dispatch)
+## Wymagania dotyczące pokrycia testami
 
-2. Uruchamia testy jednostkowe:
-   - Instaluje zależności
-   - Uruchamia testy Vitest
-   - Generuje raport pokrycia kodu
-   - Archiwizuje raport pokrycia
-
-3. Uruchamia testy E2E:
-   - Instaluje zależności
-   - Instaluje Playwright (tylko Chromium)
-   - Buduje aplikację
-   - Uruchamia testy E2E
-   - Archiwizuje raport z testów Playwright 
+Celem projektu jest utrzymanie pokrycia testami na poziomie co najmniej 70%. Obecne pokrycie testami jest monitorowane i raportowane w procesie CI. 
