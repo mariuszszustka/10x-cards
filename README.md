@@ -41,27 +41,16 @@ A modern web application for creating, managing, and reviewing educational flash
 - **Unit Testing:**
   - [Vitest](https://vitest.dev/) - Fast unit test framework that integrates well with Astro
   - [Testing Library](https://testing-library.com/) - For testing React components
-  - [Langchain Test Suite](https://js.langchain.com/docs/guides/testing/) - For testing AI integrations
+  - [jsdom](https://github.com/jsdom/jsdom) - DOM environment implementation for Node.js tests
   - [SuperTest](https://github.com/visionmedia/supertest) - For API testing
-  - [Promptfoo](https://github.com/promptfoo/promptfoo) - For systematic prompt testing
 
 - **End-to-End Testing:**
   - [Playwright](https://playwright.dev/) - Modern E2E testing framework
-  - [Cypress](https://www.cypress.io/) - For cross-browser testing
   - [Allure Framework](https://allurereport.org/) - For test reporting and visualization
 
-- **Performance Testing:**
-  - WebPageTest API and Core Web Vitals Library
-  - Locust and k6 for load testing
-
-- **Security Testing:**
-  - OWASP ZAP Automation Framework
-  - Snyk for dependency testing
-  - TruffleHog for credential leaks detection
-
-- **Monitoring:**
-  - Datadog or Grafana + Prometheus
-  - Supavisor for Supabase performance monitoring
+- **CI/CD Tools:**
+  - GitHub Actions - For test and deployment automation
+  - v8 coverage - For code coverage reporting
 
 ### CI/CD & Hosting
 - GitHub Actions
@@ -110,13 +99,12 @@ npm run dev
 - `npm run lint:fix` - Fix ESLint issues
 - `npm run format` - Format code with Prettier
 - `npm run test` - Run unit tests with Vitest
-- `npm run test:e2e` - Run E2E tests with Playwright
-- `npm run test:integration` - Run integration tests
-- `npm run test:security` - Run security tests
-- `npm run test:performance` - Run performance tests
-- `npm run test:all` - Run all tests
 - `npm run test:watch` - Run tests in watch mode
+- `npm run test:ui` - Run tests with UI interface
 - `npm run test:coverage` - Generate test coverage report
+- `npm run test:e2e` - Run E2E tests with Playwright
+- `npm run test:e2e:ui` - Run E2E tests with UI interface
+- `npm run test:e2e:debug` - Run E2E tests in debug mode
 
 ## Project Scope
 

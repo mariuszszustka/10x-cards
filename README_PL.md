@@ -41,27 +41,16 @@ Nowoczesna aplikacja webowa do tworzenia, zarządzania i przeglądania fiszek ed
 - **Testy jednostkowe:**
   - [Vitest](https://vitest.dev/) - szybki framework do testów jednostkowych, dobrze integrujący się z Astro
   - [Testing Library](https://testing-library.com/) - do testowania komponentów React
-  - [Langchain Test Suite](https://js.langchain.com/docs/guides/testing/) - do testowania integracji AI
+  - [jsdom](https://github.com/jsdom/jsdom) - implementacja środowiska DOM dla testów w Node.js
   - [SuperTest](https://github.com/visionmedia/supertest) - do testowania API
-  - [Promptfoo](https://github.com/promptfoo/promptfoo) - do systematycznego testowania promptów
 
 - **Testy end-to-end:**
   - [Playwright](https://playwright.dev/) - nowoczesny framework do testów E2E
-  - [Cypress](https://www.cypress.io/) - do testowania w różnych przeglądarkach
   - [Allure Framework](https://allurereport.org/) - do raportowania i wizualizacji testów
 
-- **Testy wydajnościowe:**
-  - WebPageTest API i Core Web Vitals Library
-  - Locust i k6 do testów obciążeniowych
-
-- **Testy bezpieczeństwa:**
-  - OWASP ZAP Automation Framework
-  - Snyk do testowania zależności
-  - TruffleHog do wykrywania wycieków poświadczeń
-
-- **Monitoring:**
-  - Datadog lub Grafana + Prometheus
-  - Supavisor do monitorowania wydajności Supabase
+- **Narzędzia CI/CD:**
+  - GitHub Actions - automatyzacja testów i wdrażania
+  - v8 coverage - raportowanie pokrycia kodu testami
 
 ### CI/CD i Hosting
 - GitHub Actions
@@ -110,13 +99,12 @@ npm run dev
 - `npm run lint:fix` - Naprawienie problemów ESLint
 - `npm run format` - Formatowanie kodu przy użyciu Prettier
 - `npm run test` - Uruchomienie testów jednostkowych z Vitest
-- `npm run test:e2e` - Uruchomienie testów E2E z Playwright
-- `npm run test:integration` - Uruchomienie testów integracyjnych
-- `npm run test:security` - Uruchomienie testów bezpieczeństwa
-- `npm run test:performance` - Uruchomienie testów wydajnościowych
-- `npm run test:all` - Uruchomienie wszystkich testów
-- `npm run test:watch` - Uruchomienie testów w trybie watch
+- `npm run test:watch` - Uruchomienie testów w trybie obserwowania zmian
+- `npm run test:ui` - Uruchomienie testów z interfejsem użytkownika
 - `npm run test:coverage` - Generowanie raportu pokrycia testami
+- `npm run test:e2e` - Uruchomienie testów E2E z Playwright
+- `npm run test:e2e:ui` - Uruchomienie testów E2E z interfejsem UI
+- `npm run test:e2e:debug` - Uruchomienie testów E2E w trybie debugowania
 
 ## Zakres projektu
 
