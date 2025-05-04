@@ -9,6 +9,16 @@ import pluginAstro from "eslint-plugin-astro";
 import pluginPrettier from "eslint-plugin-prettier/recommended";
 import jsxA11y from "eslint-plugin-jsx-a11y";
 
+// Filtruj globalne obiekty, aby usunąć te z nadmiarowymi spacjami
+const filterGlobals = (globalsObj) => {
+  return Object.fromEntries(
+    Object.entries(globalsObj).filter(([key]) => key.trim() === key)
+  );
+};
+
+const browserGlobals = filterGlobals(globals.browser);
+const nodeGlobals = filterGlobals(globals.node);
+
 export default defineConfig([
   { 
     files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"], 
@@ -22,7 +32,7 @@ export default defineConfig([
   { files: ["**/*.js"], languageOptions: { sourceType: "script" } },
   { 
     files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"], 
-    languageOptions: { globals: {...globals.browser, ...globals.node} } 
+    languageOptions: { globals: {...browserGlobals, ...nodeGlobals} } 
   },
   tseslint.configs.recommended,
   tseslint.configs.strict,
