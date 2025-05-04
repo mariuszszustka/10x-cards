@@ -98,15 +98,11 @@ export default defineConfig({
     },
   ],
 
-  // Katalog webserver do serwowania aplikacji lokalnie podczas testów
-  webServer: process.env.CI
-    ? // Użyj tej konfiguracji jeśli testy są uruchamiane w CI
-      undefined
-    : // Lokalne uruchomienie aplikacji
-      {
-        command: 'npm run dev',
-        url: 'http://localhost:3000',
-        reuseExistingServer: !process.env.CI,
-        timeout: 120 * 1000,
-      },
+  // Konfiguracja serwera do testów
+  webServer: {
+    command: 'npm run dev',
+    url: 'http://localhost:3000',
+    reuseExistingServer: true, // Zawsze używaj istniejącego serwera, jeśli jest dostępny
+    timeout: 120 * 1000,
+  },
 }); 
