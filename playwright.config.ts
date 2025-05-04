@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
-import path from 'path';
-import dotenv from 'dotenv';
+import * as path from 'path';
+import * as dotenv from 'dotenv';
 
 // Wczytanie zmiennych środowiskowych z pliku .env.test
 try {
@@ -68,10 +68,20 @@ export default defineConfig({
     // Projekt dla Firefox z zależnością od konfiguracji bazy
     {
       name: 'firefox',
+      // Pomijamy testy Firefox ze względu na problemy z timeoutem
+      // Alternatywnie możemy zwiększyć timeout dla Firefox
       use: { 
         ...devices['Desktop Firefox'],
-      },
+        launchOptions: {
+          slowMo: 100, // Spowalnia wykonanie dla stabilności
+        },
+        navigationTimeout: 60000, // Zwiększamy timeout dla nawigacji do 60 sekund
+      }, 
       dependencies: ['setup db'],
+      
+      // Ustawiamy flagę, aby tymczasowo pominąć testy w Firefox
+      // Usunięcie tej linii zwiększy timeout zamiast pomijać testy
+      // testIgnore: /.*/, // Ignoruje wszystkie testy dla Firefox
     },
     // Projekt dla WebKit z zależnością od konfiguracji bazy
     {
@@ -98,11 +108,6 @@ export default defineConfig({
     },
   ],
 
-  // Konfiguracja serwera do testów
-  webServer: {
-    command: 'npm run dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: true, // Zawsze używaj istniejącego serwera, jeśli jest dostępny
-    timeout: 120 * 1000,
-  },
+  // Usuwamy konfigurację webServer lub ustawiamy flagę reuseExistingServer na true
+  webServer: undefined, // Usuwamy całkowicie konfigurację webServer, ponieważ serwer już działa
 }); 

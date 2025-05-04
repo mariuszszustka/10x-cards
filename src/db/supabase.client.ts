@@ -4,9 +4,19 @@ import { createClient } from '@supabase/supabase-js';
 import type { Database } from './database.types.ts';
 import { getAdjustedSupabaseUrl, getCookieOptions } from '../utils/auth-helper.ts';
 
+// Diagnostyka - wyświetlamy zmienne środowiskowe
+console.log('[Diagnostyka] import.meta.env.SUPABASE_URL =', import.meta.env.SUPABASE_URL);
+console.log('[Diagnostyka] import.meta.env.SUPABASE_KEY =', import.meta.env.SUPABASE_KEY);
+console.log('[Diagnostyka] import.meta.env.SUPABASE_ANON_KEY =', import.meta.env.SUPABASE_ANON_KEY);
+console.log('[Diagnostyka] Wszystkie zmienne env =', JSON.stringify(import.meta.env, null, 2));
+
 // Pobieramy URL z zmiennych środowiskowych
 const supabaseUrl = import.meta.env.SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.SUPABASE_KEY;
+const supabaseAnonKey = import.meta.env.SUPABASE_KEY || import.meta.env.SUPABASE_ANON_KEY;
+
+// Sprawdzamy, czy klucze są dostępne
+if (!supabaseUrl) console.error('[KRYTYCZNY] Brak SUPABASE_URL!');
+if (!supabaseAnonKey) console.error('[KRYTYCZNY] Brak SUPABASE_KEY i SUPABASE_ANON_KEY!');
 
 // Klient dla komponentów klienckich (bez cookies)
 export const supabaseClient = createClient<Database>(supabaseUrl, supabaseAnonKey);
@@ -43,6 +53,7 @@ export const createSupabaseServerInstance = (context: {
   const adjustedCookieOptions = getCookieOptions(requestHost);
   
   console.log(`[Supabase Client] Inicjalizacja z URL: ${adjustedSupabaseUrl} dla hosta: ${requestHost}`);
+  console.log(`[Supabase Client] Używany klucz: ${supabaseAnonKey ? 'DOSTĘPNY' : 'BRAK KLUCZA'}`);
   
   const supabase = createServerClient<Database>(
     adjustedSupabaseUrl,

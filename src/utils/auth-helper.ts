@@ -2,9 +2,18 @@ import { createClient } from '@supabase/supabase-js';
 import type { CookieOptions } from '@supabase/ssr';
 import type { AstroCookies } from 'astro';
 
+// Diagnostyka
+console.log('[auth-helper] Sprawdzam zmienne środowiskowe:');
+console.log('SUPABASE_URL =', import.meta.env.SUPABASE_URL);
+console.log('SUPABASE_KEY =', import.meta.env.SUPABASE_KEY ? 'ISTNIEJE' : 'BRAK');
+console.log('SUPABASE_ANON_KEY =', import.meta.env.SUPABASE_ANON_KEY ? 'ISTNIEJE' : 'BRAK');
+
 // Stałe
 const LOCAL_SUPABASE_URL = import.meta.env.SUPABASE_URL as string;
-const SUPABASE_KEY = import.meta.env.SUPABASE_KEY as string;
+const SUPABASE_KEY = (import.meta.env.SUPABASE_KEY || import.meta.env.SUPABASE_ANON_KEY) as string;
+
+if (!LOCAL_SUPABASE_URL) console.error('[KRYTYCZNY] Brak SUPABASE_URL w auth-helper!');
+if (!SUPABASE_KEY) console.error('[KRYTYCZNY] Brak zarówno SUPABASE_KEY jak i SUPABASE_ANON_KEY w auth-helper!');
 
 // Dostosowanie URL dla różnych środowisk
 export function getAdjustedSupabaseUrl(requestHost: string): string {
