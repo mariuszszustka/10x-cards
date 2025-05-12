@@ -45,8 +45,8 @@ Nowoczesna aplikacja webowa do tworzenia, zarządzania i przeglądania fiszek ed
   - [SuperTest](https://github.com/visionmedia/supertest) - do testowania API
 
 - **Testy end-to-end:**
-  - [Playwright](https://playwright.dev/) - nowoczesny framework do testów E2E
-  - [Allure Framework](https://allurereport.org/) - do raportowania i wizualizacji testów
+  - [Playwright](https://playwright.dev/) - nowoczesny framework do testów E2E z przeglądarką Google Chrome
+  - Testy E2E wykorzystują uproszczone podejście MVP - koncentracja na kluczowych funkcjonalnościach z testowaniem na jednej przeglądarce
 
 - **Narzędzia CI/CD:**
   - GitHub Actions - automatyzacja testów i wdrażania
@@ -102,9 +102,10 @@ npm run dev
 - `npm run test:watch` - Uruchomienie testów w trybie obserwowania zmian
 - `npm run test:ui` - Uruchomienie testów z interfejsem użytkownika
 - `npm run test:coverage` - Generowanie raportu pokrycia testami
-- `npm run test:e2e` - Uruchomienie testów E2E z Playwright
-- `npm run test:e2e:ui` - Uruchomienie testów E2E z interfejsem UI
-- `npm run test:e2e:debug` - Uruchomienie testów E2E w trybie debugowania
+- `npm run test:e2e` - Uruchomienie testów E2E z Playwright na przeglądarce Google Chrome
+- `npm run test:e2e:ui` - Uruchomienie testów E2E z interfejsem UI na przeglądarce Google Chrome
+- `npm run test:e2e:debug` - Uruchomienie testów E2E w trybie debugowania na przeglądarce Google Chrome
+- `npm run test:e2e:setup` - Uruchomienie tylko fazy konfiguracyjnej testów E2E
 
 ## Zakres projektu
 

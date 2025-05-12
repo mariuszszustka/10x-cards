@@ -82,7 +82,27 @@ describe('MójKomponent', () => {
 
 Testy E2E (end-to-end) są realizowane przy użyciu Playwright. Pozwalają na testowanie aplikacji w rzeczywistych przeglądarkach, symulując interakcje użytkownika.
 
-**Ważna informacja:** Na obecnym etapie rozwoju projektu, skupiamy się na testach jednostkowych. Testy E2E będą rozwijane w kolejnym etapie.
+### Uproszczone podejście do testów E2E
+
+W celu ułatwienia procesu rozwoju i utrzymania testów, zdecydowaliśmy się na uproszczone podejście:
+- Testy są uruchamiane tylko na przeglądarce **Google Chrome**
+- Skupiamy się na testowaniu kluczowych funkcjonalności aplikacji
+- Kierujemy się zasadą MVP (Minimum Viable Product) dla testów
+
+### Jak uruchomić testy E2E?
+
+```bash
+# Uruchomienie wszystkich testów E2E na Google Chrome
+npm run test:e2e
+
+# Uruchomienie konkretnego testu
+npm run test:e2e -- tests/e2e/auth.spec.ts
+
+# Uruchomienie testów z raportem HTML
+npm run test:e2e -- --reporter=html
+```
+
+Szczegółowe informacje na temat testów E2E znajdują się w pliku [tests/e2e/README.md](./e2e/README.md).
 
 ## Ciągła integracja (CI)
 

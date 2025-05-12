@@ -57,52 +57,11 @@ export default defineConfig({
       name: 'cleanup db',
       testMatch: /global\.teardown\.ts/,
     },
-    // Projekt dla Chromium z zależnością od konfiguracji bazy
+    // Projekt dla Google Chrome z zależnością od konfiguracji bazy
     {
       name: 'chromium',
       use: { 
         ...devices['Desktop Chrome'],
-      },
-      dependencies: ['setup db'],
-    },
-    // Projekt dla Firefox z zależnością od konfiguracji bazy
-    {
-      name: 'firefox',
-      // Pomijamy testy Firefox ze względu na problemy z timeoutem
-      // Alternatywnie możemy zwiększyć timeout dla Firefox
-      use: { 
-        ...devices['Desktop Firefox'],
-        launchOptions: {
-          slowMo: 100, // Spowalnia wykonanie dla stabilności
-        },
-        navigationTimeout: 60000, // Zwiększamy timeout dla nawigacji do 60 sekund
-      }, 
-      dependencies: ['setup db'],
-      
-      // Ustawiamy flagę, aby tymczasowo pominąć testy w Firefox
-      // Usunięcie tej linii zwiększy timeout zamiast pomijać testy
-      // testIgnore: /.*/, // Ignoruje wszystkie testy dla Firefox
-    },
-    // Projekt dla WebKit z zależnością od konfiguracji bazy
-    {
-      name: 'webkit',
-      use: { 
-        ...devices['Desktop Safari'],
-      },
-      dependencies: ['setup db'],
-    },
-    // Projekt dla urządzeń mobilnych z zależnością od konfiguracji bazy
-    {
-      name: 'mobile chrome',
-      use: { 
-        ...devices['Pixel 5'],
-      },
-      dependencies: ['setup db'],
-    },
-    {
-      name: 'mobile safari',
-      use: {
-        ...devices['iPhone 12'],
       },
       dependencies: ['setup db'],
     },

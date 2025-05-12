@@ -45,8 +45,8 @@ A modern web application for creating, managing, and reviewing educational flash
   - [SuperTest](https://github.com/visionmedia/supertest) - For API testing
 
 - **End-to-End Testing:**
-  - [Playwright](https://playwright.dev/) - Modern E2E testing framework
-  - [Allure Framework](https://allurereport.org/) - For test reporting and visualization
+  - [Playwright](https://playwright.dev/) - Modern E2E testing framework with Chrome browser
+  - E2E tests use simplified MVP approach - focused on core functionality with single browser testing
 
 - **CI/CD Tools:**
   - GitHub Actions - For test and deployment automation
@@ -102,9 +102,10 @@ npm run dev
 - `npm run test:watch` - Run tests in watch mode
 - `npm run test:ui` - Run tests with UI interface
 - `npm run test:coverage` - Generate test coverage report
-- `npm run test:e2e` - Run E2E tests with Playwright
-- `npm run test:e2e:ui` - Run E2E tests with UI interface
-- `npm run test:e2e:debug` - Run E2E tests in debug mode
+- `npm run test:e2e` - Run E2E tests with Playwright on Chrome browser
+- `npm run test:e2e:ui` - Run E2E tests with UI interface on Chrome browser
+- `npm run test:e2e:debug` - Run E2E tests in debug mode on Chrome browser
+- `npm run test:e2e:setup` - Run only the setup test phase for E2E tests
 
 ## Project Scope
 

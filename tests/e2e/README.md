@@ -1,5 +1,12 @@
 # Testy E2E z Playwright dla aplikacji 10x-cards
 
+## Uproszczone podejście do testów E2E
+
+W celu ułatwienia procesu rozwoju i utrzymania testów, zdecydowaliśmy się na uproszczone podejście:
+- Testy są uruchamiane tylko na przeglądarce **Google Chrome**
+- Skupiamy się na testowaniu kluczowych funkcjonalności aplikacji
+- Kierujemy się zasadą MVP (Minimum Viable Product) dla testów
+
 ## Struktura testów
 
 Testy E2E dla aplikacji 10x-cards są zorganizowane według wzorca Page Object Model (POM):
@@ -116,7 +123,7 @@ npm install
 ### 4. Uruchomienie testów
 
 ```bash
-# Uruchomienie wszystkich testów
+# Uruchomienie wszystkich testów na Google Chrome
 npm run test:e2e
 
 # Uruchomienie konkretnego testu
@@ -175,30 +182,10 @@ test('Użytkownik może utworzyć nową fiszkę', async ({ page }) => {
 });
 ```
 
-### Dodawanie nowych klas POM
+### Wskazówki dla początkujących
 
-1. Utwórz nowy plik w katalogu `tests/pom/`
-2. Rozszerz klasę `BasePage`
-3. Dodaj metody dla operacji specyficznych dla danej strony
-
-Przykład:
-
-```typescript
-import { Page } from '@playwright/test';
-import { BasePage } from './base-page';
-import { SOME_SELECTOR } from '../test-selectors';
-
-export class NewFeaturePage extends BasePage {
-  constructor(page: Page) {
-    super(page);
-  }
-  
-  async goto(): Promise<void> {
-    await super.goto('/new-feature');
-  }
-  
-  async performAction(): Promise<void> {
-    await this.getByTestId(SOME_SELECTOR.BUTTON).click();
-  }
-}
-``` 
+1. **Zacznij od prostych testów** - twórz testy od podstawowych funkcjonalności
+2. **Unikaj skomplikowanych scenariuszy** - złożone testy są trudniejsze w utrzymaniu
+3. **Izoluj testy** - każdy test powinien być niezależny od innych
+4. **Używaj selektorów testowych** - zdefiniuj selektory w pliku `test-selectors.ts`
+5. **Sprawdzaj logi** - w przypadku problemów, analiza raportów może pomóc zidentyfikować przyczynę 
