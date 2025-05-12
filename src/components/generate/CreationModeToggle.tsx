@@ -19,7 +19,7 @@ export default function CreationModeToggle({ currentMode, onChange }: CreationMo
           "px-4 py-2 text-sm rounded-l-md",
           currentMode === CreationMode.MANUAL
             ? "bg-primary text-primary-foreground"
-            : "bg-background hover:bg-accent hover:text-accent-foreground"
+            : "bg-background text-foreground hover:bg-accent hover:text-accent-foreground"
         )}
         onClick={() => onChange(CreationMode.MANUAL)}
       >
@@ -31,7 +31,7 @@ export default function CreationModeToggle({ currentMode, onChange }: CreationMo
           "px-4 py-2 text-sm rounded-r-md",
           currentMode === CreationMode.AI
             ? "bg-primary text-primary-foreground"
-            : "bg-background hover:bg-accent hover:text-accent-foreground"
+            : "bg-background text-foreground hover:bg-accent hover:text-accent-foreground"
         )}
         onClick={() => onChange(CreationMode.AI)}
       >

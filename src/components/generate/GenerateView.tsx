@@ -2,6 +2,14 @@ import React, { useState } from 'react';
 import CreationModeToggle from './CreationModeToggle';
 import ManualFlashcardForm from './ManualFlashcardForm';
 import AIGenerationContainer from './AIGenerationContainer';
+import useToast from '@/lib/hooks/useToast';
+import ToastNotifications from '@/components/flashcards/ToastNotifications';
+
+// Interfejs dla danych z formularza tworzenia fiszki
+interface FlashcardFormData {
+  front: string;
+  back: string;
+}
 
 /**
  * Enum dla trybów tworzenia fiszek
@@ -17,6 +25,10 @@ export enum CreationMode {
 export default function GenerateView() {
   // Stan dla aktualnego trybu tworzenia fiszek
   const [creationMode, setCreationMode] = useState<CreationMode>(CreationMode.MANUAL);
+  // Stan do kontrolowania procesu zapisywania
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  // Hook do obsługi powiadomień
+  const { toasts, success, error: showError, removeToast } = useToast();
   
   // Obsługa zmiany trybu
   const handleModeChange = (mode: CreationMode) => {
@@ -24,12 +36,33 @@ export default function GenerateView() {
   };
 
   // Obsługa ręcznego tworzenia fiszki
-  const handleManualSubmit = async (flashcard: { front: string; back: string }) => {
+  const handleManualSubmit = async (flashcard: FlashcardFormData): Promise<void> => {
     try {
-      // Tutaj będzie implementacja wywołania API
-      console.log('Zapisuję fiszkę:', flashcard);
+      setIsSubmitting(true);
+      
+      const response = await fetch('/api/management-fc', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(flashcard),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Problem z zapisem fiszki');
+      }
+      
+      await response.json();
+      success('Fiszka została pomyślnie zapisana!');
+      
+      // Resetowanie formularza odbywa się w komponencie formularza
     } catch (error) {
       console.error('Błąd podczas zapisywania fiszki:', error);
+      showError(error instanceof Error ? error.message : 'Nie udało się zapisać fiszki. Spróbuj ponownie.');
+      throw error; // Propagujemy błąd, aby formularz wiedział o niepowodzeniu
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -47,10 +80,13 @@ export default function GenerateView() {
       
       {/* Renderowanie odpowiedniego formularza zależnie od trybu */}
       {creationMode === CreationMode.MANUAL ? (
-        <ManualFlashcardForm onSubmit={handleManualSubmit} />
+        <ManualFlashcardForm onSubmit={handleManualSubmit} isSubmitting={isSubmitting} />
       ) : (
         <AIGenerationContainer />
       )}
+      
+      {/* Wyświetlanie powiadomień */}
+      <ToastNotifications toasts={toasts} removeToast={removeToast} />
     </div>
   );
 } 

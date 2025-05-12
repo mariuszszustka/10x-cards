@@ -69,24 +69,15 @@ export default function FlashcardItem({ flashcard, onEdit, onDelete }: Flashcard
   return (
     <div 
       className={`relative border rounded-lg overflow-hidden h-64 transition-all duration-300 shadow-sm hover:shadow-md ${
-        isFlipped ? 'bg-muted/20' : 'bg-card'
+        isFlipped ? 'bg-muted/20' : 'bg-slate-100'
       }`}
       data-testid="flashcard-item"
     >
-      {/* Przycisk odwracania karty */}
-      <button 
-        className="absolute top-0 left-0 w-full h-full z-10"
-        onClick={handleFlip}
-        aria-label={isFlipped ? "Pokaż przód" : "Pokaż tył"}
-      >
-        <span className="sr-only">
-          {isFlipped ? "Pokaż przód" : "Pokaż tył"}
-        </span>
-      </button>
+      {/* Usuwamy przycisk, który blokował interakcję z zawartością */}
       
       <div className="p-4 h-full flex flex-col">
         {/* Nagłówek z informacjami o źródle i dacie */}
-        <div className="flex justify-between items-start mb-2 z-20 pointer-events-none">
+        <div className="flex justify-between items-start mb-2 z-20">
           <span 
             className={`text-xs px-2 py-1 rounded-full ${sourceInfo.cssClass}`}
           >
@@ -97,20 +88,26 @@ export default function FlashcardItem({ flashcard, onEdit, onDelete }: Flashcard
           </span>
         </div>
         
-        {/* Zawartość karty - przód lub tył */}
-        <div className="flex-grow flex items-center justify-center overflow-auto">
-          <p className="text-lg leading-relaxed">
-            {isFlipped ? flashcard.back : flashcard.front}
-          </p>
+        {/* Zawartość karty - przód lub tył - z możliwością kliknięcia do odwrócenia */}
+        <div 
+          className="flex-grow flex items-start justify-center overflow-y-auto"
+          onClick={handleFlip}
+          style={{ cursor: 'pointer' }}
+        >
+          <div className="max-w-full">
+            <p className="text-lg leading-relaxed text-foreground">
+              {isFlipped ? flashcard.back : flashcard.front}
+            </p>
+          </div>
         </div>
         
         {/* Przyciski akcji */}
         <div className="mt-4 flex justify-end gap-2 z-20">
           <Button 
             size="sm" 
-            variant="outline" 
+            variant="default" 
             onClick={handleEdit}
-            className="pointer-events-auto"
+            className="bg-primary text-primary-foreground hover:bg-primary/90"
             data-testid="edit-flashcard-button"
           >
             Edytuj
@@ -119,7 +116,6 @@ export default function FlashcardItem({ flashcard, onEdit, onDelete }: Flashcard
             size="sm" 
             variant="destructive" 
             onClick={handleDelete}
-            className="pointer-events-auto"
             data-testid="delete-flashcard-button"
           >
             Usuń

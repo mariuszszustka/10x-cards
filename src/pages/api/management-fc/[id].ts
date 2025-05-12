@@ -25,8 +25,96 @@ async function getUser(request: Request) {
  * Umożliwia modyfikację istniejącej fiszki
  */
 export const PUT: APIRoute = async ({ request, params }) => {
-  // TODO: Implementacja aktualizacji fiszki
-  return new Response('TODO', { status: 501 });
+  try {
+    // 1. Ekstrakcja tokenu JWT z nagłówka i weryfikacja tożsamości użytkownika
+    const user = await getUser(request);
+    if (!user) {
+      return new Response(
+        JSON.stringify(createErrorResponse('unauthorized', 'Brak autoryzacji')),
+        { status: 401, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // 2. Parsowanie body żądania
+    const body = await request.json();
+    const { front, back } = body;
+
+    // 3. Walidacja danych wejściowych
+    if (!front || typeof front !== 'string' || front.trim() === '') {
+      return new Response(
+        JSON.stringify(createErrorResponse('validation_error', 'Przód fiszki jest wymagany')),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (!back || typeof back !== 'string' || back.trim() === '') {
+      return new Response(
+        JSON.stringify(createErrorResponse('validation_error', 'Tył fiszki jest wymagany')),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // 4. Sprawdzenie czy podano prawidłowe ID fiszki
+    const id = params.id;
+    
+    if (!id || isNaN(parseInt(id)) || parseInt(id) < 1) {
+      return new Response(
+        JSON.stringify(createErrorResponse('validation_error', 'Nieprawidłowe ID fiszki')),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+    
+    const flashcardId = parseInt(id);
+
+    // 5. Sprawdzenie czy fiszka istnieje i należy do użytkownika
+    const { data: existingFlashcard, error: checkError } = await supabase
+      .from('flashcards')
+      .select('id, source')
+      .eq('id', flashcardId)
+      .eq('user_id', user.id)
+      .single();
+
+    if (checkError || !existingFlashcard) {
+      return new Response(
+        JSON.stringify(createErrorResponse('not_found', 'Fiszka nie znaleziona')),
+        { status: 404, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // 6. Aktualizacja fiszki
+    const { data: updatedFlashcard, error: updateError } = await supabase
+      .from('flashcards')
+      .update({
+        front: front.trim(),
+        back: back.trim(),
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', flashcardId)
+      .eq('user_id', user.id)
+      .select('*')
+      .single();
+
+    if (updateError) {
+      console.error('Błąd podczas aktualizacji fiszki:', updateError);
+      return new Response(
+        JSON.stringify(createErrorResponse('server_error', 'Wystąpił błąd podczas aktualizacji fiszki')),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // 7. Zwrócenie zaktualizowanej fiszki
+    return new Response(
+      JSON.stringify(updatedFlashcard),
+      { status: 200, headers: { 'Content-Type': 'application/json' } }
+    );
+
+  } catch (error) {
+    console.error('Nieoczekiwany błąd:', error);
+    return new Response(
+      JSON.stringify(createErrorResponse('server_error', 'Wystąpił nieoczekiwany błąd')),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
 };
 
 /**

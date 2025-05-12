@@ -146,9 +146,9 @@ export default function FlashcardForm({
             name="front"
             value={formData.front}
             onChange={handleChange}
-            className={`w-full p-2 border rounded-md h-24 resize-none ${
+            className={`w-full p-2 border rounded-md h-24 resize-none text-foreground ${
               errors.front ? 'border-red-500' : 'border-gray-300'
-            }`}
+            } bg-card`}
             aria-invalid={!!errors.front}
             aria-describedby={errors.front ? "front-error" : undefined}
             data-testid="flashcard-front-input"
@@ -169,9 +169,9 @@ export default function FlashcardForm({
             name="back"
             value={formData.back}
             onChange={handleChange}
-            className={`w-full p-2 border rounded-md h-24 resize-none ${
+            className={`w-full p-2 border rounded-md h-24 resize-none text-foreground ${
               errors.back ? 'border-red-500' : 'border-gray-300'
-            }`}
+            } bg-card`}
             aria-invalid={!!errors.back}
             aria-describedby={errors.back ? "back-error" : undefined}
             data-testid="flashcard-back-input"
@@ -192,7 +192,7 @@ export default function FlashcardForm({
             name="source"
             value={formData.source}
             onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-md bg-white"
+            className="w-full p-2 border border-gray-300 rounded-md text-foreground bg-card"
           >
             <option value="manual">Ręcznie dodane</option>
             <option value="imported">Zaimportowane</option>

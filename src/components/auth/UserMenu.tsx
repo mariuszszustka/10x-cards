@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "../ui/button";
 
 interface UserMenuProps {
@@ -10,16 +10,48 @@ interface UserMenuProps {
 
 export default function UserMenu({ user, onLogout }: UserMenuProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+  const openMenu = () => {
+    // Wyczyść timeout zamknięcia, jeśli istnieje
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    setIsMenuOpen(true);
+  };
+
+  const closeMenuWithDelay = () => {
+    // Ustaw opóźnienie zamknięcia, aby użytkownik miał czas przemieścić mysz do menu
+    timeoutRef.current = setTimeout(() => {
+      setIsMenuOpen(false);
+    }, 300); // 300ms opóźnienia
+  };
+
+  const cancelCloseMenu = () => {
+    // Anuluj zamknięcie, jeśli użytkownik wrócił do menu
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
   };
 
   const handleLogout = () => {
     if (onLogout) {
       onLogout();
     }
+    setIsMenuOpen(false);
   };
+
+  // Czyszczenie timeout przy odmontowaniu komponentu
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   // Gdy użytkownik nie jest zalogowany, pokazujemy przyciski logowania i rejestracji
   if (!user) {
@@ -48,9 +80,14 @@ export default function UserMenu({ user, onLogout }: UserMenuProps) {
 
   // Gdy użytkownik jest zalogowany, pokazujemy menu użytkownika
   return (
-    <div className="relative">
+    <div 
+      className="relative" 
+      ref={menuRef}
+      onMouseEnter={openMenu}
+      onMouseLeave={closeMenuWithDelay}
+    >
       <button
-        onClick={toggleMenu}
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
         className="flex items-center space-x-2 bg-white/10 hover:bg-white/20 px-3 py-2 rounded-full transition-colors"
         data-testid="user-menu"
       >
@@ -75,12 +112,16 @@ export default function UserMenu({ user, onLogout }: UserMenuProps) {
       </button>
 
       {isMenuOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white/10 backdrop-blur-xl rounded-md shadow-lg border border-white/20 py-1 z-10">
+        <div 
+          className="absolute right-0 mt-2 w-48 bg-white/10 backdrop-blur-xl rounded-md shadow-lg border border-white/20 py-1 z-10"
+          onMouseEnter={cancelCloseMenu}
+          onMouseLeave={closeMenuWithDelay}
+        >
           <a 
-            href="/settings" 
+            href="/profile" 
             className="block px-4 py-2 text-sm text-blue-100 hover:bg-white/10"
           >
-            Ustawienia
+            Profil
           </a>
           <button
             onClick={handleLogout}

@@ -79,7 +79,7 @@ export default function SearchAndFilterBar({
             placeholder="Szukaj fiszek..."
             value={searchInput}
             onChange={handleSearchChange}
-            className="w-full p-2 border rounded-md pr-10 bg-background"
+            className="w-full p-2 border rounded-md pr-10 bg-card text-foreground"
           />
           {searchInput && (
             <button
@@ -107,7 +107,7 @@ export default function SearchAndFilterBar({
             id="source-filter"
             value={currentSource || "all"}
             onChange={handleSourceChange}
-            className="w-full p-2 border rounded-md bg-background"
+            className="w-full p-2 border rounded-md bg-card text-foreground"
           >
             <option value="all">Wszystkie</option>
             <option value="manual">Ręcznie dodane</option>
@@ -124,7 +124,7 @@ export default function SearchAndFilterBar({
             id="sort-select"
             value={currentSortValue}
             onChange={handleSortChange}
-            className="w-full p-2 border rounded-md bg-background"
+            className="w-full p-2 border rounded-md bg-card text-foreground"
           >
             <option value="created_at-desc">Najnowsze</option>
             <option value="created_at-asc">Najstarsze</option>

@@ -90,9 +90,9 @@ export default function EditableFlashcard({ flashcard, onSave, onCancel }: Edita
   }, [formData, onSave]);
 
   return (
-    <form onSubmit={handleSubmit} className="border rounded-lg p-4 h-full flex flex-col">
+    <form onSubmit={handleSubmit} className="border rounded-lg p-4 h-64 flex flex-col bg-slate-100 shadow-sm hover:shadow-md">
       <div className="mb-3">
-        <label htmlFor="front" className="block text-sm font-medium mb-1">
+        <label htmlFor="front" className="block text-sm font-medium mb-1 text-foreground">
           Przód
         </label>
         <textarea
@@ -100,21 +100,22 @@ export default function EditableFlashcard({ flashcard, onSave, onCancel }: Edita
           name="front"
           value={formData.front}
           onChange={handleChange}
-          className={`w-full p-2 border rounded-md h-24 resize-none ${
-            errors.front ? 'border-red-500' : 'border-gray-300'
+          className={`w-full p-2 border rounded-md text-foreground bg-white resize-none ${
+            errors.front ? 'border-destructive' : 'border-input'
           }`}
+          style={{ height: "60px" }}
           aria-invalid={!!errors.front}
           aria-describedby={errors.front ? "front-error" : undefined}
         />
         {errors.front && (
-          <p id="front-error" className="text-sm text-red-500 mt-1">
+          <p id="front-error" className="text-sm text-destructive mt-1">
             {errors.front}
           </p>
         )}
       </div>
       
-      <div className="mb-4">
-        <label htmlFor="back" className="block text-sm font-medium mb-1">
+      <div className="mb-2">
+        <label htmlFor="back" className="block text-sm font-medium mb-1 text-foreground">
           Tył
         </label>
         <textarea
@@ -122,14 +123,15 @@ export default function EditableFlashcard({ flashcard, onSave, onCancel }: Edita
           name="back"
           value={formData.back}
           onChange={handleChange}
-          className={`w-full p-2 border rounded-md h-24 resize-none ${
-            errors.back ? 'border-red-500' : 'border-gray-300'
+          className={`w-full p-2 border rounded-md text-foreground bg-white resize-none ${
+            errors.back ? 'border-destructive' : 'border-input'
           }`}
+          style={{ height: "60px" }}
           aria-invalid={!!errors.back}
           aria-describedby={errors.back ? "back-error" : undefined}
         />
         {errors.back && (
-          <p id="back-error" className="text-sm text-red-500 mt-1">
+          <p id="back-error" className="text-sm text-destructive mt-1">
             {errors.back}
           </p>
         )}
@@ -140,11 +142,13 @@ export default function EditableFlashcard({ flashcard, onSave, onCancel }: Edita
           type="button" 
           variant="outline" 
           onClick={onCancel}
+          className="bg-white text-foreground hover:bg-slate-200"
         >
           Anuluj
         </Button>
         <Button 
           type="submit"
+          className="bg-primary text-primary-foreground hover:bg-primary/90"
         >
           Zapisz
         </Button>

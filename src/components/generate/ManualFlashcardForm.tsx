@@ -86,10 +86,10 @@ export default function ManualFlashcardForm({ onSubmit, isSubmitting = false }: 
     try {
       await onSubmit(flashcard);
       // Czyszczenie formularza po udanym zapisie
-      setFlashcard({ front: '', back: '' });
+      handleReset();
     } catch (error) {
       console.error('Błąd podczas zapisywania fiszki:', error);
-      // Obsługa błędów API może być dodana tutaj
+      // Błąd zostanie obsłużony w komponencie rodzica
     }
   };
   
@@ -113,9 +113,9 @@ export default function ManualFlashcardForm({ onSubmit, isSubmitting = false }: 
             name="front"
             value={flashcard.front}
             onChange={handleChange}
-            className={`w-full min-h-[100px] p-3 rounded-md border ${
+            className={`w-full min-h-[100px] p-3 rounded-md border text-foreground ${
               errors.front ? 'border-destructive' : 'border-input'
-            } bg-background`}
+            } bg-card`}
             placeholder="Wprowadź tekst dla przodu fiszki..."
             disabled={isSubmitting}
           />
@@ -138,9 +138,9 @@ export default function ManualFlashcardForm({ onSubmit, isSubmitting = false }: 
             name="back"
             value={flashcard.back}
             onChange={handleChange}
-            className={`w-full min-h-[200px] p-3 rounded-md border ${
+            className={`w-full min-h-[200px] p-3 rounded-md border text-foreground ${
               errors.back ? 'border-destructive' : 'border-input'
-            } bg-background`}
+            } bg-card`}
             placeholder="Wprowadź tekst dla tyłu fiszki..."
             disabled={isSubmitting}
           />
@@ -159,6 +159,7 @@ export default function ManualFlashcardForm({ onSubmit, isSubmitting = false }: 
           variant="outline" 
           onClick={handleReset}
           disabled={isSubmitting}
+          className="text-secondary-foreground"
         >
           Wyczyść
         </Button>

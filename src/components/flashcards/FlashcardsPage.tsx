@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useFlashcards from '@/lib/hooks/useFlashcards';
 import type { SearchParams, SortOptions } from '@/lib/hooks/useFlashcards';
 import useToast from '@/lib/hooks/useToast';
@@ -51,6 +51,11 @@ export default function FlashcardsPage() {
   const { toasts, success, error: showError, removeToast } = useToast();
   const { isOpen, flashcardId, flashcardFront, openModal, closeModal } = useModal();
   
+  // Pobierz fiszki przy pierwszym renderowaniu
+  useEffect(() => {
+    fetchFlashcards();
+  }, [fetchFlashcards]);
+  
   /**
    * Obsługa dodawania nowej fiszki
    */
@@ -75,6 +80,8 @@ export default function FlashcardsPage() {
       await createFlashcard(data);
       success('Fiszka została pomyślnie utworzona.');
       setIsFormOpen(false);
+      // Odśwież listę fiszek po dodaniu nowej
+      fetchFlashcards();
     } catch (error) {
       showError('Nie udało się utworzyć fiszki. Spróbuj ponownie.');
     } finally {

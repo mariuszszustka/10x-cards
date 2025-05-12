@@ -68,7 +68,7 @@ export default function useFlashcards(initialParams: SearchParams) {
         }
       });
       
-      const response = await fetch(`/api/flashcards?${queryParams}`);
+      const response = await fetch(`/api/management-fc?${queryParams}`);
       
       if (!response.ok) {
         throw new Error('Problem z pobieraniem fiszek');
@@ -103,7 +103,7 @@ export default function useFlashcards(initialParams: SearchParams) {
     setState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
-      const response = await fetch('/api/flashcards', {
+      const response = await fetch('/api/management-fc', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -138,7 +138,7 @@ export default function useFlashcards(initialParams: SearchParams) {
     setState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
-      const response = await fetch(`/api/flashcards/${id}`, {
+      const response = await fetch(`/api/management-fc/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -177,7 +177,7 @@ export default function useFlashcards(initialParams: SearchParams) {
     setState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
-      const response = await fetch(`/api/flashcards/${id}`, {
+      const response = await fetch(`/api/management-fc/${id}`, {
         method: 'DELETE'
       });
       
@@ -251,7 +251,7 @@ export default function useFlashcards(initialParams: SearchParams) {
     }));
   };
 
-  // Pobieranie fiszek przy inicjalizacji i zmianie parametrów
+  // Efekt pobierający dane przy pierwszym renderowaniu oraz zmianie parametrów
   useEffect(() => {
     fetchFlashcards();
   }, [fetchFlashcards]);
@@ -259,13 +259,13 @@ export default function useFlashcards(initialParams: SearchParams) {
   return {
     ...state,
     params,
-    fetchFlashcards,
-    createFlashcard,
-    updateFlashcard,
-    deleteFlashcard,
     setPage,
     setSearch,
     setFilter,
-    setSort
+    setSort,
+    fetchFlashcards,
+    createFlashcard,
+    updateFlashcard,
+    deleteFlashcard
   };
 } 
