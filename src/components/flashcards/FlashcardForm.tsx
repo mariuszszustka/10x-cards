@@ -2,16 +2,24 @@ import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
 
+export interface FlashcardFormData {
+  front: string;
+  back: string;
+  source: string;
+}
+
 interface FlashcardFormProps {
-  onSubmit: (data: { front: string; back: string; source: string }) => void;
+  onSubmit: (data: FlashcardFormData) => void;
   onCancel?: () => void;
-  initialValues?: { front: string; back: string; source: string };
+  initialValues?: FlashcardFormData;
+  isSubmitting?: boolean;
 }
 
 export default function FlashcardForm({ 
   onSubmit, 
   onCancel, 
-  initialValues = { front: '', back: '', source: 'manual' } 
+  initialValues = { front: '', back: '', source: 'manual' },
+  isSubmitting = false
 }: FlashcardFormProps) {
   // Stan formularza
   const [formData, setFormData] = useState({
@@ -143,6 +151,7 @@ export default function FlashcardForm({
             }`}
             aria-invalid={!!errors.front}
             aria-describedby={errors.front ? "front-error" : undefined}
+            data-testid="flashcard-front-input"
           />
           {errors.front && (
             <p id="front-error" className="text-sm text-red-500 mt-1">
@@ -165,6 +174,7 @@ export default function FlashcardForm({
             }`}
             aria-invalid={!!errors.back}
             aria-describedby={errors.back ? "back-error" : undefined}
+            data-testid="flashcard-back-input"
           />
           {errors.back && (
             <p id="back-error" className="text-sm text-red-500 mt-1">
@@ -192,8 +202,8 @@ export default function FlashcardForm({
       </div>
       
       <div className="flex justify-end mt-4">
-        <Button type="submit">
-          Dodaj fiszkę
+        <Button type="submit" disabled={isSubmitting} data-testid="save-flashcard-button">
+          {isSubmitting ? 'Zapisywanie...' : 'Dodaj fiszkę'}
         </Button>
       </div>
     </form>

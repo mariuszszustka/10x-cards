@@ -12,7 +12,7 @@ export default function Header({ onAddClick }: HeaderProps) {
   return (
     <div className="flex items-center justify-between mb-8">
       <h1 className="text-3xl font-bold">Moje Fiszki</h1>
-      <Button onClick={onAddClick} size="default">
+      <Button onClick={onAddClick} size="default" data-testid="add-flashcard-button">
         Dodaj fiszkę
       </Button>
     </div>

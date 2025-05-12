@@ -74,6 +74,7 @@ export default function ToastNotifications({ toasts, removeToast }: ToastNotific
           key={toast.id}
           className={getToastClasses(toast.type)}
           role="alert"
+          data-testid={`notification-${toast.type}`}
         >
           <div className="flex-shrink-0 mr-3">
             {getIcon(toast.type)}

@@ -189,7 +189,7 @@ export default function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6" data-testid="auth-login-form">
       <div className="space-y-4">
         <div>
           <label 
@@ -208,6 +208,7 @@ export default function LoginForm() {
             onChange={handleChange}
             className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-md text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
             placeholder="twoj@email.com"
+            data-testid="auth-email-input"
           />
           {errors.email && (
             <p className="mt-1 text-sm text-red-300">{errors.email}</p>
@@ -239,6 +240,7 @@ export default function LoginForm() {
             onChange={handleChange}
             className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-md text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
             placeholder="••••••••"
+            data-testid="auth-password-input"
           />
           {errors.password && (
             <p className="mt-1 text-sm text-red-300">{errors.password}</p>
@@ -265,6 +267,7 @@ export default function LoginForm() {
         type="submit"
         className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-medium py-2 px-4 rounded-md"
         disabled={isLoading}
+        data-testid="auth-submit-button"
       >
         {isLoading ? "Logowanie..." : "Zaloguj się"}
       </Button>

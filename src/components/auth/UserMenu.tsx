@@ -29,6 +29,7 @@ export default function UserMenu({ user, onLogout }: UserMenuProps) {
           <Button
             variant="ghost"
             className="text-blue-100 hover:text-white hover:bg-white/10"
+            data-testid="header-login-button"
           >
             Zaloguj się
           </Button>
@@ -36,6 +37,7 @@ export default function UserMenu({ user, onLogout }: UserMenuProps) {
         <a href="/auth/register">
           <Button
             className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white"
+            data-testid="header-register-button"
           >
             Zarejestruj się
           </Button>
@@ -50,6 +52,7 @@ export default function UserMenu({ user, onLogout }: UserMenuProps) {
       <button
         onClick={toggleMenu}
         className="flex items-center space-x-2 bg-white/10 hover:bg-white/20 px-3 py-2 rounded-full transition-colors"
+        data-testid="user-menu"
       >
         <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full flex items-center justify-center text-white font-medium">
           {user.email.charAt(0).toUpperCase()}
@@ -82,6 +85,7 @@ export default function UserMenu({ user, onLogout }: UserMenuProps) {
           <button
             onClick={handleLogout}
             className="block w-full text-left px-4 py-2 text-sm text-red-300 hover:bg-white/10"
+            data-testid="user-menu-logout"
           >
             Wyloguj się
           </button>

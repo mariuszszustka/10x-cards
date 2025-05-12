@@ -47,12 +47,14 @@ export default function DeleteConfirmationModal({
           <Button
             variant="outline"
             onClick={onCancel}
+            data-testid="cancel-delete-button"
           >
             Anuluj
           </Button>
           <Button
             variant="destructive"
             onClick={onConfirm}
+            data-testid="confirm-delete-button"
           >
             Usuń
           </Button>

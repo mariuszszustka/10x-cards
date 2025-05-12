@@ -71,6 +71,7 @@ export default function FlashcardItem({ flashcard, onEdit, onDelete }: Flashcard
       className={`relative border rounded-lg overflow-hidden h-64 transition-all duration-300 shadow-sm hover:shadow-md ${
         isFlipped ? 'bg-muted/20' : 'bg-card'
       }`}
+      data-testid="flashcard-item"
     >
       {/* Przycisk odwracania karty */}
       <button 
@@ -110,6 +111,7 @@ export default function FlashcardItem({ flashcard, onEdit, onDelete }: Flashcard
             variant="outline" 
             onClick={handleEdit}
             className="pointer-events-auto"
+            data-testid="edit-flashcard-button"
           >
             Edytuj
           </Button>
@@ -118,6 +120,7 @@ export default function FlashcardItem({ flashcard, onEdit, onDelete }: Flashcard
             variant="destructive" 
             onClick={handleDelete}
             className="pointer-events-auto"
+            data-testid="delete-flashcard-button"
           >
             Usuń
           </Button>

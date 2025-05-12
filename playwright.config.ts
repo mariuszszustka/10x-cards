@@ -68,5 +68,10 @@ export default defineConfig({
   ],
 
   // Usuwamy konfigurację webServer lub ustawiamy flagę reuseExistingServer na true
-  webServer: undefined, // Usuwamy całkowicie konfigurację webServer, ponieważ serwer już działa
+  webServer: {
+    command: 'npm run dev',
+    port: 3000,
+    timeout: 60 * 1000,
+    reuseExistingServer: true,
+  },
 }); 

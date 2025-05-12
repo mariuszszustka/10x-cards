@@ -28,7 +28,7 @@ const { user } = Astro.props;
             Moje fiszki
           </a>
           <div class="relative group">
-            <button class="flex items-center text-gray-300 hover:text-white">
+            <button class="flex items-center text-gray-300 hover:text-white" data-testid="user-menu">
               <span class="mr-1">{user.email || "Użytkownik"}</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                 <path d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
@@ -39,7 +39,7 @@ const { user } = Astro.props;
                 Profil
               </a>
               <form action="/api/auth/logout" method="POST" class="w-full">
-                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-600">
+                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-600" data-testid="user-menu-logout">
                   Wyloguj się
                 </button>
               </form>
@@ -48,10 +48,10 @@ const { user } = Astro.props;
         </>
       ) : (
         <>
-          <a href="/auth/login" class="text-gray-300 hover:text-white transition-colors">
+          <a href="/auth/login" class="text-gray-300 hover:text-white transition-colors" data-testid="header-login-button">
             Zaloguj się
           </a>
-          <a href="/auth/register" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors">
+          <a href="/auth/register" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors" data-testid="header-register-button">
             Zarejestruj się
           </a>
         </>

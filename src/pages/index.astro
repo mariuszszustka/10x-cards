@@ -41,10 +41,10 @@ const { user } = Astro.locals;
 ) : (
   <Layout title="10x Cards - Tworzenie i nauka z fiszkami napędzanymi przez AI">
     <div class="fixed top-0 right-0 p-4 z-10">
-      <a href="/auth/login" class="text-white bg-blue-600 hover:bg-blue-700 py-2 px-4 rounded-md transition-colors mr-2">
+      <a href="/auth/login" class="text-white bg-blue-600 hover:bg-blue-700 py-2 px-4 rounded-md transition-colors mr-2" data-testid="header-login-button">
         Zaloguj się
       </a>
-      <a href="/auth/register" class="text-blue-600 bg-white hover:bg-gray-100 py-2 px-4 rounded-md transition-colors">
+      <a href="/auth/register" class="text-blue-600 bg-white hover:bg-gray-100 py-2 px-4 rounded-md transition-colors" data-testid="header-register-button">
         Zarejestruj się
       </a>
     </div>
