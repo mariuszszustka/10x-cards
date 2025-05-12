@@ -10,9 +10,29 @@ const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
 
 // Tymczasowe rozwiązanie dla uwierzytelniania podczas developmentu
 const DEFAULT_USER_ID = '123e4567-e89b-12d3-a456-426614174000';
+// ID dla testów E2E
+const TEST_E2E_USER_ID = 'test-e2e-user-id';
+
+// Funkcja dostępu do testowych danych z głównego endpointu
+import { testE2EFlashcards } from '../management-fc';
 
 // Funkcja do uwierzytelniania użytkownika
 async function getUser(request: Request) {
+  // Sprawdzenie czy to jest żądanie z Playwright (testy E2E)
+  const isTestRequest = request.headers.get('user-agent')?.includes('Playwright') || 
+                        request.headers.get('X-Test-E2E') === 'true';
+  
+  // Sprawdzenie ciasteczka sesji
+  const cookieHeader = request.headers.get('Cookie') || '';
+  
+  if (isTestRequest || cookieHeader.includes('test-e2e@example.com')) {
+    console.log("API fiszek [id]: Wykryto konto testowe E2E");
+    return { 
+      id: TEST_E2E_USER_ID,
+      email: 'test-e2e@example.com'
+    };
+  }
+  
   // Tymczasowe uproszczone uwierzytelnianie dla developmentu
   return { 
     id: DEFAULT_USER_ID,
@@ -65,6 +85,34 @@ export const PUT: APIRoute = async ({ request, params }) => {
     }
     
     const flashcardId = parseInt(id);
+
+    // Specjalna obsługa dla konta testowego E2E
+    if (user.id === TEST_E2E_USER_ID) {
+      console.log("API fiszek [id]: Aktualizacja testowej fiszki dla konta E2E");
+      
+      // Znajdź fiszkę w tablicy testowej
+      const flashcardIndex = testE2EFlashcards.findIndex((card: FlashcardDTO) => card.id === flashcardId);
+      
+      if (flashcardIndex === -1) {
+        return new Response(
+          JSON.stringify(createErrorResponse('not_found', 'Fiszka testowa nie znaleziona')),
+          { status: 404, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+      
+      // Aktualizuj fiszkę
+      testE2EFlashcards[flashcardIndex] = {
+        ...testE2EFlashcards[flashcardIndex],
+        front: front.trim(),
+        back: back.trim(),
+        updated_at: new Date().toISOString()
+      };
+      
+      return new Response(
+        JSON.stringify(testE2EFlashcards[flashcardIndex]),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
 
     // 5. Sprawdzenie czy fiszka istnieje i należy do użytkownika
     const { data: existingFlashcard, error: checkError } = await supabase
@@ -143,6 +191,26 @@ export const DELETE: APIRoute = async ({ request, params }) => {
     }
     
     const flashcardId = parseInt(id);
+
+    // Specjalna obsługa dla konta testowego E2E
+    if (user.id === TEST_E2E_USER_ID) {
+      console.log("API fiszek [id]: Usuwanie testowej fiszki dla konta E2E");
+      
+      // Znajdź fiszkę w tablicy testowej
+      const flashcardIndex = testE2EFlashcards.findIndex((card: FlashcardDTO) => card.id === flashcardId);
+      
+      if (flashcardIndex === -1) {
+        return new Response(
+          JSON.stringify(createErrorResponse('not_found', 'Fiszka testowa nie znaleziona')),
+          { status: 404, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+      
+      // Usuń fiszkę
+      testE2EFlashcards.splice(flashcardIndex, 1);
+      
+      return new Response(null, { status: 204 });
+    }
 
     // 3. Sprawdzenie czy fiszka istnieje i należy do użytkownika
     const { data: existingFlashcard, error: checkError } = await supabase

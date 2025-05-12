@@ -6,14 +6,16 @@ export default function RegisterForm() {
     email: "",
     password: "",
     confirmPassword: "",
+    acceptTerms: false
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    const newValue = type === 'checkbox' ? checked : value;
+    setFormData((prev) => ({ ...prev, [name]: newValue }));
     
     // Usuwanie błędu po rozpoczęciu edycji pola
     if (errors[name]) {
@@ -49,6 +51,10 @@ export default function RegisterForm() {
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Hasła nie są zgodne";
     }
+
+    if (!formData.acceptTerms) {
+      newErrors.acceptTerms = "Musisz zaakceptować warunki użytkowania";
+    }
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -70,7 +76,11 @@ export default function RegisterForm() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          confirmPassword: formData.confirmPassword
+        }),
         redirect: 'follow',
       });
       
@@ -93,6 +103,7 @@ export default function RegisterForm() {
         email: "",
         password: "",
         confirmPassword: "",
+        acceptTerms: false
       });
       
     } catch (error) {
@@ -193,6 +204,28 @@ export default function RegisterForm() {
           {errors.confirmPassword && (
             <p className="mt-1 text-sm text-red-300">{errors.confirmPassword}</p>
           )}
+        </div>
+
+        <div className="flex items-start">
+          <div className="flex items-center h-5">
+            <input
+              id="acceptTerms"
+              name="acceptTerms"
+              type="checkbox"
+              checked={formData.acceptTerms}
+              onChange={handleChange}
+              className="w-4 h-4 bg-blue-800 border-blue-600 rounded focus:ring-blue-500"
+              data-testid="auth-terms-checkbox"
+            />
+          </div>
+          <div className="ml-3 text-sm">
+            <label htmlFor="acceptTerms" className="text-blue-100">
+              Akceptuję <a href="/terms" className="text-blue-300 hover:text-blue-200">warunki użytkowania</a> oraz <a href="/privacy" className="text-blue-300 hover:text-blue-200">politykę prywatności</a>
+            </label>
+            {errors.acceptTerms && (
+              <p className="mt-1 text-sm text-red-300">{errors.acceptTerms}</p>
+            )}
+          </div>
         </div>
       </div>
 
