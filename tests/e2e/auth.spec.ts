@@ -1,10 +1,115 @@
 import { test, expect } from '@playwright/test';
 import { AUTH, AUTH_BUTTONS, NOTIFICATIONS, DASHBOARD } from '../test-selectors';
 
+// Dodaję test do naprawy problemu z about:blank
+test('Diagnoza problemu z przekierowaniem na about:blank', async ({ page }) => {
+  // Dodaję nagłówek identyfikujący jako test E2E
+  await page.setExtraHTTPHeaders({
+    'X-Test-E2E': 'true'
+  });
+  
+  // Włączamy przechwytywanie błędów strony
+  page.on('pageerror', exception => {
+    console.error(`Błąd strony: ${exception.message}`);
+  });
+  
+  // Włączamy przechwytywanie błędów sieci
+  page.on('requestfailed', request => {
+    const failure = request.failure();
+    console.error(`Błąd żądania: ${request.url()} - ${failure ? failure.errorText : 'nieznany błąd'}`);
+  });
+  
+  // Włączamy logowanie konsoli
+  page.on('console', msg => {
+    console.log(`KONSOLA STRONY: ${msg.type()}: ${msg.text()}`);
+  });
+  
+  // Najpierw otwieramy stronę główną, żeby sprawdzić, czy serwer działa
+  console.log('Test naprawczy: Otwieranie strony głównej...');
+  await page.goto('/', { timeout: 30000 });
+  console.log('Test naprawczy: Strona główna otwarta, URL:', page.url());
+  
+  // Zrzut ekranu strony głównej
+  await page.screenshot({ path: 'diagnostic-homepage.png' });
+  
+  // Czekamy chwilę
+  await page.waitForTimeout(1000);
+  
+  // Teraz próbujemy otworzyć stronę logowania
+  console.log('Test naprawczy: Przechodzę na stronę logowania...');
+  await page.goto('/auth/login', { timeout: 30000 });
+  console.log('Test naprawczy: Strona logowania otwarta, URL:', page.url());
+  
+  // Zapisujemy zrzut ekranu
+  await page.screenshot({ path: 'diagnostic-login.png' });
+  
+  // Szukamy formularza logowania
+  const emailInput = page.getByTestId(AUTH.EMAIL_INPUT);
+  const passwordInput = page.getByTestId(AUTH.PASSWORD_INPUT);
+  const loginButton = page.getByTestId(AUTH.SUBMIT_BUTTON);
+  
+  // Sprawdzamy, czy formularz jest widoczny
+  const emailVisible = await emailInput.isVisible().catch(() => false);
+  const passwordVisible = await passwordInput.isVisible().catch(() => false);
+  const buttonVisible = await loginButton.isVisible().catch(() => false);
+  
+  console.log('Test naprawczy: Formularz widoczny?', 
+    emailVisible ? 'Email: Tak' : 'Email: Nie',
+    passwordVisible ? 'Hasło: Tak' : 'Hasło: Nie',
+    buttonVisible ? 'Przycisk: Tak' : 'Przycisk: Nie'
+  );
+  
+  // Jeśli formularz jest widoczny, wypełniamy go
+  if (emailVisible && passwordVisible && buttonVisible) {
+    await emailInput.fill('test-e2e@example.com');
+    await passwordInput.fill('Test123!@#');
+    
+    // Zrzut ekranu po wypełnieniu
+    await page.screenshot({ path: 'diagnostic-form-filled.png' });
+    
+    // Klikamy przycisk logowania
+    console.log('Test naprawczy: Klikam przycisk logowania...');
+    await loginButton.click();
+    
+    // Czekamy na przetworzenie
+    await page.waitForTimeout(5000);
+    
+    // Dodajemy zrzut ekranu po kliknięciu
+    await page.screenshot({ path: 'diagnostic-after-click.png' });
+    console.log('Test naprawczy: Po kliknięciu, URL:', page.url());
+    
+    // Sprawdzamy localStorage
+    const localStorage = await page.evaluate(() => {
+      return {
+        userId: window.localStorage.getItem('userId'),
+        authSession: window.localStorage.getItem('authSession'),
+        userEmail: window.localStorage.getItem('userEmail')
+      };
+    });
+    
+    console.log('Test naprawczy: Stan localStorage:', JSON.stringify(localStorage, null, 2));
+    
+    // Ręcznie próbujemy przejść na dashboard
+    console.log('Test naprawczy: Próbuję przejść na dashboard...');
+    await page.goto('/dashboard', { timeout: 30000 });
+    console.log('Test naprawczy: Po próbie przejścia na dashboard, URL:', page.url());
+    
+    // Zrzut ekranu dashboard
+    await page.screenshot({ path: 'diagnostic-dashboard.png' });
+  }
+});
+
 test.describe('Testy autoryzacji', () => {
   test('Logowanie z poprawnymi danymi', async ({ page }) => {
+    // Dodaję nagłówek identyfikujący jako test E2E
+    await page.setExtraHTTPHeaders({
+      'X-Test-E2E': 'true'
+    });
+    
     // Otwórz stronę logowania
-    await page.goto('/auth/login');
+    console.log('Próba otwarcia strony logowania...');
+    await page.goto('/auth/login', { timeout: 30000 });
+    console.log('Strona logowania otwarta, URL:', page.url());
     
     // Znajdź elementy formularza
     const emailInput = page.getByTestId(AUTH.EMAIL_INPUT);
@@ -12,13 +117,19 @@ test.describe('Testy autoryzacji', () => {
     const loginButton = page.getByTestId(AUTH.SUBMIT_BUTTON);
     
     // Upewnij się, że elementy istnieją
-    await expect(emailInput).toBeVisible();
-    await expect(passwordInput).toBeVisible();
-    await expect(loginButton).toBeVisible();
+    console.log('Sprawdzam czy elementy formularza są widoczne...');
+    await expect(emailInput).toBeVisible({ timeout: 10000 });
+    await expect(passwordInput).toBeVisible({ timeout: 10000 });
+    await expect(loginButton).toBeVisible({ timeout: 10000 });
+    console.log('Elementy formularza są widoczne');
     
     // Wypełnij formularz
     await emailInput.fill('test-e2e@example.com');
     await passwordInput.fill('Test123!@#');
+    console.log('Formularz wypełniony');
+    
+    // Zapisz screenshot przed kliknięciem
+    await page.screenshot({ path: 'test-before-login.png' });
     
     // Kliknij przycisk logowania
     console.log('Klikam przycisk logowania');
@@ -28,7 +139,11 @@ test.describe('Testy autoryzacji', () => {
     console.log('Oczekiwanie na zmiany po logowaniu...');
     
     // Dajemy aplikacji czas na przetworzenie logowania
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(5000);
+    console.log('Po czekaniu, aktualny URL:', page.url());
+    
+    // Zapisz screenshot po kliknięciu
+    await page.screenshot({ path: 'test-after-login.png' });
     
     // Próba sprawdzenia, czy jesteśmy zalogowani
     // Może być na stronie dashboard lub stronie logowania z komunikatem

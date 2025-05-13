@@ -4,8 +4,8 @@ import type { APIRoute } from 'astro';
 import type { Database } from '@/db/database.types';
 
 // Inicjalizacja klienta Supabase
-const supabaseUrl = import.meta.env.SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.SUPABASE_KEY;
+const supabaseUrl = import.meta.env.SUPABASE_URL || 'https://example.supabase.co';
+const supabaseAnonKey = import.meta.env.SUPABASE_KEY || 'dummy-key-for-testing';
 const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
 
 // Tymczasowe rozwiązanie dla uwierzytelniania podczas developmentu

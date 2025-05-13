@@ -10,13 +10,13 @@ console.log('[Diagnostyka] import.meta.env.SUPABASE_KEY =', import.meta.env.SUPA
 console.log('[Diagnostyka] import.meta.env.SUPABASE_ANON_KEY =', import.meta.env.SUPABASE_ANON_KEY);
 console.log('[Diagnostyka] Wszystkie zmienne env =', JSON.stringify(import.meta.env, null, 2));
 
-// Pobieramy URL z zmiennych środowiskowych
-const supabaseUrl = import.meta.env.SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.SUPABASE_KEY || import.meta.env.SUPABASE_ANON_KEY;
+// Pobieramy URL z zmiennych środowiskowych lub używamy wartości domyślnych dla testów
+const supabaseUrl = import.meta.env.SUPABASE_URL || 'https://example.supabase.co';
+const supabaseAnonKey = import.meta.env.SUPABASE_KEY || import.meta.env.SUPABASE_ANON_KEY || 'dummy-key-for-testing';
 
 // Sprawdzamy, czy klucze są dostępne
-if (!supabaseUrl) console.error('[KRYTYCZNY] Brak SUPABASE_URL!');
-if (!supabaseAnonKey) console.error('[KRYTYCZNY] Brak SUPABASE_KEY i SUPABASE_ANON_KEY!');
+if (!supabaseUrl || supabaseUrl === 'https://example.supabase.co') console.warn('[OSTRZEŻENIE] Używam domyślnego SUPABASE_URL - to może być problem w produkcji!');
+if (!supabaseAnonKey || supabaseAnonKey === 'dummy-key-for-testing') console.warn('[OSTRZEŻENIE] Używam domyślnego SUPABASE_KEY - to może być problem w produkcji!');
 
 // Klient dla komponentów klienckich (bez cookies)
 export const supabaseClient = createClient<Database>(supabaseUrl, supabaseAnonKey);

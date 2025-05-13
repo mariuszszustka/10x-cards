@@ -31,7 +31,7 @@ test('Debug logowania - sprawdzenie co się dzieje po wypełnieniu formularza', 
   await page.screenshot({ path: 'before-login.png' });
   
   // Włącz śledzenie requestów
-  const requests = [];
+  const requests: string[] = [];
   page.on('request', request => {
     requests.push(`${request.method()} ${request.url()}`);
   });
@@ -55,10 +55,15 @@ test('Debug logowania - sprawdzenie co się dzieje po wypełnieniu formularza', 
   
   // Sprawdź localStorage
   const localStorage = await page.evaluate(() => {
-    const items = {};
+    const items: Record<string, string> = {};
     for (let i = 0; i < window.localStorage.length; i++) {
       const key = window.localStorage.key(i);
-      items[key] = window.localStorage.getItem(key);
+      if (key !== null) {
+        const value = window.localStorage.getItem(key);
+        if (value !== null) {
+          items[key] = value;
+        }
+      }
     }
     return items;
   });
@@ -82,4 +87,77 @@ test('Debug logowania - sprawdzenie co się dzieje po wypełnieniu formularza', 
   
   // Zrzut ekranu po próbie ręcznego przejścia
   await page.screenshot({ path: 'manual-dashboard.png' });
+});
+
+// Dodaję nowy test diagnostyczny, który sprawdzi, czy strona logowania ładuje się poprawnie
+test('Test diagnostyczny dostępu do strony logowania', async ({ page }) => {
+  console.log('Rozpoczynam test diagnostyczny strony logowania');
+
+  // Włączam przechwytywanie błędów strony
+  page.on('pageerror', exception => {
+    console.error(`Błąd strony: ${exception.message}`);
+  });
+
+  // Włączam przechwytywanie błędów sieci
+  page.on('requestfailed', request => {
+    const failure = request.failure();
+    console.error(`Błąd żądania: ${request.url()} - ${failure ? failure.errorText : 'nieznany błąd'}`);
+  });
+
+  // Włączam logowanie konsoli
+  page.on('console', msg => {
+    console.log(`KONSOLA STRONY [${msg.type()}]: ${msg.text()}`);
+  });
+
+  try {
+    // Najpierw spróbuję otworzyć stronę główną aby sprawdzić, czy serwer działa
+    console.log('Próba otwarcia strony głównej...');
+    await page.goto('/', { timeout: 30000 });
+    console.log('Strona główna: ' + page.url());
+    
+    // Zapisuję zrzut ekranu strony głównej
+    await page.screenshot({ path: 'homepage.png' });
+    
+    // Sprawdzam, czy strona główna załadowała się poprawnie
+    const homepageHtml = await page.content();
+    console.log('Pierwsze 100 znaków HTML strony głównej: ' + homepageHtml.substring(0, 100));
+    
+    // Próba otwarcia strony logowania
+    console.log('Próba otwarcia strony logowania...');
+    await page.goto('/auth/login', { timeout: 30000 });
+    console.log('Strona logowania: ' + page.url());
+    
+    // Zapisuję zrzut ekranu strony logowania
+    await page.screenshot({ path: 'login-page.png' });
+    
+    // Sprawdzam, czy strona logowania załadowała się poprawnie
+    const loginHtml = await page.content();
+    console.log('Pierwsze 100 znaków HTML strony logowania: ' + loginHtml.substring(0, 100));
+
+    // Sprawdzam, czy widoczny jest formularz logowania
+    const emailInputExists = await page.locator('input[type="email"]').count() > 0;
+    const passwordInputExists = await page.locator('input[type="password"]').count() > 0;
+    const loginButtonExists = await page.locator('button[type="submit"]').count() > 0;
+
+    console.log('Formularz logowania:', 
+      emailInputExists ? 'Email: Tak' : 'Email: Nie', 
+      passwordInputExists ? 'Hasło: Tak' : 'Hasło: Nie',
+      loginButtonExists ? 'Przycisk: Tak' : 'Przycisk: Nie'
+    );
+
+    // Sprawdzam, czy strona używa selektorów testowych
+    const emailInputByTestId = await page.getByTestId('auth-email-input').count() > 0;
+    const passwordInputByTestId = await page.getByTestId('auth-password-input').count() > 0;
+    const submitButtonByTestId = await page.getByTestId('auth-submit-button').count() > 0;
+
+    console.log('Selektory testowe:', 
+      emailInputByTestId ? 'Email: Tak' : 'Email: Nie', 
+      passwordInputByTestId ? 'Hasło: Tak' : 'Hasło: Nie',
+      submitButtonByTestId ? 'Przycisk: Tak' : 'Przycisk: Nie'
+    );
+
+  } catch (error) {
+    console.error('Błąd podczas testu diagnostycznego:', error);
+    await page.screenshot({ path: 'error-screenshot.png' });
+  }
 }); 

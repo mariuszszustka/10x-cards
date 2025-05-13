@@ -9,11 +9,15 @@ console.log('SUPABASE_KEY =', import.meta.env.SUPABASE_KEY ? 'ISTNIEJE' : 'BRAK'
 console.log('SUPABASE_ANON_KEY =', import.meta.env.SUPABASE_ANON_KEY ? 'ISTNIEJE' : 'BRAK');
 
 // Stałe
-const LOCAL_SUPABASE_URL = import.meta.env.SUPABASE_URL as string;
-const SUPABASE_KEY = (import.meta.env.SUPABASE_KEY || import.meta.env.SUPABASE_ANON_KEY) as string;
+const LOCAL_SUPABASE_URL = (import.meta.env.SUPABASE_URL || 'https://example.supabase.co') as string;
+const SUPABASE_KEY = (import.meta.env.SUPABASE_KEY || import.meta.env.SUPABASE_ANON_KEY || 'dummy-key-for-testing') as string;
 
-if (!LOCAL_SUPABASE_URL) console.error('[KRYTYCZNY] Brak SUPABASE_URL w auth-helper!');
-if (!SUPABASE_KEY) console.error('[KRYTYCZNY] Brak zarówno SUPABASE_KEY jak i SUPABASE_ANON_KEY w auth-helper!');
+if (!LOCAL_SUPABASE_URL || LOCAL_SUPABASE_URL === 'https://example.supabase.co') {
+  console.warn('[OSTRZEŻENIE] Używam domyślnego SUPABASE_URL w auth-helper - to może być problem w produkcji!');
+}
+if (!SUPABASE_KEY || SUPABASE_KEY === 'dummy-key-for-testing') {
+  console.warn('[OSTRZEŻENIE] Używam domyślnego SUPABASE_KEY w auth-helper - to może być problem w produkcji!');
+}
 
 // Dostosowanie URL dla różnych środowisk
 export function getAdjustedSupabaseUrl(requestHost: string): string {

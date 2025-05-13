@@ -4,7 +4,7 @@ import { AUTH, GENERATION, FLASHCARDS, NOTIFICATIONS } from '../test-selectors';
 
 // Funkcja pomocnicza do logowania
 async function loginUser(page: Page) {
-  await page.goto('/login');
+  await page.goto('/auth/login');
   await page.getByTestId(AUTH.EMAIL_INPUT).fill('test-e2e@example.com');
   await page.getByTestId(AUTH.PASSWORD_INPUT).fill('Test123!@#');
   await page.getByTestId(AUTH.SUBMIT_BUTTON).click();
