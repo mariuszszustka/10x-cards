@@ -13,10 +13,23 @@ export function ensureArtifactsDir() {
   }
 }
 
+// Upewnij się, że katalog na tymczasowe zrzuty ekranu testów istnieje
+export function ensureTmpScreenshotsDir() {
+  const dirPath = './tmp/test-screenshots';
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+  }
+}
+
 // Zapisz zrzut ekranu
-export async function saveScreenshot(page: Page, name: string) {
-  ensureArtifactsDir();
-  await page.screenshot({ path: `./test-artifacts/${name}.png`, fullPage: true });
+export async function saveScreenshot(page: Page, name: string, tmpOnly: boolean = false) {
+  if (tmpOnly) {
+    ensureTmpScreenshotsDir();
+    await page.screenshot({ path: `./tmp/test-screenshots/${name}.png`, fullPage: true });
+  } else {
+    ensureArtifactsDir();
+    await page.screenshot({ path: `./test-artifacts/${name}.png`, fullPage: true });
+  }
 }
 
 // Sprawdź, czy użytkownik jest już zalogowany

@@ -22,7 +22,8 @@
     "test:e2e:smoke": "playwright test smoke-test.spec.ts --project=chromium",
     "test:e2e:auth": "playwright test auth-basic.spec.ts --project=chromium",
     "test:e2e:flashcards": "playwright test flashcards-basic.spec.ts --project=chromium",
-    "test:e2e:basic": "playwright test smoke-test.spec.ts auth-basic.spec.ts flashcards-basic.spec.ts --project=chromium"
+    "test:e2e:basic": "playwright test smoke-test.spec.ts auth-basic.spec.ts flashcards-basic.spec.ts --project=chromium",
+    "clean:tmp": "node scripts/clean-tmp.js"
   },
   "dependencies": {
     "@astrojs/check": "^0.5.9",

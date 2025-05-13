@@ -1,6 +1,24 @@
 import { defineConfig, devices } from '@playwright/test';
 import * as path from 'path';
 import * as dotenv from 'dotenv';
+import * as fs from 'fs';
+
+// Utworzenie katalogów tymczasowych, jeśli nie istnieją
+const tmpDir = path.resolve(process.cwd(), 'tmp');
+const screenshotsDir = path.resolve(tmpDir, 'test-screenshots');
+const videosDir = path.resolve(tmpDir, 'test-videos');
+
+if (!fs.existsSync(tmpDir)) {
+  fs.mkdirSync(tmpDir, { recursive: true });
+}
+
+if (!fs.existsSync(screenshotsDir)) {
+  fs.mkdirSync(screenshotsDir, { recursive: true });
+}
+
+if (!fs.existsSync(videosDir)) {
+  fs.mkdirSync(videosDir, { recursive: true });
+}
 
 // Wczytanie zmiennych środowiskowych z pliku .env.test
 try {
@@ -67,4 +85,7 @@ export default defineConfig({
     timeout: 180 * 1000,
     reuseExistingServer: true,
   },
+  
+  // Konfiguracja katalogów wyjściowych
+  outputDir: './tmp/test-results',
 }); 

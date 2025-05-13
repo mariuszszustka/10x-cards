@@ -25,3 +25,9 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# temporary files and test artifacts
+tmp/
+test-artifacts/
+test-results/
+playwright-report/
