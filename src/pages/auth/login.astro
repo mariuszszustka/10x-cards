@@ -5,18 +5,24 @@ import LoginForm from "../../components/auth/LoginForm";
 // Wyłączenie prerenderowania
 export const prerender = false;
 
+// Sprawdzamy, czy to jest żądanie z testów E2E
+const isTestRequest = Astro.request.headers.get('X-Test-E2E') === 'true';
+const wantsLoginForm = Astro.request.headers.get('X-Test-Login-Form') === 'true';
+
 // Diagnostyka - sprawdzenie sesji
 const { user, supabase } = Astro.locals;
 console.log("Login page - otrzymany użytkownik z middleware:", user ? `ID: ${user.id}` : "brak");
+console.log("Login page - nagłówek X-Test-E2E:", Astro.request.headers.get('X-Test-E2E'));
+console.log("Login page - nagłówek X-Test-Login-Form:", Astro.request.headers.get('X-Test-Login-Form'));
 
-// Sprawdzenie, czy użytkownik jest już zalogowany
-if (user) {
+// Sprawdzenie, czy użytkownik jest już zalogowany (pomijamy dla żądań z testów E2E)
+if (user && !isTestRequest && !wantsLoginForm) {
   console.log("Użytkownik już zalogowany, przekierowuję na dashboard");
   return Astro.redirect('/dashboard');
 }
 
-// Dodatkowa weryfikacja sesji (diagnostyczna)
-if (supabase) {
+// Dodatkowa weryfikacja sesji (diagnostyczna) - również pomijamy dla testów E2E
+if (supabase && !isTestRequest && !wantsLoginForm) {
   const { data } = await supabase.auth.getSession();
   console.log("Login page - sesja z Supabase:", data.session ? `Aktywna, user: ${data.session.user.id}` : "brak sesji");
   
@@ -29,7 +35,16 @@ if (supabase) {
 ---
 
 <AuthLayout title="Logowanie | 10x Cards">
+  {isTestRequest && <meta name="x-test-e2e" content="true" />}
+  
   <Fragment slot="title">Zaloguj się</Fragment>
+  
+  <!-- Dodajemy komunikat dla testów E2E -->
+  {isTestRequest && (
+    <div class="p-2 bg-yellow-500/20 border border-yellow-500/30 rounded-md mb-4 text-sm">
+      Tryb testu E2E aktywny - pomiń automatyczne przekierowania
+    </div>
+  )}
   
   <LoginForm client:load />
   
@@ -39,4 +54,28 @@ if (supabase) {
       Zarejestruj się
     </a>
   </p>
+  
+  <!-- Skrypt diagnostyczny dla testów E2E -->
+  {isTestRequest && (
+    <script is:inline>
+      console.log('[Login Page Test] Strona logowania załadowana w trybie testowym');
+      document.addEventListener('DOMContentLoaded', () => {
+        // Sprawdź, czy formularz jest widoczny
+        const emailInput = document.querySelector('[data-testid="auth-email-input"]');
+        const passwordInput = document.querySelector('[data-testid="auth-password-input"]');
+        const submitButton = document.querySelector('[data-testid="auth-submit-button"]');
+        
+        console.log('[Login Page Test] Elementy formularza:', {
+          email: emailInput ? 'znaleziony' : 'brak',
+          password: passwordInput ? 'znaleziony' : 'brak',
+          button: submitButton ? 'znaleziony' : 'brak'
+        });
+        
+        // Niech wszystkie testy wiedzą, że formularz jest gotowy
+        if (emailInput && passwordInput && submitButton) {
+          document.body.setAttribute('data-test-login-form-ready', 'true');
+        }
+      });
+    </script>
+  )}
 </AuthLayout> 

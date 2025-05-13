@@ -160,4 +160,68 @@ test('Test diagnostyczny dostępu do strony logowania', async ({ page }) => {
     console.error('Błąd podczas testu diagnostycznego:', error);
     await page.screenshot({ path: 'error-screenshot.png' });
   }
+});
+
+// Dodaję nowy test do debugowania strony logowania 
+test('Test renderowania selektorów testowych na stronie logowania', async ({ page }) => {
+  // Ustawiam nagłówek E2E
+  await page.setExtraHTTPHeaders({
+    'X-Test-E2E': 'true'
+  });
+  
+  // Włączam rejestrowanie błędów
+  page.on('pageerror', error => {
+    console.error('Błąd strony:', error.message);
+  });
+  
+  console.log('Próba otwarcia strony logowania...');
+  await page.goto('/auth/login', { timeout: 30000, waitUntil: 'networkidle' });
+  console.log('Strona logowania otwarta, URL:', page.url());
+  
+  // Zapisuję zrzut ekranu
+  await page.screenshot({ path: 'login-render-debug.png' });
+  
+  // Sprawdzam HTML strony
+  const html = await page.content();
+  console.log('Pełny HTML strony logowania:');
+  console.log(html);
+  
+  // Sprawdzam, czy LoginForm jest załadowany jako komponent kliencki
+  const hasLoginForm = html.includes('LoginForm');
+  console.log('HTML zawiera nazwę LoginForm:', hasLoginForm);
+  
+  // Sprawdzam, czy występują data-testid w kodzie HTML
+  const hasTestIds = html.includes('data-testid');
+  console.log('HTML zawiera atrybuty data-testid:', hasTestIds);
+  
+  // Sprawdzam, czy atrybuty testowe są obecne
+  const authEmailInput = html.includes('data-testid="auth-email-input"');
+  const authPasswordInput = html.includes('data-testid="auth-password-input"');
+  const authSubmitButton = html.includes('data-testid="auth-submit-button"');
+  
+  console.log('Atrybuty testowe w HTML:', {
+    'auth-email-input': authEmailInput,
+    'auth-password-input': authPasswordInput,
+    'auth-submit-button': authSubmitButton
+  });
+  
+  // Sprawdzam, czy React został załadowany
+  const reactLoaded = await page.evaluate(() => {
+    return typeof window.React !== 'undefined';
+  });
+  
+  console.log('React jest załadowany:', reactLoaded);
+  
+  // Sprawdzam, czy komponent został prawidłowo zahydrowany
+  await page.waitForTimeout(5000); // Czekam na hydratację
+  
+  // Sprawdzam, czy po hydratacji elementy są dostępne
+  const emailInputAfterHydration = await page.evaluate(() => {
+    return document.querySelector('[data-testid="auth-email-input"]') !== null;
+  });
+  
+  console.log('Element email po hydratacji:', emailInputAfterHydration);
+  
+  // Zrzut ekranu po hydratacji
+  await page.screenshot({ path: 'login-after-hydration.png' });
 }); 

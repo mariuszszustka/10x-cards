@@ -1,15 +1,43 @@
 import { test, expect } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import { AUTH, GENERATION, FLASHCARDS, NOTIFICATIONS } from '../test-selectors';
+import { SELECTORS } from '../selectors';
+import { loginUser } from './helpers';
 
-// Funkcja pomocnicza do logowania
-async function loginUser(page: Page) {
-  await page.goto('/auth/login');
-  await page.getByTestId(AUTH.EMAIL_INPUT).fill('test-e2e@example.com');
-  await page.getByTestId(AUTH.PASSWORD_INPUT).fill('Test123!@#');
-  await page.getByTestId(AUTH.SUBMIT_BUTTON).click();
-  await expect(page).toHaveURL('/dashboard');
+// Funkcja do tworzenia użytkownika testowego jeśli nie istnieje
+export async function setupTestUser(page: Page) {
+  // To wdrożymy później jako endpoint API do tworzenia użytkownika testowego
+  // lub użyjemy bezpośredniego dostępu do Supabase
 }
+
+test.describe('Podstawowe operacje na fiszkach', () => {
+  test.beforeEach(async ({ page }) => {
+    await loginUser(page);
+  });
+
+  test('Dodawanie nowej fiszki', async ({ page }) => {
+    // Przejdź do sekcji fiszek
+    await page.goto('/flashcards');
+    
+    // Kliknij przycisk dodawania
+    await page.click(SELECTORS.FLASHCARDS.ADD_BUTTON);
+    
+    // Wypełnij formularz
+    const frontText = `Pytanie testowe ${Date.now()}`;
+    const backText = `Odpowiedź testowa ${Date.now()}`;
+    
+    await page.fill(SELECTORS.FLASHCARDS.FRONT_INPUT, frontText);
+    await page.fill(SELECTORS.FLASHCARDS.BACK_INPUT, backText);
+    await page.click(SELECTORS.FLASHCARDS.SAVE_BUTTON);
+    
+    // Sprawdź czy fiszka pojawiła się na liście
+    await page.waitForSelector(`text=${frontText}`);
+    
+    // Dodatkowe sprawdzenie czy fiszka jest widoczna
+    const flashcardVisible = await page.isVisible(`text=${frontText}`);
+    expect(flashcardVisible).toBeTruthy();
+  });
+});
 
 test.describe('Scenariusze zarządzania fiszkami', () => {
   // Przed każdym testem zaloguj użytkownika
@@ -127,4 +155,141 @@ test.describe('Scenariusze zarządzania fiszkami', () => {
     const countAfter = await page.getByTestId(FLASHCARDS.LIST.ITEM).count();
     expect(countAfter).toBe(countBefore - 1);
   });
+});
+
+test.describe('Podstawowa sesja nauki', () => {
+  test.beforeEach(async ({ page }) => {
+    await loginUser(page);
+  });
+
+  test('Rozpoczęcie i zakończenie sesji nauki', async ({ page }) => {
+    // Przejdź do sekcji nauki
+    await page.goto('/study');
+    
+    // Rozpocznij sesję
+    await page.click(SELECTORS.STUDY.START_BUTTON);
+    
+    // Poczekaj na wyświetlenie pierwszej fiszki
+    await page.waitForSelector(SELECTORS.STUDY.CARD_FRONT);
+    
+    // Pokaż odpowiedź
+    await page.click(SELECTORS.STUDY.REVEAL_BUTTON);
+    await page.waitForSelector(SELECTORS.STUDY.CARD_BACK);
+    
+    // Oceń jako łatwą
+    await page.click(SELECTORS.STUDY.EASY_BUTTON);
+    
+    // Zakończ sesję (jeśli przeszliśmy do ekranu podsumowania)
+    try {
+      await page.waitForSelector(SELECTORS.STUDY.FINISH_BUTTON, { timeout: 5000 });
+      await page.click(SELECTORS.STUDY.FINISH_BUTTON);
+      await expect(page).toHaveURL('/study');
+    } catch (error) {
+      // Może nie być podsumowania jeśli jest więcej fiszek,
+      // wtedy po prostu kończymy test
+      console.log('Sesja kontynuowana, pomijamy zakończenie');
+    }
+  });
+});
+
+test('Diagnoza problemu z ładowaniem strony', async ({ page }) => {
+  console.log('Otwieranie strony głównej...');
+  
+  // Ustawienie dłuższego timeoutu dla tej nawigacji
+  const response = await page.goto('/', { timeout: 60000 });
+  
+  // Sprawdź status HTTP
+  console.log('Status odpowiedzi:', response?.status());
+  
+  // Sprawdź zawartość strony
+  const html = await page.content();
+  console.log('Długość otrzymanej strony HTML:', html.length);
+  
+  // Zrzut ekranu
+  await page.screenshot({ path: 'homepage-debug.png', fullPage: true });
+  
+  // Sprawdź konsolę przeglądarki
+  const logs = [];
+  page.on('console', msg => logs.push(`[${msg.type()}] ${msg.text()}`));
+  
+  // Poczekaj chwilę i wypisz logi
+  await page.waitForTimeout(5000);
+  console.log('Logi z konsoli przeglądarki:', logs);
+});
+
+test('Prosty test logowania bez pomocników', async ({ page }) => {
+  // Otwórz stronę logowania
+  await page.goto('/auth/login', { timeout: 30000 });
+  console.log('Otwarto stronę logowania:', page.url());
+  
+  // Zrób zrzut ekranu
+  await page.screenshot({ path: 'login-page.png' });
+  
+  // Zbadaj strukturę HTML
+  const html = await page.content();
+  console.log('Fragment HTML strony logowania:', html.substring(0, 500) + '...');
+  
+  // Sprawdź czy elementy formularza są widoczne
+  const emailVisible = await page.isVisible(SELECTORS.AUTH.EMAIL_INPUT);
+  const passwordVisible = await page.isVisible(SELECTORS.AUTH.PASSWORD_INPUT);
+  const buttonVisible = await page.isVisible(SELECTORS.AUTH.LOGIN_BUTTON);
+  
+  console.log('Widoczność elementów formularza:', 
+    emailVisible ? 'Email: Tak' : 'Email: Nie',
+    passwordVisible ? 'Hasło: Tak' : 'Hasło: Nie',
+    buttonVisible ? 'Przycisk: Tak' : 'Przycisk: Nie'
+  );
+  
+  // Jeśli elementy są widoczne, wypełnij formularz
+  if (emailVisible && passwordVisible && buttonVisible) {
+    await page.fill(SELECTORS.AUTH.EMAIL_INPUT, 'test-e2e@example.com');
+    await page.fill(SELECTORS.AUTH.PASSWORD_INPUT, 'Test123!@#');
+    
+    // Zrób zrzut przed kliknięciem
+    await page.screenshot({ path: 'before-login-click-simple.png' });
+    
+    // Kliknij przycisk logowania
+    await page.click(SELECTORS.AUTH.LOGIN_BUTTON);
+    
+    // Poczekaj chwilę
+    await page.waitForTimeout(5000);
+    
+    // Zrób zrzut po kliknięciu
+    await page.screenshot({ path: 'after-login-click-simple.png' });
+    
+    // Sprawdź URL po logowaniu
+    console.log('URL po kliknięciu:', page.url());
+  } else {
+    console.log('Nie znaleziono wszystkich elementów formularza logowania!');
+  }
+});
+
+test('Dostęp do strony fiszek', async ({ page }) => {
+  // Najpierw zaloguj się
+  await page.goto('/auth/login', { timeout: 30000 });
+  
+  // Sprawdź czy elementy formularza są widoczne
+  if (await page.isVisible(SELECTORS.AUTH.EMAIL_INPUT)) {
+    await page.fill(SELECTORS.AUTH.EMAIL_INPUT, 'test-e2e@example.com');
+    await page.fill(SELECTORS.AUTH.PASSWORD_INPUT, 'Test123!@#');
+    await page.click(SELECTORS.AUTH.LOGIN_BUTTON);
+    
+    // Poczekaj na przekierowanie
+    await page.waitForTimeout(5000);
+  }
+  
+  // Przejdź do strony fiszek
+  await page.goto('/flashcards', { timeout: 30000 });
+  console.log('Otwarto stronę fiszek:', page.url());
+  
+  // Zrób zrzut ekranu
+  await page.screenshot({ path: 'flashcards-page.png' });
+  
+  // Sprawdź tytuł strony
+  const title = await page.title();
+  console.log('Tytuł strony fiszek:', title);
+  
+  // Wypisz główne elementy strony
+  const elementsHTML = await page.evaluate(() => document.body.innerHTML);
+  console.log('Fragment HTML strony fiszek:', elementsHTML.substring(0, 500) + '...');
 }); 

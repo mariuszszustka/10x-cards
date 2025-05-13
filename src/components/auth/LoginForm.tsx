@@ -226,6 +226,7 @@ export default function LoginForm() {
             <a 
               href="/auth/reset-password" 
               className="text-sm text-blue-300 hover:text-blue-200"
+              data-testid="auth-forgot-password-link"
             >
               Zapomniałem hasła
             </a>
@@ -249,38 +250,37 @@ export default function LoginForm() {
       </div>
 
       {errors.form && (
-        <div className="p-3 bg-red-500/20 border border-red-500/30 rounded-md">
+        <div className="bg-red-500/20 border border-red-500/30 p-3 rounded-md">
           <p className="text-sm text-red-300">{errors.form}</p>
         </div>
       )}
 
       {debugInfo && (
-        <div className="p-3 bg-blue-500/20 border border-blue-500/30 rounded-md mb-4">
-          <p className="text-sm text-blue-300 font-semibold mb-1">Informacje diagnostyczne:</p>
-          <pre className="text-xs text-blue-200 overflow-auto max-h-40">
-            {JSON.stringify(debugInfo, null, 2)}
-          </pre>
+        <div className="bg-gray-500/20 border border-gray-500/30 p-3 rounded-md text-xs">
+          <p>Status: {debugInfo.status}</p>
+          <p>Typ: {debugInfo.type}</p>
+          <pre>{JSON.stringify(debugInfo.data, null, 2)}</pre>
         </div>
       )}
 
-      <Button
-        type="submit"
-        className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-medium py-2 px-4 rounded-md"
-        disabled={isLoading}
-        data-testid="auth-submit-button"
-      >
-        {isLoading ? "Logowanie..." : "Zaloguj się"}
-      </Button>
+      <div className="flex flex-col gap-3">
+        <Button
+          type="submit"
+          className="w-full py-2"
+          disabled={isLoading}
+          data-testid="auth-submit-button"
+        >
+          {isLoading ? "Logowanie..." : "Zaloguj się"}
+        </Button>
 
-      <div className="text-center mt-4">
-        <p className="text-sm text-blue-200 mb-2">Problemy z logowaniem?</p>
-        <button 
+        <button
           type="button"
           onClick={handleSendMagicLink}
-          className="text-sm text-blue-300 hover:text-blue-200"
+          className="text-sm text-blue-300 hover:text-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400/50 py-1"
           disabled={isLoading}
+          data-testid="auth-magic-link-button"
         >
-          Zaloguj się przez link wysłany na email
+          Zaloguj się linkiem magicznym
         </button>
       </div>
     </form>

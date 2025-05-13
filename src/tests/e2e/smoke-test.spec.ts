@@ -1,0 +1,31 @@
+import { test, expect } from '@playwright/test';
+import { ensureArtifactsDir } from './helpers';
+import * as fs from 'fs';
+
+test('Strona główna ładuje się poprawnie', async ({ page }) => {
+  ensureArtifactsDir();
+  
+  console.log('Rozpoczynam test strony głównej');
+  
+  // 1. Otwórz stronę główną
+  await page.goto('/', { timeout: 30000 });
+  console.log('Otwarto stronę główną:', page.url());
+  
+  // 2. Wykonaj zrzut ekranu
+  await page.screenshot({ path: './test-artifacts/homepage.png', fullPage: true });
+  
+  // 3. Sprawdź czy strona ma tytuł
+  const title = await page.title();
+  console.log('Tytuł strony:', title);
+  expect(title.length).toBeGreaterThan(0);
+  
+  // 4. Sprawdź podstawowe elementy strony
+  const html = await page.content();
+  expect(html).toContain('</html>');
+  expect(html.length).toBeGreaterThan(1000); // Strona nie powinna być pusta
+  
+  // 5. Zapisz HTML do analizy
+  fs.writeFileSync('./test-artifacts/homepage.html', html);
+  
+  console.log('Test strony głównej zakończony pomyślnie');
+}); 

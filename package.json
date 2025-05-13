@@ -18,7 +18,11 @@
     "test:e2e": "playwright test --project=chromium",
     "test:e2e:ui": "playwright test --ui --project=chromium",
     "test:e2e:debug": "playwright test --debug --project=chromium",
-    "test:e2e:setup": "playwright test --project='setup db'"
+    "test:e2e:setup": "playwright test --project='setup db'",
+    "test:e2e:smoke": "playwright test smoke-test.spec.ts --project=chromium",
+    "test:e2e:auth": "playwright test auth-basic.spec.ts --project=chromium",
+    "test:e2e:flashcards": "playwright test flashcards-basic.spec.ts --project=chromium",
+    "test:e2e:basic": "playwright test smoke-test.spec.ts auth-basic.spec.ts flashcards-basic.spec.ts --project=chromium"
   },
   "dependencies": {
     "@astrojs/check": "^0.5.9",
