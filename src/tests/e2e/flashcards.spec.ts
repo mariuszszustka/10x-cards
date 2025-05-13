@@ -46,7 +46,7 @@ test.describe('Scenariusze zarządzania fiszkami', () => {
   });
 
   test('E2E-GEN-001: Generowanie fiszek przez AI', async ({ page }) => {
-    // 1. Przejście do sekcji "Generuj fiszki"
+    // 1. Przejście do sekcji "Kreator fiszek"
     await page.getByTestId(FLASHCARDS.TABS.GENERATE).click();
     
     // 2. Wprowadzenie tekstu źródłowego
@@ -56,7 +56,7 @@ test.describe('Scenariusze zarządzania fiszkami', () => {
     // 3. Wybór modelu AI
     await page.getByTestId(GENERATION.FORM.MODEL_SELECTOR).selectOption('llama3.2:3b');
     
-    // 4. Kliknięcie przycisku "Generuj fiszki"
+    // 4. Kliknięcie przycisku "Kreator fiszek"
     await page.getByTestId(GENERATION.FORM.GENERATE_BUTTON).click();
     
     // 5. Oczekiwanie na propozycje fiszek (z dłuższym timeoutem, bo generowanie może trwać dłużej)
