@@ -209,6 +209,7 @@ export default function LoginForm() {
             className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-md text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
             placeholder="twoj@email.com"
             data-testid="auth-email-input"
+            style={{ caretColor: "transparent" }}
           />
           {errors.email && (
             <p className="mt-1 text-sm text-red-300">{errors.email}</p>
@@ -242,6 +243,7 @@ export default function LoginForm() {
             className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-md text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
             placeholder="••••••••"
             data-testid="auth-password-input"
+            style={{ caretColor: "transparent" }}
           />
           {errors.password && (
             <p className="mt-1 text-sm text-red-300">{errors.password}</p>

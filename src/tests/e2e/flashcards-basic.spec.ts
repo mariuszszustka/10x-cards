@@ -1,7 +1,23 @@
-import { test, expect } from '@playwright/test';
-import { loginUser, ensureArtifactsDir } from './helpers';
+import { test, expect, type Page } from '@playwright/test';
+import { ensureArtifactsDir } from './helpers';
 import { SELECTORS } from './selectors';
 import * as fs from 'fs';
+
+// Pomocnicza funkcja logowania
+async function loginUser(page: Page): Promise<boolean> {
+  await page.goto('/auth/login');
+  
+  const emailInput = page.locator('input[type="email"]');
+  const passwordInput = page.locator('input[type="password"]');
+  const loginButton = page.locator('button[type="submit"]');
+  
+  await emailInput.fill('test-e2e@example.com');
+  await passwordInput.fill('Test123!@#');
+  await loginButton.click();
+  
+  await page.waitForURL('**/dashboard');
+  return page.url().includes('/dashboard');
+}
 
 test('Dostęp do strony fiszek i podstawowa nawigacja', async ({ page }) => {
   ensureArtifactsDir();
@@ -18,12 +34,7 @@ test('Dostęp do strony fiszek i podstawowa nawigacja', async ({ page }) => {
   }
   
   // 2. Przejdź do strony fiszek - sprawdź różne możliwe ścieżki
-  const flashcardPaths = [
-    '/dashboard/flashcards',  // Dodana nowa ścieżka
-    '/dashboard/fiszki',      // Dodana nowa ścieżka
-    '/flashcards',
-    '/fiszki'
-  ];
+  const flashcardPaths = ['/flashcards'];
   
   let flashcardsAccessible = false;
   
@@ -120,4 +131,60 @@ test('Dostęp do strony fiszek i podstawowa nawigacja', async ({ page }) => {
   }
   
   console.log('Test dostępu do fiszek zakończony');
+});
+
+// Test podstawowych funkcji fiszek
+test('Podstawowe funkcje fiszek', async ({ page }) => {
+  console.log('Rozpoczynam test fiszek');
+  
+  // Logowanie użytkownika
+  const loggedIn = await loginUser(page);
+  expect(loggedIn).toBeTruthy();
+  console.log('Użytkownik zalogowany');
+  
+  // Przejście do strony fiszek
+  await page.goto('/flashcards');
+  console.log('Przejście na stronę fiszek');
+  
+  // Sprawdzenie, czy jesteśmy na stronie fiszek
+  expect(page.url()).toContain('/flashcards');
+  
+  // Sprawdzenie, czy istnieją zakładki
+  const myFlashcardsTab = page.getByRole('tab', { name: /moje fiszki/i });
+  const addFlashcardTab = page.getByRole('tab', { name: /dodaj/i });
+  
+  await expect(myFlashcardsTab).toBeVisible();
+  await expect(addFlashcardTab).toBeVisible();
+  
+  // Przejście do zakładki dodawania fiszek
+  await addFlashcardTab.click();
+  
+  // Sprawdzenie, czy formularz dodawania fiszkek jest widoczny
+  const frontInput = page.locator('textarea[name="front"]');
+  const backInput = page.locator('textarea[name="back"]');
+  const saveButton = page.getByRole('button', { name: /zapisz/i });
+  
+  await expect(frontInput).toBeVisible();
+  await expect(backInput).toBeVisible();
+  await expect(saveButton).toBeVisible();
+  
+  // Wypełnienie formularza
+  await frontInput.fill('Testowa fiszka przód');
+  await backInput.fill('Testowa fiszka tył');
+  
+  // Zapisanie fiszki
+  await saveButton.click();
+  
+  // Sprawdzenie czy pojawił się komunikat o sukcesie
+  const successNotification = page.locator('.notification-success');
+  await expect(successNotification).toBeVisible();
+  
+  // Przejście do zakładki "Moje fiszki"
+  await myFlashcardsTab.click();
+  
+  // Sprawdzenie, czy fiszka została dodana
+  const flashcardItem = page.locator('.flashcard-item').first();
+  await expect(flashcardItem).toBeVisible();
+  
+  console.log('Test fiszek zakończony pomyślnie');
 }); 

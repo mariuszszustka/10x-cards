@@ -1,104 +1,86 @@
 // src/tests/e2e/minimal-flashcards.spec.ts
 import { test, expect } from '@playwright/test';
-import { SELECTORS } from '../selectors';
+import { loginUser, goToFlashcards, saveScreenshot } from './helpers';
 
-test('Dostęp do strony fiszek - test diagnoza', async ({ page }) => {
-  // Utwórz katalog na artefakty testów, jeśli nie istnieje
-  try {
-    const fs = require('fs');
-    if (!fs.existsSync('./test-artifacts')) {
-      fs.mkdirSync('./test-artifacts', { recursive: true });
-    }
-  } catch (error) {
-    console.error('Błąd podczas tworzenia katalogu:', error);
-  }
+// Minimalny test funkcji fiszek
+test('Minimalny test fiszek', async ({ page }) => {
+  console.log('Rozpoczynam minimalny test fiszek');
   
-  // Najpierw zaloguj się
-  await page.goto('/auth/login', { timeout: 30000 });
-  console.log('Otwarto stronę logowania:', page.url());
+  // 1. Zaloguj użytkownika
+  const loggedIn = await loginUser(page);
+  expect(loggedIn).toBeTruthy();
   
-  // Wyprobuj różne selektory
-  const selektoryEmail = [
-    SELECTORS.AUTH.EMAIL_INPUT,
-    '[name="email"]',
-    'input[type="email"]',
-    '#email'
-  ];
-  
-  const selektoryHaslo = [
-    SELECTORS.AUTH.PASSWORD_INPUT,
-    '[name="password"]',
-    'input[type="password"]',
-    '#password'
-  ];
-  
-  const selektoryPrzycisku = [
-    SELECTORS.AUTH.LOGIN_BUTTON,
-    'button[type="submit"]',
-    'input[type="submit"]',
-    'button:has-text("Zaloguj")'
-  ];
-  
-  // Znajdź działające selektory
-  let dzialajacyEmail = '';
-  let dzialajaceHaslo = '';
-  let dzialajacyPrzycisk = '';
-  
-  for (const selektor of selektoryEmail) {
-    if (await page.isVisible(selektor)) {
-      console.log('Znaleziono działający selektor dla email:', selektor);
-      dzialajacyEmail = selektor;
-      break;
-    }
-  }
-  
-  for (const selektor of selektoryHaslo) {
-    if (await page.isVisible(selektor)) {
-      console.log('Znaleziono działający selektor dla hasła:', selektor);
-      dzialajaceHaslo = selektor;
-      break;
-    }
-  }
-  
-  for (const selektor of selektoryPrzycisku) {
-    if (await page.isVisible(selektor)) {
-      console.log('Znaleziono działający selektor dla przycisku:', selektor);
-      dzialajacyPrzycisk = selektor;
-      break;
-    }
-  }
-  
-  // Zaloguj się jeśli wszystkie elementy są dostępne
-  if (dzialajacyEmail && dzialajaceHaslo && dzialajacyPrzycisk) {
-    await page.fill(dzialajacyEmail, 'test-e2e@example.com');
-    await page.fill(dzialajaceHaslo, 'Test123!@#');
-    await page.click(dzialajacyPrzycisk);
-    await page.waitForTimeout(5000);
-  } else {
-    console.log('Nie udało się znaleźć elementów formularza logowania');
-    await page.screenshot({ path: './test-artifacts/login-form-not-found.png', fullPage: true });
+  if (!loggedIn) {
+    console.log('Test przerwany - nie udało się zalogować');
     return;
   }
   
-  // Przejdź do strony fiszek - spróbujmy różne URLe
-  const urleFiszek = [
-    '/flashcards',
-    '/fiszki',
-    '/dashboard/flashcards',
-    '/dashboard/fiszki'
-  ];
+  // 2. Przejdź do strony fiszek
+  const flashcardsAccessible = await goToFlashcards(page);
+  expect(flashcardsAccessible).toBeTruthy();
   
-  for (const url of urleFiszek) {
-    console.log(`Próba otwarcia strony fiszek pod adresem: ${url}`);
-    await page.goto(url, { timeout: 15000 });
-    await page.screenshot({ path: `./test-artifacts/flashcards-page-${url.replace(/\//g, '-')}.png` });
-    
-    // Sprawdź tytuł strony
-    const title = await page.title();
-    console.log(`Tytuł strony pod adresem ${url}:`, title);
-    
-    // Wypisz strukture HTML, aby zobaczyć co faktycznie jest na stronie
-    console.log(`HTML dla ${url}:`);
-    console.log(await page.content());
+  if (!flashcardsAccessible) {
+    console.log('Test przerwany - nie udało się przejść do fiszek');
+    return;
   }
+  
+  // Zapisz zrzut ekranu strony fiszek
+  await saveScreenshot(page, 'flashcards-page');
+  
+  // 3. Sprawdź czy są widoczne podstawowe elementy interfejsu
+  // Zakładki
+  const tabs = page.locator('[role="tab"]');
+  const tabCount = await tabs.count();
+  expect(tabCount).toBeGreaterThan(0);
+  
+  console.log(`Znaleziono ${tabCount} zakładek na stronie fiszek`);
+  
+  // Sprawdź czy jest zakładka "Dodaj"
+  const addTab = page.getByRole('tab', { name: /dodaj/i });
+  
+  if (await addTab.isVisible()) {
+    // Kliknij w zakładkę "Dodaj"
+    await addTab.click();
+    console.log('Kliknięto zakładkę Dodaj');
+    
+    // Sprawdź czy formularz dodawania jest widoczny
+    const frontInput = page.locator('textarea[name="front"], input[name="front"]');
+    const backInput = page.locator('textarea[name="back"], input[name="back"]');
+    
+    const frontVisible = await frontInput.isVisible();
+    const backVisible = await backInput.isVisible();
+    
+    if (frontVisible && backVisible) {
+      console.log('Formularz dodawania fiszek jest widoczny');
+      
+      // Wypełnij formularz
+      await frontInput.fill('Testowa fiszka (przód)');
+      await backInput.fill('Testowa fiszka (tył)');
+      
+      // Zapisz zrzut ekranu wypełnionego formularza
+      await saveScreenshot(page, 'flashcards-form-filled');
+      
+      // Znajdź i kliknij przycisk zapisz
+      const saveButton = page.getByRole('button', { name: /zapisz/i });
+      
+      if (await saveButton.isVisible()) {
+        await saveButton.click();
+        console.log('Kliknięto przycisk Zapisz');
+        
+        // Poczekaj na akcję zapisu
+        await page.waitForTimeout(1000);
+        
+        // Zapisz zrzut ekranu po zapisie
+        await saveScreenshot(page, 'flashcards-after-save');
+      } else {
+        console.log('Przycisk Zapisz nie jest widoczny');
+      }
+    } else {
+      console.log('Formularz dodawania fiszek nie jest w pełni widoczny');
+    }
+  } else {
+    console.log('Zakładka Dodaj nie jest widoczna');
+  }
+  
+  console.log('Minimalny test fiszek zakończony');
 });

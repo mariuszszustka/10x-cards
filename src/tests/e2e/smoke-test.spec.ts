@@ -28,4 +28,40 @@ test('Strona główna ładuje się poprawnie', async ({ page }) => {
   fs.writeFileSync('./test-artifacts/homepage.html', html);
   
   console.log('Test strony głównej zakończony pomyślnie');
+});
+
+// Smoke test - sprawdza czy podstawowe funkcje działają
+test('Podstawowy smoke test aplikacji', async ({ page }) => {
+  console.log('Rozpoczynam smoke test');
+  
+  // Sprawdzenie czy strona główna się ładuje
+  await page.goto('/');
+  console.log('Strona główna załadowana');
+  
+  // Sprawdzenie czy tytuł strony zawiera właściwy tekst
+  const title = await page.title();
+  expect(title).toContain('10x-cards'); // Dopasuj do rzeczywistego tytułu
+  
+  // Sprawdzenie czy menu główne jest dostępne
+  const navbar = page.locator('nav');
+  await expect(navbar).toBeVisible();
+  
+  // Sprawdzenie czy jest przycisk/link logowania
+  const loginLink = page.getByRole('link', { name: /logowanie|login|zaloguj/i });
+  await expect(loginLink).toBeVisible();
+  
+  // Przejście do strony logowania
+  await loginLink.click();
+  
+  // Sprawdzenie czy jesteśmy na stronie logowania
+  expect(page.url()).toContain('/auth/login');
+  
+  // Sprawdzenie czy formularz logowania jest widoczny
+  const emailInput = page.locator('input[type="email"]');
+  const passwordInput = page.locator('input[type="password"]');
+  
+  await expect(emailInput).toBeVisible();
+  await expect(passwordInput).toBeVisible();
+  
+  console.log('Smoke test zakończony pomyślnie');
 }); 

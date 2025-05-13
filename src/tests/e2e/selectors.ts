@@ -3,34 +3,40 @@
 
 export const SELECTORS = {
   AUTH: {
-    EMAIL_INPUT: '[data-testid="email-input"]',
-    PASSWORD_INPUT: '[data-testid="password-input"]',
-    LOGIN_BUTTON: '[data-testid="login-button"]',
-    REGISTER_BUTTON: '[data-testid="register-button"]',
-    SUBMIT_BUTTON: 'button[type="submit"]'
+    EMAIL_INPUT: '[data-testid="auth-email-input"]',
+    PASSWORD_INPUT: '[data-testid="auth-password-input"]',
+    LOGIN_BUTTON: '[data-testid="auth-submit-button"]',
+    REGISTER_BUTTON: '[data-testid="auth-register-button"]',
+    SUBMIT_BUTTON: '[data-testid="auth-submit-button"]',
+    LOGIN_FORM: '[data-testid="auth-login-form"]',
+    MAGIC_LINK_BUTTON: '[data-testid="auth-magic-link-button"]'
   },
   LAYOUT: {
     USER_MENU: '[data-testid="user-menu"]',
-    LOGOUT_BUTTON: '[data-testid="logout-button"]'
+    LOGOUT_BUTTON: '[data-testid="logout-button"]',
+    NAVBAR: 'nav',
+    DASHBOARD_LINK: '[data-testid="dashboard-link"]',
+    FLASHCARDS_LINK: '[data-testid="flashcards-link"]'
   },
   FLASHCARDS: {
     TABS: {
-      MY_FLASHCARDS: '[data-testid="tab-my-flashcards"]',
-      GENERATE: '[data-testid="tab-generate"]',
-      ADD: '[data-testid="tab-add-flashcard"]'
+      MY_FLASHCARDS: '[role="tab"][name="moje fiszki"]',
+      GENERATE: '[role="tab"][name="generuj"]',
+      ADD: '[role="tab"][name="dodaj"]'
     },
     LIST: {
-      ITEM: '[data-testid="flashcard-item"]',
+      ITEM: '.flashcard-item',
       EDIT_BUTTON: '[data-testid="edit-button"]',
       DELETE_BUTTON: '[data-testid="delete-button"]'
     },
     FORM: {
-      FRONT_INPUT: '[data-testid="flashcard-front"]',
-      BACK_INPUT: '[data-testid="flashcard-back"]',
-      SAVE_BUTTON: '[data-testid="save-button"]'
+      FRONT_INPUT: 'textarea[name="front"]',
+      BACK_INPUT: 'textarea[name="back"]',
+      SAVE_BUTTON: 'button[type="submit"]'
     },
     CONFIRMATION: {
-      CONFIRM_BUTTON: '[data-testid="confirm-button"]'
+      CONFIRM_BUTTON: '[data-testid="confirm-button"]',
+      CANCEL_BUTTON: '[data-testid="cancel-button"]'
     }
   },
   STUDY: {
@@ -79,5 +85,17 @@ export const ALT_SELECTORS = {
     EMAIL_INPUT: ['[name="email"]', 'input[type="email"]', '#email'],
     PASSWORD_INPUT: ['[name="password"]', 'input[type="password"]', '#password'],
     SUBMIT_BUTTON: ['button[type="submit"]', 'input[type="submit"]', 'button:has-text("Zaloguj")'],
+  },
+  FLASHCARDS: {
+    TABS: {
+      MY_FLASHCARDS: [
+        '[role="tab"]:has-text("Moje fiszki")',
+        'button:has-text("Moje fiszki")'
+      ],
+      ADD: [
+        '[role="tab"]:has-text("Dodaj")',
+        'button:has-text("Dodaj")'
+      ]
+    }
   }
 }; 

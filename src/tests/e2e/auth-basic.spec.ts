@@ -1,26 +1,46 @@
 import { test, expect } from '@playwright/test';
-import { loginUser, ensureArtifactsDir } from './helpers';
 
+// Podstawowy test logowania użytkownika
 test('Podstawowy test logowania użytkownika', async ({ page }) => {
-  ensureArtifactsDir();
+  console.log('Rozpoczynam test podstawowego logowania');
   
-  console.log('Rozpoczynam test logowania');
+  // Otwieramy stronę logowania
+  await page.goto('/auth/login');
+  console.log('Otwarto stronę logowania');
   
-  // Spróbuj zalogować użytkownika
-  const loggedIn = await loginUser(page);
+  // Sprawdzamy, czy formularz logowania jest widoczny
+  const emailInput = page.locator('input[type="email"]');
+  const passwordInput = page.locator('input[type="password"]');
+  const loginButton = page.locator('button[type="submit"]');
+
+  // Sprawdzamy, czy pola formularza istnieją
+  await expect(emailInput).toBeVisible();
+  await expect(passwordInput).toBeVisible();
+  await expect(loginButton).toBeVisible();
   
-  // Sprawdź czy logowanie się powiodło
-  expect(loggedIn).toBeTruthy();
+  // Wypełniamy formularz
+  await emailInput.fill('test-e2e@example.com');
+  await passwordInput.fill('Test123!@#');
   
-  // Dodatkowe sprawdzenia po zalogowaniu (przykładowe)
-  if (loggedIn) {
-    // Sprawdź czy jesteśmy na stronie po zalogowaniu
-    const currentUrl = page.url();
-    console.log('URL po zalogowaniu:', currentUrl);
-    
-    // Wykonaj zrzut ekranu jako potwierdzenie
-    await page.screenshot({ path: './test-artifacts/logged-in.png', fullPage: true });
-  }
+  // Klikamy przycisk logowania
+  await loginButton.click();
   
-  console.log('Test logowania zakończony');
+  // Czekamy na przekierowanie na dashboard
+  await page.waitForURL('**/dashboard');
+  
+  // Sprawdzamy, czy jesteśmy na stronie dashboard
+  expect(page.url()).toContain('/dashboard');
+  
+  // Sprawdzamy, czy na dashboard jest link do fiszek
+  const flashcardsLink = page.getByRole('link', { name: /fiszki/i });
+  await expect(flashcardsLink).toBeVisible();
+  
+  // Klikamy w link do fiszek
+  await flashcardsLink.click();
+  
+  // Sprawdzamy, czy jesteśmy na stronie fiszek
+  await page.waitForURL('**/flashcards');
+  expect(page.url()).toContain('/flashcards');
+  
+  console.log('Test logowania zakończony pomyślnie');
 }); 
