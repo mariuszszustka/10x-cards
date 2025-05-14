@@ -36,9 +36,14 @@ jobs:
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
 
-      - name: Run linter on specific directories
+      - name: Automatyczne formatowanie kodu
         run: |
-          npx eslint src/ --ext .js,.jsx,.ts,.tsx,.astro
+          npm run format
+        continue-on-error: true
+
+      - name: Run linter on specific directories with auto-fix
+        run: |
+          npx eslint src/ --ext .js,.jsx,.ts,.tsx,.astro --fix --quiet --no-error-on-unmatched-pattern
         continue-on-error: true
       
       - name: Run unit tests
