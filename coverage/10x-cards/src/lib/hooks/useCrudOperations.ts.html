@@ -3,15 +3,15 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for 10x-cards/src/pages/api/leitner/sessions.ts</title>
+    <title>Code coverage report for 10x-cards/src/lib/hooks/useCrudOperations.ts</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../../../../../prettify.css" />
-    <link rel="stylesheet" href="../../../../../base.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="../../../../../favicon.png" />
+    <link rel="stylesheet" href="../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(../../../../../sort-arrow-sprite.png);
+            background-image: url(../../../../sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../../index.html">All files</a> / <a href="index.html">10x-cards/src/pages/api/leitner</a> sessions.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">10x-cards/src/lib/hooks</a> useCrudOperations.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/263</span>
+                <span class='fraction'>0/268</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/263</span>
+                <span class='fraction'>0/268</span>
             </div>
         
             
@@ -325,7 +325,12 @@
 <a name='L260'></a><a href='#L260'>260</a>
 <a name='L261'></a><a href='#L261'>261</a>
 <a name='L262'></a><a href='#L262'>262</a>
-<a name='L263'></a><a href='#L263'>263</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L263'></a><a href='#L263'>263</a>
+<a name='L264'></a><a href='#L264'>264</a>
+<a name='L265'></a><a href='#L265'>265</a>
+<a name='L266'></a><a href='#L266'>266</a>
+<a name='L267'></a><a href='#L267'>267</a>
+<a name='L268'></a><a href='#L268'>268</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -587,269 +592,279 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import { createErrorResponse, type CreateReviewSessionDTO, type UpdateReviewSessionDTO, type ReviewSessionDTO } from '@/types';<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
-<span class="cstat-no" title="statement not covered" >import { createClient } from '@supabase/supabase-js';</span>
-<span class="cstat-no" title="statement not covered" >import type { APIRoute } from 'astro';</span>
-<span class="cstat-no" title="statement not covered" >import type { Database } from '@/db/database.types';</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import { useState, useCallback } from 'react';<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >// Inicjalizacja klienta Supabase</span>
-<span class="cstat-no" title="statement not covered" >const supabaseUrl = import.meta.env.SUPABASE_URL;</span>
-<span class="cstat-no" title="statement not covered" >const supabaseAnonKey = import.meta.env.SUPABASE_KEY;</span>
-<span class="cstat-no" title="statement not covered" >const supabase = createClient&lt;Database&gt;(supabaseUrl, supabaseAnonKey);</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >// Tymczasowe rozwiązanie dla uwierzytelniania podczas developmentu</span>
-<span class="cstat-no" title="statement not covered" >const DEFAULT_USER_ID = '123e4567-e89b-12d3-a456-426614174000';</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >// Funkcja do uwierzytelniania użytkownika</span>
-<span class="cstat-no" title="statement not covered" >async function getUser(request: Request) {</span>
-<span class="cstat-no" title="statement not covered" >  // Tymczasowe uproszczone uwierzytelnianie dla developmentu</span>
-<span class="cstat-no" title="statement not covered" >  return { </span>
-<span class="cstat-no" title="statement not covered" >    id: DEFAULT_USER_ID,</span>
-<span class="cstat-no" title="statement not covered" >    email: 'test@example.com'</span>
-<span class="cstat-no" title="statement not covered" >  };</span>
+<span class="cstat-no" title="statement not covered" >interface CrudOperationsOptions&lt;T, CreateData, UpdateData&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  fetchEndpoint: string;</span>
+<span class="cstat-no" title="statement not covered" >  createEndpoint?: string;</span>
+<span class="cstat-no" title="statement not covered" >  updateEndpoint?: string;</span>
+<span class="cstat-no" title="statement not covered" >  deleteEndpoint?: string;</span>
+<span class="cstat-no" title="statement not covered" >  defaultQueryParams?: Record&lt;string, any&gt;;</span>
+<span class="cstat-no" title="statement not covered" >  getItemId: (item: T) =&gt; string | number;</span>
+<span class="cstat-no" title="statement not covered" >  onFetchSuccess?: (data: { items: T[], pagination: any }) =&gt; void;</span>
+<span class="cstat-no" title="statement not covered" >  onFetchError?: (error: Error) =&gt; void;</span>
+<span class="cstat-no" title="statement not covered" >  onCreateSuccess?: (data: T) =&gt; void;</span>
+<span class="cstat-no" title="statement not covered" >  onCreateError?: (error: Error) =&gt; void;</span>
+<span class="cstat-no" title="statement not covered" >  onUpdateSuccess?: (data: T) =&gt; void;</span>
+<span class="cstat-no" title="statement not covered" >  onUpdateError?: (error: Error) =&gt; void;</span>
+<span class="cstat-no" title="statement not covered" >  onDeleteSuccess?: (id: string | number) =&gt; void;</span>
+<span class="cstat-no" title="statement not covered" >  onDeleteError?: (error: Error) =&gt; void;</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >/**</span>
-<span class="cstat-no" title="statement not covered" > * POST /api/leitner/sessions - Tworzenie nowej sesji nauki</span>
-<span class="cstat-no" title="statement not covered" > * Tworzy nową sesję nauki lub aktualizuje istniejącą, gdy użytkownik kontynuuje naukę</span>
-<span class="cstat-no" title="statement not covered" > */</span>
-<span class="cstat-no" title="statement not covered" >export const POST: APIRoute = async ({ request }) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >  try {</span>
-<span class="cstat-no" title="statement not covered" >    // 1. Ekstrakcja i weryfikacja tokenu użytkownika</span>
-<span class="cstat-no" title="statement not covered" >    const user = await getUser(request);</span>
-<span class="cstat-no" title="statement not covered" >    if (!user) {</span>
-<span class="cstat-no" title="statement not covered" >      return new Response(</span>
-<span class="cstat-no" title="statement not covered" >        JSON.stringify(createErrorResponse('unauthorized', 'Brak autoryzacji')),</span>
-<span class="cstat-no" title="statement not covered" >        { status: 401, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >      );</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >export function useCrudOperations&lt;T, CreateData = Partial&lt;T&gt;, UpdateData = Partial&lt;T&gt;&gt;({</span>
+<span class="cstat-no" title="statement not covered" >  fetchEndpoint,</span>
+<span class="cstat-no" title="statement not covered" >  createEndpoint = fetchEndpoint,</span>
+<span class="cstat-no" title="statement not covered" >  updateEndpoint = fetchEndpoint,</span>
+<span class="cstat-no" title="statement not covered" >  deleteEndpoint = fetchEndpoint,</span>
+<span class="cstat-no" title="statement not covered" >  defaultQueryParams = {},</span>
+<span class="cstat-no" title="statement not covered" >  getItemId,</span>
+<span class="cstat-no" title="statement not covered" >  onFetchSuccess,</span>
+<span class="cstat-no" title="statement not covered" >  onFetchError,</span>
+<span class="cstat-no" title="statement not covered" >  onCreateSuccess,</span>
+<span class="cstat-no" title="statement not covered" >  onCreateError,</span>
+<span class="cstat-no" title="statement not covered" >  onUpdateSuccess,</span>
+<span class="cstat-no" title="statement not covered" >  onUpdateError,</span>
+<span class="cstat-no" title="statement not covered" >  onDeleteSuccess,</span>
+<span class="cstat-no" title="statement not covered" >  onDeleteError</span>
+<span class="cstat-no" title="statement not covered" >}: CrudOperationsOptions&lt;T, CreateData, UpdateData&gt;) {</span>
+<span class="cstat-no" title="statement not covered" >  const [items, setItems] = useState&lt;T[]&gt;([]);</span>
+<span class="cstat-no" title="statement not covered" >  const [loading, setLoading] = useState(false);</span>
+<span class="cstat-no" title="statement not covered" >  const [error, setError] = useState&lt;string | null&gt;(null);</span>
+<span class="cstat-no" title="statement not covered" >  const [pagination, setPagination] = useState({</span>
+<span class="cstat-no" title="statement not covered" >    page: 1,</span>
+<span class="cstat-no" title="statement not covered" >    per_page: 20,</span>
+<span class="cstat-no" title="statement not covered" >    total_items: 0,</span>
+<span class="cstat-no" title="statement not covered" >    total_pages: 1</span>
+<span class="cstat-no" title="statement not covered" >  });</span>
+<span class="cstat-no" title="statement not covered" >  const [queryParams, setQueryParams] = useState({</span>
+<span class="cstat-no" title="statement not covered" >    ...defaultQueryParams</span>
+<span class="cstat-no" title="statement not covered" >  });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // 2. Walidacja danych wejściowych</span>
-<span class="cstat-no" title="statement not covered" >    let sessionData: CreateReviewSessionDTO;</span>
-<span class="cstat-no" title="statement not covered" >    try {</span>
-<span class="cstat-no" title="statement not covered" >      sessionData = await request.json();</span>
-<span class="cstat-no" title="statement not covered" >    } catch (e) {</span>
-<span class="cstat-no" title="statement not covered" >      return new Response(</span>
-<span class="cstat-no" title="statement not covered" >        JSON.stringify(createErrorResponse('validation_error', 'Nieprawidłowy format JSON')),</span>
-<span class="cstat-no" title="statement not covered" >        { status: 400, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >      );</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    let session: ReviewSessionDTO;</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // 3. Sprawdzenie, czy chcemy kontynuować istniejącą sesję</span>
-<span class="cstat-no" title="statement not covered" >    if (sessionData.session_id) {</span>
-<span class="cstat-no" title="statement not covered" >      // Pobranie istniejącej sesji</span>
-<span class="cstat-no" title="statement not covered" >      const { data: existingSession, error: sessionError } = await supabase</span>
-<span class="cstat-no" title="statement not covered" >        .from('review_sessions')</span>
-<span class="cstat-no" title="statement not covered" >        .select('*')</span>
-<span class="cstat-no" title="statement not covered" >        .eq('id', sessionData.session_id)</span>
-<span class="cstat-no" title="statement not covered" >        .eq('user_id', user.id)</span>
-<span class="cstat-no" title="statement not covered" >        .single();</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >      if (sessionError || !existingSession) {</span>
-<span class="cstat-no" title="statement not covered" >        return new Response(</span>
-<span class="cstat-no" title="statement not covered" >          JSON.stringify(createErrorResponse('not_found', 'Nie znaleziono sesji o podanym ID')),</span>
-<span class="cstat-no" title="statement not covered" >          { status: 404, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >        );</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >      // Sprawdź, czy sesja nie jest już zakończona</span>
-<span class="cstat-no" title="statement not covered" >      if (existingSession.completed_at) {</span>
-<span class="cstat-no" title="statement not covered" >        return new Response(</span>
-<span class="cstat-no" title="statement not covered" >          JSON.stringify(createErrorResponse('conflict', 'Sesja została już zakończona')),</span>
-<span class="cstat-no" title="statement not covered" >          { status: 409, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >        );</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >      session = {</span>
-<span class="cstat-no" title="statement not covered" >        id: existingSession.id,</span>
-<span class="cstat-no" title="statement not covered" >        started_at: existingSession.started_at,</span>
-<span class="cstat-no" title="statement not covered" >        completed_at: existingSession.completed_at,</span>
-<span class="cstat-no" title="statement not covered" >        cards_reviewed: existingSession.cards_reviewed,</span>
-<span class="cstat-no" title="statement not covered" >        correct_answers: existingSession.correct_answers,</span>
-<span class="cstat-no" title="statement not covered" >        incorrect_answers: existingSession.incorrect_answers,</span>
-<span class="cstat-no" title="statement not covered" >        total_review_time_ms: existingSession.total_review_time_ms,</span>
-<span class="cstat-no" title="statement not covered" >        created_at: existingSession.created_at,</span>
-<span class="cstat-no" title="statement not covered" >        updated_at: existingSession.updated_at</span>
-<span class="cstat-no" title="statement not covered" >      };</span>
-<span class="cstat-no" title="statement not covered" >    } else {</span>
-<span class="cstat-no" title="statement not covered" >      // 4. Utworzenie nowej sesji nauki</span>
-<span class="cstat-no" title="statement not covered" >      const { data: newSession, error: createError } = await supabase</span>
-<span class="cstat-no" title="statement not covered" >        .from('review_sessions')</span>
-<span class="cstat-no" title="statement not covered" >        .insert({</span>
-<span class="cstat-no" title="statement not covered" >          user_id: user.id,</span>
-<span class="cstat-no" title="statement not covered" >          started_at: new Date().toISOString(),</span>
-<span class="cstat-no" title="statement not covered" >          cards_reviewed: 0,</span>
-<span class="cstat-no" title="statement not covered" >          correct_answers: 0,</span>
-<span class="cstat-no" title="statement not covered" >          incorrect_answers: 0</span>
-<span class="cstat-no" title="statement not covered" >        })</span>
-<span class="cstat-no" title="statement not covered" >        .select()</span>
-<span class="cstat-no" title="statement not covered" >        .single();</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >      if (createError) {</span>
-<span class="cstat-no" title="statement not covered" >        console.error('Błąd podczas tworzenia sesji nauki:', createError);</span>
-<span class="cstat-no" title="statement not covered" >        return new Response(</span>
-<span class="cstat-no" title="statement not covered" >          JSON.stringify(createErrorResponse('server_error', 'Wystąpił błąd podczas tworzenia sesji nauki')),</span>
-<span class="cstat-no" title="statement not covered" >          { status: 500, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >        );</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >      session = {</span>
-<span class="cstat-no" title="statement not covered" >        id: newSession.id,</span>
-<span class="cstat-no" title="statement not covered" >        started_at: newSession.started_at,</span>
-<span class="cstat-no" title="statement not covered" >        completed_at: newSession.completed_at,</span>
-<span class="cstat-no" title="statement not covered" >        cards_reviewed: newSession.cards_reviewed,</span>
-<span class="cstat-no" title="statement not covered" >        correct_answers: newSession.correct_answers,</span>
-<span class="cstat-no" title="statement not covered" >        incorrect_answers: newSession.incorrect_answers,</span>
-<span class="cstat-no" title="statement not covered" >        total_review_time_ms: newSession.total_review_time_ms,</span>
-<span class="cstat-no" title="statement not covered" >        created_at: newSession.created_at,</span>
-<span class="cstat-no" title="statement not covered" >        updated_at: newSession.updated_at</span>
-<span class="cstat-no" title="statement not covered" >      };</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // 5. Zwrócenie danych o sesji</span>
-<span class="cstat-no" title="statement not covered" >    return new Response(JSON.stringify(session), {</span>
-<span class="cstat-no" title="statement not covered" >      status: 201,</span>
-<span class="cstat-no" title="statement not covered" >      headers: { 'Content-Type': 'application/json' }</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
+<span class="cstat-no" title="statement not covered" >  // Pobieranie danych</span>
+<span class="cstat-no" title="statement not covered" >  const fetchItems = useCallback(async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    setLoading(true);</span>
+<span class="cstat-no" title="statement not covered" >    setError(null);</span>
 <span class="cstat-no" title="statement not covered" >    </span>
-<span class="cstat-no" title="statement not covered" >  } catch (error) {</span>
-<span class="cstat-no" title="statement not covered" >    console.error('Nieoczekiwany błąd:', error);</span>
-<span class="cstat-no" title="statement not covered" >    return new Response(</span>
-<span class="cstat-no" title="statement not covered" >      JSON.stringify(createErrorResponse('server_error', 'Wystąpił nieoczekiwany błąd')),</span>
-<span class="cstat-no" title="statement not covered" >      { status: 500, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >    );</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >};</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >/**</span>
-<span class="cstat-no" title="statement not covered" > * PUT /api/leitner/sessions - Aktualizacja sesji nauki</span>
-<span class="cstat-no" title="statement not covered" > * Aktualizuje sesję nauki o nowe wyniki przeglądania fiszek lub oznacza ją jako zakończoną</span>
-<span class="cstat-no" title="statement not covered" > */</span>
-<span class="cstat-no" title="statement not covered" >export const PUT: APIRoute = async ({ request }) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >  try {</span>
-<span class="cstat-no" title="statement not covered" >    // 1. Ekstrakcja i weryfikacja tokenu użytkownika</span>
-<span class="cstat-no" title="statement not covered" >    const user = await getUser(request);</span>
-<span class="cstat-no" title="statement not covered" >    if (!user) {</span>
-<span class="cstat-no" title="statement not covered" >      return new Response(</span>
-<span class="cstat-no" title="statement not covered" >        JSON.stringify(createErrorResponse('unauthorized', 'Brak autoryzacji')),</span>
-<span class="cstat-no" title="statement not covered" >        { status: 401, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >      );</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // 2. Walidacja danych wejściowych</span>
-<span class="cstat-no" title="statement not covered" >    let updateData: UpdateReviewSessionDTO;</span>
 <span class="cstat-no" title="statement not covered" >    try {</span>
-<span class="cstat-no" title="statement not covered" >      updateData = await request.json();</span>
-<span class="cstat-no" title="statement not covered" >    } catch (e) {</span>
-<span class="cstat-no" title="statement not covered" >      return new Response(</span>
-<span class="cstat-no" title="statement not covered" >        JSON.stringify(createErrorResponse('validation_error', 'Nieprawidłowy format JSON')),</span>
-<span class="cstat-no" title="statement not covered" >        { status: 400, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >      );</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // Sprawdzenie wymaganych pól</span>
-<span class="cstat-no" title="statement not covered" >    if (!updateData.session_id) {</span>
-<span class="cstat-no" title="statement not covered" >      return new Response(</span>
-<span class="cstat-no" title="statement not covered" >        JSON.stringify(createErrorResponse('validation_error', 'Pole session_id jest wymagane')),</span>
-<span class="cstat-no" title="statement not covered" >        { status: 400, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >      );</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // 3. Pobranie istniejącej sesji</span>
-<span class="cstat-no" title="statement not covered" >    const { data: existingSession, error: sessionError } = await supabase</span>
-<span class="cstat-no" title="statement not covered" >      .from('review_sessions')</span>
-<span class="cstat-no" title="statement not covered" >      .select('*')</span>
-<span class="cstat-no" title="statement not covered" >      .eq('id', updateData.session_id)</span>
-<span class="cstat-no" title="statement not covered" >      .eq('user_id', user.id)</span>
-<span class="cstat-no" title="statement not covered" >      .single();</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    if (sessionError || !existingSession) {</span>
-<span class="cstat-no" title="statement not covered" >      return new Response(</span>
-<span class="cstat-no" title="statement not covered" >        JSON.stringify(createErrorResponse('not_found', 'Nie znaleziono sesji o podanym ID')),</span>
-<span class="cstat-no" title="statement not covered" >        { status: 404, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >      );</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // Sprawdź, czy sesja nie jest już zakończona</span>
-<span class="cstat-no" title="statement not covered" >    if (existingSession.completed_at) {</span>
-<span class="cstat-no" title="statement not covered" >      return new Response(</span>
-<span class="cstat-no" title="statement not covered" >        JSON.stringify(createErrorResponse('conflict', 'Sesja została już zakończona')),</span>
-<span class="cstat-no" title="statement not covered" >        { status: 409, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >      );</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // 4. Rozpocznij transakcję do aktualizacji sesji i dodania wyników</span>
-<span class="cstat-no" title="statement not covered" >    let totalCorrect = existingSession.correct_answers || 0;</span>
-<span class="cstat-no" title="statement not covered" >    let totalIncorrect = existingSession.incorrect_answers || 0;</span>
-<span class="cstat-no" title="statement not covered" >    let totalReviewed = existingSession.cards_reviewed || 0;</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // Aktualizacja liczników na podstawie wyników</span>
-<span class="cstat-no" title="statement not covered" >    if (updateData.results &amp;&amp; updateData.results.length &gt; 0) {</span>
-<span class="cstat-no" title="statement not covered" >      const correctCount = updateData.results.filter(r =&gt; r.is_correct).length;</span>
-<span class="cstat-no" title="statement not covered" >      const incorrectCount = updateData.results.length - correctCount;</span>
+<span class="cstat-no" title="statement not covered" >      const queryString = new URLSearchParams();</span>
 <span class="cstat-no" title="statement not covered" >      </span>
-<span class="cstat-no" title="statement not covered" >      totalCorrect += correctCount;</span>
-<span class="cstat-no" title="statement not covered" >      totalIncorrect += incorrectCount;</span>
-<span class="cstat-no" title="statement not covered" >      totalReviewed += updateData.results.length;</span>
+<span class="cstat-no" title="statement not covered" >      // Dodaj wszystkie parametry zapytania</span>
+<span class="cstat-no" title="statement not covered" >      Object.entries(queryParams).forEach(([key, value]) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        if (value !== undefined &amp;&amp; value !== null &amp;&amp; value !== '') {</span>
+<span class="cstat-no" title="statement not covered" >          queryString.append(key, String(value));</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >      });</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      const response = await fetch(`${fetchEndpoint}?${queryString.toString()}`);</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      if (!response.ok) {</span>
+<span class="cstat-no" title="statement not covered" >        const errorData = await response.json();</span>
+<span class="cstat-no" title="statement not covered" >        throw new Error(errorData.error || 'Wystąpił błąd podczas pobierania danych');</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      const data = await response.json();</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      setItems(data.items || data.data || []);</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      if (data.pagination) {</span>
+<span class="cstat-no" title="statement not covered" >        setPagination(data.pagination);</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      if (onFetchSuccess) {</span>
+<span class="cstat-no" title="statement not covered" >        onFetchSuccess({</span>
+<span class="cstat-no" title="statement not covered" >          items: data.items || data.data || [],</span>
+<span class="cstat-no" title="statement not covered" >          pagination: data.pagination || pagination</span>
+<span class="cstat-no" title="statement not covered" >        });</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >    } catch (error) {</span>
+<span class="cstat-no" title="statement not covered" >      console.error('Error fetching items:', error);</span>
+<span class="cstat-no" title="statement not covered" >      setError(error instanceof Error ? error.message : 'Wystąpił nieznany błąd');</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      if (onFetchError &amp;&amp; error instanceof Error) {</span>
+<span class="cstat-no" title="statement not covered" >        onFetchError(error);</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >    } finally {</span>
+<span class="cstat-no" title="statement not covered" >      setLoading(false);</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >  }, [fetchEndpoint, queryParams, onFetchSuccess, onFetchError, pagination]);</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // Przygotowanie danych do aktualizacji</span>
-<span class="cstat-no" title="statement not covered" >    const updateFields: any = {</span>
-<span class="cstat-no" title="statement not covered" >      cards_reviewed: totalReviewed,</span>
-<span class="cstat-no" title="statement not covered" >      correct_answers: totalCorrect,</span>
-<span class="cstat-no" title="statement not covered" >      incorrect_answers: totalIncorrect</span>
-<span class="cstat-no" title="statement not covered" >    };</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // Jeśli sesja ma być zakończona, dodaj timestamp zakończenia</span>
-<span class="cstat-no" title="statement not covered" >    if (updateData.completed) {</span>
-<span class="cstat-no" title="statement not covered" >      updateFields.completed_at = new Date().toISOString();</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // 5. Aktualizacja sesji nauki</span>
-<span class="cstat-no" title="statement not covered" >    const { data: updatedSession, error: updateError } = await supabase</span>
-<span class="cstat-no" title="statement not covered" >      .from('review_sessions')</span>
-<span class="cstat-no" title="statement not covered" >      .update(updateFields)</span>
-<span class="cstat-no" title="statement not covered" >      .eq('id', updateData.session_id)</span>
-<span class="cstat-no" title="statement not covered" >      .eq('user_id', user.id)</span>
-<span class="cstat-no" title="statement not covered" >      .select()</span>
-<span class="cstat-no" title="statement not covered" >      .single();</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    if (updateError) {</span>
-<span class="cstat-no" title="statement not covered" >      console.error('Błąd podczas aktualizacji sesji nauki:', updateError);</span>
-<span class="cstat-no" title="statement not covered" >      return new Response(</span>
-<span class="cstat-no" title="statement not covered" >        JSON.stringify(createErrorResponse('server_error', 'Wystąpił błąd podczas aktualizacji sesji nauki')),</span>
-<span class="cstat-no" title="statement not covered" >        { status: 500, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >      );</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // 6. Zwrócenie zaktualizowanych danych o sesji</span>
-<span class="cstat-no" title="statement not covered" >    const session: ReviewSessionDTO = {</span>
-<span class="cstat-no" title="statement not covered" >      id: updatedSession.id,</span>
-<span class="cstat-no" title="statement not covered" >      started_at: updatedSession.started_at,</span>
-<span class="cstat-no" title="statement not covered" >      completed_at: updatedSession.completed_at,</span>
-<span class="cstat-no" title="statement not covered" >      cards_reviewed: updatedSession.cards_reviewed,</span>
-<span class="cstat-no" title="statement not covered" >      correct_answers: updatedSession.correct_answers,</span>
-<span class="cstat-no" title="statement not covered" >      incorrect_answers: updatedSession.incorrect_answers,</span>
-<span class="cstat-no" title="statement not covered" >      total_review_time_ms: updatedSession.total_review_time_ms,</span>
-<span class="cstat-no" title="statement not covered" >      created_at: updatedSession.created_at,</span>
-<span class="cstat-no" title="statement not covered" >      updated_at: updatedSession.updated_at</span>
-<span class="cstat-no" title="statement not covered" >    };</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    return new Response(JSON.stringify(session), {</span>
-<span class="cstat-no" title="statement not covered" >      status: 200,</span>
-<span class="cstat-no" title="statement not covered" >      headers: { 'Content-Type': 'application/json' }</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
+<span class="cstat-no" title="statement not covered" >  // Tworzenie nowego elementu</span>
+<span class="cstat-no" title="statement not covered" >  const createItem = useCallback(async (data: CreateData) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    setLoading(true);</span>
+<span class="cstat-no" title="statement not covered" >    setError(null);</span>
 <span class="cstat-no" title="statement not covered" >    </span>
-<span class="cstat-no" title="statement not covered" >  } catch (error) {</span>
-<span class="cstat-no" title="statement not covered" >    console.error('Nieoczekiwany błąd:', error);</span>
-<span class="cstat-no" title="statement not covered" >    return new Response(</span>
-<span class="cstat-no" title="statement not covered" >      JSON.stringify(createErrorResponse('server_error', 'Wystąpił nieoczekiwany błąd')),</span>
-<span class="cstat-no" title="statement not covered" >      { status: 500, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >    );</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >}; </span></pre></td></tr></table></pre>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+<span class="cstat-no" title="statement not covered" >      const response = await fetch(createEndpoint, {</span>
+<span class="cstat-no" title="statement not covered" >        method: 'POST',</span>
+<span class="cstat-no" title="statement not covered" >        headers: {</span>
+<span class="cstat-no" title="statement not covered" >          'Content-Type': 'application/json',</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        body: JSON.stringify(data),</span>
+<span class="cstat-no" title="statement not covered" >      });</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      if (!response.ok) {</span>
+<span class="cstat-no" title="statement not covered" >        const errorData = await response.json();</span>
+<span class="cstat-no" title="statement not covered" >        throw new Error(errorData.error || 'Wystąpił błąd podczas tworzenia');</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      const createdItem = await response.json();</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      setItems(prev =&gt; [...prev, createdItem]);</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      if (onCreateSuccess) {</span>
+<span class="cstat-no" title="statement not covered" >        onCreateSuccess(createdItem);</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      return createdItem;</span>
+<span class="cstat-no" title="statement not covered" >    } catch (error) {</span>
+<span class="cstat-no" title="statement not covered" >      console.error('Error creating item:', error);</span>
+<span class="cstat-no" title="statement not covered" >      setError(error instanceof Error ? error.message : 'Wystąpił nieznany błąd');</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      if (onCreateError &amp;&amp; error instanceof Error) {</span>
+<span class="cstat-no" title="statement not covered" >        onCreateError(error);</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      throw error;</span>
+<span class="cstat-no" title="statement not covered" >    } finally {</span>
+<span class="cstat-no" title="statement not covered" >      setLoading(false);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >  }, [createEndpoint, onCreateSuccess, onCreateError]);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  // Aktualizacja elementu</span>
+<span class="cstat-no" title="statement not covered" >  const updateItem = useCallback(async (id: string | number, data: UpdateData) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    setLoading(true);</span>
+<span class="cstat-no" title="statement not covered" >    setError(null);</span>
+<span class="cstat-no" title="statement not covered" >    </span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+<span class="cstat-no" title="statement not covered" >      const response = await fetch(`${updateEndpoint}/${id}`, {</span>
+<span class="cstat-no" title="statement not covered" >        method: 'PUT',</span>
+<span class="cstat-no" title="statement not covered" >        headers: {</span>
+<span class="cstat-no" title="statement not covered" >          'Content-Type': 'application/json',</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        body: JSON.stringify(data),</span>
+<span class="cstat-no" title="statement not covered" >      });</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      if (!response.ok) {</span>
+<span class="cstat-no" title="statement not covered" >        const errorData = await response.json();</span>
+<span class="cstat-no" title="statement not covered" >        throw new Error(errorData.error || 'Wystąpił błąd podczas aktualizacji');</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      const updatedItem = await response.json();</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      setItems(prev =&gt; prev.map(item =&gt; </span>
+<span class="cstat-no" title="statement not covered" >        getItemId(item) === id ? updatedItem : item</span>
+<span class="cstat-no" title="statement not covered" >      ));</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      if (onUpdateSuccess) {</span>
+<span class="cstat-no" title="statement not covered" >        onUpdateSuccess(updatedItem);</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      return updatedItem;</span>
+<span class="cstat-no" title="statement not covered" >    } catch (error) {</span>
+<span class="cstat-no" title="statement not covered" >      console.error('Error updating item:', error);</span>
+<span class="cstat-no" title="statement not covered" >      setError(error instanceof Error ? error.message : 'Wystąpił nieznany błąd');</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      if (onUpdateError &amp;&amp; error instanceof Error) {</span>
+<span class="cstat-no" title="statement not covered" >        onUpdateError(error);</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      throw error;</span>
+<span class="cstat-no" title="statement not covered" >    } finally {</span>
+<span class="cstat-no" title="statement not covered" >      setLoading(false);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >  }, [updateEndpoint, getItemId, onUpdateSuccess, onUpdateError]);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  // Usuwanie elementu</span>
+<span class="cstat-no" title="statement not covered" >  const deleteItem = useCallback(async (id: string | number) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    setLoading(true);</span>
+<span class="cstat-no" title="statement not covered" >    setError(null);</span>
+<span class="cstat-no" title="statement not covered" >    </span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+<span class="cstat-no" title="statement not covered" >      const response = await fetch(`${deleteEndpoint}/${id}`, {</span>
+<span class="cstat-no" title="statement not covered" >        method: 'DELETE',</span>
+<span class="cstat-no" title="statement not covered" >      });</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      if (!response.ok) {</span>
+<span class="cstat-no" title="statement not covered" >        const errorData = await response.json();</span>
+<span class="cstat-no" title="statement not covered" >        throw new Error(errorData.error || 'Wystąpił błąd podczas usuwania');</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      setItems(prev =&gt; prev.filter(item =&gt; getItemId(item) !== id));</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      if (onDeleteSuccess) {</span>
+<span class="cstat-no" title="statement not covered" >        onDeleteSuccess(id);</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      return id;</span>
+<span class="cstat-no" title="statement not covered" >    } catch (error) {</span>
+<span class="cstat-no" title="statement not covered" >      console.error('Error deleting item:', error);</span>
+<span class="cstat-no" title="statement not covered" >      setError(error instanceof Error ? error.message : 'Wystąpił nieznany błąd');</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      if (onDeleteError &amp;&amp; error instanceof Error) {</span>
+<span class="cstat-no" title="statement not covered" >        onDeleteError(error);</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      throw error;</span>
+<span class="cstat-no" title="statement not covered" >    } finally {</span>
+<span class="cstat-no" title="statement not covered" >      setLoading(false);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >  }, [deleteEndpoint, getItemId, onDeleteSuccess, onDeleteError]);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  // Ustawienie parametrów zapytania</span>
+<span class="cstat-no" title="statement not covered" >  const setParams = useCallback((params: Record&lt;string, any&gt;) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    setQueryParams(prev =&gt; ({</span>
+<span class="cstat-no" title="statement not covered" >      ...prev,</span>
+<span class="cstat-no" title="statement not covered" >      ...params</span>
+<span class="cstat-no" title="statement not covered" >    }));</span>
+<span class="cstat-no" title="statement not covered" >  }, []);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  // Ustawienie strony</span>
+<span class="cstat-no" title="statement not covered" >  const setPage = useCallback((page: number) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    setParams({ page });</span>
+<span class="cstat-no" title="statement not covered" >  }, [setParams]);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  // Ustawienie wyszukiwania</span>
+<span class="cstat-no" title="statement not covered" >  const setSearch = useCallback((search: string) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    setParams({ search, page: 1 });</span>
+<span class="cstat-no" title="statement not covered" >  }, [setParams]);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  // Ustawienie filtru</span>
+<span class="cstat-no" title="statement not covered" >  const setFilter = useCallback((filter: Record&lt;string, any&gt;) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    setParams({ ...filter, page: 1 });</span>
+<span class="cstat-no" title="statement not covered" >  }, [setParams]);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  // Ustawienie sortowania</span>
+<span class="cstat-no" title="statement not covered" >  const setSort = useCallback((sortParams: { field: string, direction: 'asc' | 'desc' }) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    setParams({</span>
+<span class="cstat-no" title="statement not covered" >      sort_by: sortParams.field,</span>
+<span class="cstat-no" title="statement not covered" >      sort_dir: sortParams.direction,</span>
+<span class="cstat-no" title="statement not covered" >      page: 1</span>
+<span class="cstat-no" title="statement not covered" >    });</span>
+<span class="cstat-no" title="statement not covered" >  }, [setParams]);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  return {</span>
+<span class="cstat-no" title="statement not covered" >    items,</span>
+<span class="cstat-no" title="statement not covered" >    loading,</span>
+<span class="cstat-no" title="statement not covered" >    error,</span>
+<span class="cstat-no" title="statement not covered" >    pagination,</span>
+<span class="cstat-no" title="statement not covered" >    params: queryParams,</span>
+<span class="cstat-no" title="statement not covered" >    fetchItems,</span>
+<span class="cstat-no" title="statement not covered" >    createItem,</span>
+<span class="cstat-no" title="statement not covered" >    updateItem,</span>
+<span class="cstat-no" title="statement not covered" >    deleteItem,</span>
+<span class="cstat-no" title="statement not covered" >    setPage,</span>
+<span class="cstat-no" title="statement not covered" >    setSearch,</span>
+<span class="cstat-no" title="statement not covered" >    setFilter,</span>
+<span class="cstat-no" title="statement not covered" >    setSort,</span>
+<span class="cstat-no" title="statement not covered" >    setParams</span>
+<span class="cstat-no" title="statement not covered" >  };</span>
+<span class="cstat-no" title="statement not covered" >} </span></pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
@@ -858,14 +873,14 @@
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
                 at 2025-05-14T22:07:38.023Z
             </div>
-        <script src="../../../../../prettify.js"></script>
+        <script src="../../../../prettify.js"></script>
         <script>
             window.onload = function () {
                 prettyPrint();
             };
         </script>
-        <script src="../../../../../sorter.js"></script>
-        <script src="../../../../../block-navigation.js"></script>
+        <script src="../../../../sorter.js"></script>
+        <script src="../../../../block-navigation.js"></script>
     </body>
 </html>
     

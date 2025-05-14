@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for 10x-cards/src/components/generate/ManualFlashcardForm.tsx</title>
+    <title>Code coverage report for 10x-cards/src/components/auth/FormElements.tsx</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">10x-cards/src/components/generate</a> ManualFlashcardForm.tsx</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">10x-cards/src/components/auth</a> FormElements.tsx</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/175</span>
+                <span class='fraction'>0/168</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/175</span>
+                <span class='fraction'>0/168</span>
             </div>
         
             
@@ -230,14 +230,7 @@
 <a name='L165'></a><a href='#L165'>165</a>
 <a name='L166'></a><a href='#L166'>166</a>
 <a name='L167'></a><a href='#L167'>167</a>
-<a name='L168'></a><a href='#L168'>168</a>
-<a name='L169'></a><a href='#L169'>169</a>
-<a name='L170'></a><a href='#L170'>170</a>
-<a name='L171'></a><a href='#L171'>171</a>
-<a name='L172'></a><a href='#L172'>172</a>
-<a name='L173'></a><a href='#L173'>173</a>
-<a name='L174'></a><a href='#L174'>174</a>
-<a name='L175'></a><a href='#L175'>175</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L168'></a><a href='#L168'>168</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -404,186 +397,172 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >import React, { useState } from 'react';</span></span></span>
-<span class="cstat-no" title="statement not covered" >import { Button } from '@/components/ui/button';</span>
+<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >import React from "react";</span></span></span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >interface FlashcardCreateDto {</span>
-<span class="cstat-no" title="statement not covered" >  front: string;</span>
-<span class="cstat-no" title="statement not covered" >  back: string;</span>
+<span class="cstat-no" title="statement not covered" >interface InputFieldProps {</span>
+<span class="cstat-no" title="statement not covered" >  id: string;</span>
+<span class="cstat-no" title="statement not covered" >  name: string;</span>
+<span class="cstat-no" title="statement not covered" >  type: string;</span>
+<span class="cstat-no" title="statement not covered" >  label: string;</span>
+<span class="cstat-no" title="statement not covered" >  value: string;</span>
+<span class="cstat-no" title="statement not covered" >  onChange: (e: React.ChangeEvent&lt;HTMLInputElement&gt;) =&gt; void;</span>
+<span class="cstat-no" title="statement not covered" >  error?: string;</span>
+<span class="cstat-no" title="statement not covered" >  placeholder?: string;</span>
+<span class="cstat-no" title="statement not covered" >  required?: boolean;</span>
+<span class="cstat-no" title="statement not covered" >  autoComplete?: string;</span>
+<span class="cstat-no" title="statement not covered" >  testId?: string;</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >interface ManualFlashcardFormProps {</span>
-<span class="cstat-no" title="statement not covered" >  onSubmit: (flashcard: FlashcardCreateDto) =&gt; Promise&lt;void&gt;;</span>
-<span class="cstat-no" title="statement not covered" >  isSubmitting?: boolean;</span>
+<span class="cstat-no" title="statement not covered" >export function InputField({</span>
+<span class="cstat-no" title="statement not covered" >  id,</span>
+<span class="cstat-no" title="statement not covered" >  name,</span>
+<span class="cstat-no" title="statement not covered" >  type,</span>
+<span class="cstat-no" title="statement not covered" >  label,</span>
+<span class="cstat-no" title="statement not covered" >  value,</span>
+<span class="cstat-no" title="statement not covered" >  onChange,</span>
+<span class="cstat-no" title="statement not covered" >  error,</span>
+<span class="cstat-no" title="statement not covered" >  placeholder,</span>
+<span class="cstat-no" title="statement not covered" >  required = false,</span>
+<span class="cstat-no" title="statement not covered" >  autoComplete,</span>
+<span class="cstat-no" title="statement not covered" >  testId</span>
+<span class="cstat-no" title="statement not covered" >}: InputFieldProps) {</span>
+<span class="cstat-no" title="statement not covered" >  return (</span>
+<span class="cstat-no" title="statement not covered" >    &lt;div&gt;</span>
+<span class="cstat-no" title="statement not covered" >      &lt;label </span>
+<span class="cstat-no" title="statement not covered" >        htmlFor={id} </span>
+<span class="cstat-no" title="statement not covered" >        className="block text-sm font-medium text-blue-100 mb-1"</span>
+<span class="cstat-no" title="statement not covered" >      &gt;</span>
+<span class="cstat-no" title="statement not covered" >        {label}</span>
+<span class="cstat-no" title="statement not covered" >      &lt;/label&gt;</span>
+<span class="cstat-no" title="statement not covered" >      &lt;input</span>
+<span class="cstat-no" title="statement not covered" >        id={id}</span>
+<span class="cstat-no" title="statement not covered" >        name={name}</span>
+<span class="cstat-no" title="statement not covered" >        type={type}</span>
+<span class="cstat-no" title="statement not covered" >        autoComplete={autoComplete}</span>
+<span class="cstat-no" title="statement not covered" >        required={required}</span>
+<span class="cstat-no" title="statement not covered" >        value={value}</span>
+<span class="cstat-no" title="statement not covered" >        onChange={onChange}</span>
+<span class="cstat-no" title="statement not covered" >        className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-md text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50"</span>
+<span class="cstat-no" title="statement not covered" >        placeholder={placeholder}</span>
+<span class="cstat-no" title="statement not covered" >        data-testid={testId}</span>
+<span class="cstat-no" title="statement not covered" >        style={{ caretColor: "transparent" }}</span>
+<span class="cstat-no" title="statement not covered" >      /&gt;</span>
+<span class="cstat-no" title="statement not covered" >      {error &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" >        &lt;p className="mt-1 text-sm text-red-300"&gt;{error}&lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" >      )}</span>
+<span class="cstat-no" title="statement not covered" >    &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >  );</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >/**</span>
-<span class="cstat-no" title="statement not covered" > * Komponent formularza do ręcznego tworzenia fiszek</span>
-<span class="cstat-no" title="statement not covered" > */</span>
-<span class="cstat-no" title="statement not covered" >export default function ManualFlashcardForm({ onSubmit, isSubmitting = false }: ManualFlashcardFormProps) {</span>
-<span class="cstat-no" title="statement not covered" >  const [flashcard, setFlashcard] = useState&lt;FlashcardCreateDto&gt;({</span>
-<span class="cstat-no" title="statement not covered" >    front: '',</span>
-<span class="cstat-no" title="statement not covered" >    back: ''</span>
-<span class="cstat-no" title="statement not covered" >  });</span>
-<span class="cstat-no" title="statement not covered" >  </span>
-<span class="cstat-no" title="statement not covered" >  const [errors, setErrors] = useState&lt;Record&lt;string, string&gt;&gt;({});</span>
-<span class="cstat-no" title="statement not covered" >  </span>
-<span class="cstat-no" title="statement not covered" >  const MAX_FRONT_LENGTH = 200;</span>
-<span class="cstat-no" title="statement not covered" >  const MAX_BACK_LENGTH = 500;</span>
-<span class="cstat-no" title="statement not covered" >  </span>
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Walidacja formularza</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  const validateForm = (): boolean =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    const newErrors: Record&lt;string, string&gt; = {};</span>
-<span class="cstat-no" title="statement not covered" >    </span>
-<span class="cstat-no" title="statement not covered" >    // Walidacja przodu fiszki</span>
-<span class="cstat-no" title="statement not covered" >    if (!flashcard.front.trim()) {</span>
-<span class="cstat-no" title="statement not covered" >      newErrors.front = 'Przód fiszki jest wymagany';</span>
-<span class="cstat-no" title="statement not covered" >    } else if (flashcard.front.length &gt; MAX_FRONT_LENGTH) {</span>
-<span class="cstat-no" title="statement not covered" >      newErrors.front = `Przód fiszki nie może być dłuższy niż ${MAX_FRONT_LENGTH} znaków`;</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    </span>
-<span class="cstat-no" title="statement not covered" >    // Walidacja tyłu fiszki</span>
-<span class="cstat-no" title="statement not covered" >    if (!flashcard.back.trim()) {</span>
-<span class="cstat-no" title="statement not covered" >      newErrors.back = 'Tył fiszki jest wymagany';</span>
-<span class="cstat-no" title="statement not covered" >    } else if (flashcard.back.length &gt; MAX_BACK_LENGTH) {</span>
-<span class="cstat-no" title="statement not covered" >      newErrors.back = `Tył fiszki nie może być dłuższy niż ${MAX_BACK_LENGTH} znaków`;</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    </span>
-<span class="cstat-no" title="statement not covered" >    // Aktualizacja stanu błędów</span>
-<span class="cstat-no" title="statement not covered" >    setErrors(newErrors);</span>
-<span class="cstat-no" title="statement not covered" >    </span>
-<span class="cstat-no" title="statement not covered" >    // Zwraca true jeśli nie ma błędów</span>
-<span class="cstat-no" title="statement not covered" >    return Object.keys(newErrors).length === 0;</span>
-<span class="cstat-no" title="statement not covered" >  };</span>
-<span class="cstat-no" title="statement not covered" >  </span>
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Obsługa zmiany pola formularza</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  const handleChange = (e: React.ChangeEvent&lt;HTMLTextAreaElement&gt;) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    const { name, value } = e.target;</span>
-<span class="cstat-no" title="statement not covered" >    setFlashcard(prev =&gt; ({</span>
-<span class="cstat-no" title="statement not covered" >      ...prev,</span>
-<span class="cstat-no" title="statement not covered" >      [name]: value</span>
-<span class="cstat-no" title="statement not covered" >    }));</span>
-<span class="cstat-no" title="statement not covered" >    </span>
-<span class="cstat-no" title="statement not covered" >    // Czyszczenie błędu dla zmienionego pola</span>
-<span class="cstat-no" title="statement not covered" >    if (errors[name]) {</span>
-<span class="cstat-no" title="statement not covered" >      setErrors(prev =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        const newErrors = { ...prev };</span>
-<span class="cstat-no" title="statement not covered" >        delete newErrors[name];</span>
-<span class="cstat-no" title="statement not covered" >        return newErrors;</span>
-<span class="cstat-no" title="statement not covered" >      });</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  };</span>
-<span class="cstat-no" title="statement not covered" >  </span>
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Obsługa wysłania formularza</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  const handleSubmit = async (e: React.FormEvent) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    e.preventDefault();</span>
-<span class="cstat-no" title="statement not covered" >    </span>
-<span class="cstat-no" title="statement not covered" >    // Walidacja formularza przed wysłaniem</span>
-<span class="cstat-no" title="statement not covered" >    if (!validateForm()) {</span>
-<span class="cstat-no" title="statement not covered" >      return;</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    </span>
-<span class="cstat-no" title="statement not covered" >    try {</span>
-<span class="cstat-no" title="statement not covered" >      await onSubmit(flashcard);</span>
-<span class="cstat-no" title="statement not covered" >      // Czyszczenie formularza po udanym zapisie</span>
-<span class="cstat-no" title="statement not covered" >      handleReset();</span>
-<span class="cstat-no" title="statement not covered" >    } catch (error) {</span>
-<span class="cstat-no" title="statement not covered" >      console.error('Błąd podczas zapisywania fiszki:', error);</span>
-<span class="cstat-no" title="statement not covered" >      // Błąd zostanie obsłużony w komponencie rodzica</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  };</span>
-<span class="cstat-no" title="statement not covered" >  </span>
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Obsługa czyszczenia formularza</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  const handleReset = () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    setFlashcard({ front: '', back: '' });</span>
-<span class="cstat-no" title="statement not covered" >    setErrors({});</span>
-<span class="cstat-no" title="statement not covered" >  };</span>
+<span class="cstat-no" title="statement not covered" >interface CheckboxFieldProps {</span>
+<span class="cstat-no" title="statement not covered" >  id: string;</span>
+<span class="cstat-no" title="statement not covered" >  name: string;</span>
+<span class="cstat-no" title="statement not covered" >  label: React.ReactNode;</span>
+<span class="cstat-no" title="statement not covered" >  checked: boolean;</span>
+<span class="cstat-no" title="statement not covered" >  onChange: (e: React.ChangeEvent&lt;HTMLInputElement&gt;) =&gt; void;</span>
+<span class="cstat-no" title="statement not covered" >  error?: string;</span>
+<span class="cstat-no" title="statement not covered" >  testId?: string;</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >export function CheckboxField({</span>
+<span class="cstat-no" title="statement not covered" >  id,</span>
+<span class="cstat-no" title="statement not covered" >  name,</span>
+<span class="cstat-no" title="statement not covered" >  label,</span>
+<span class="cstat-no" title="statement not covered" >  checked,</span>
+<span class="cstat-no" title="statement not covered" >  onChange,</span>
+<span class="cstat-no" title="statement not covered" >  error,</span>
+<span class="cstat-no" title="statement not covered" >  testId</span>
+<span class="cstat-no" title="statement not covered" >}: CheckboxFieldProps) {</span>
+<span class="cstat-no" title="statement not covered" >  return (</span>
+<span class="cstat-no" title="statement not covered" >    &lt;div className="flex items-start"&gt;</span>
+<span class="cstat-no" title="statement not covered" >      &lt;div className="flex items-center h-5"&gt;</span>
+<span class="cstat-no" title="statement not covered" >        &lt;input</span>
+<span class="cstat-no" title="statement not covered" >          id={id}</span>
+<span class="cstat-no" title="statement not covered" >          name={name}</span>
+<span class="cstat-no" title="statement not covered" >          type="checkbox"</span>
+<span class="cstat-no" title="statement not covered" >          checked={checked}</span>
+<span class="cstat-no" title="statement not covered" >          onChange={onChange}</span>
+<span class="cstat-no" title="statement not covered" >          className="w-4 h-4 bg-blue-800 border-blue-600 rounded focus:ring-blue-500"</span>
+<span class="cstat-no" title="statement not covered" >          data-testid={testId}</span>
+<span class="cstat-no" title="statement not covered" >        /&gt;</span>
+<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >      &lt;div className="ml-3 text-sm"&gt;</span>
+<span class="cstat-no" title="statement not covered" >        &lt;label htmlFor={id} className="text-blue-100"&gt;</span>
+<span class="cstat-no" title="statement not covered" >          {label}</span>
+<span class="cstat-no" title="statement not covered" >        &lt;/label&gt;</span>
+<span class="cstat-no" title="statement not covered" >        {error &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" >          &lt;p className="mt-1 text-sm text-red-300"&gt;{error}&lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" >        )}</span>
+<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >    &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >  );</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >interface FormErrorProps {</span>
+<span class="cstat-no" title="statement not covered" >  error?: string;</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >export function FormError({ error }: FormErrorProps) {</span>
+<span class="cstat-no" title="statement not covered" >  if (!error) return null;</span>
 <span class="cstat-no" title="statement not covered" >  </span>
 <span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;form onSubmit={handleSubmit} className="space-y-6"&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;div className="space-y-2"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;label htmlFor="front" className="block text-sm font-medium"&gt;</span>
-<span class="cstat-no" title="statement not covered" >          Przód fiszki</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/label&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;div className="relative"&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;textarea</span>
-<span class="cstat-no" title="statement not covered" >            id="front"</span>
-<span class="cstat-no" title="statement not covered" >            name="front"</span>
-<span class="cstat-no" title="statement not covered" >            value={flashcard.front}</span>
-<span class="cstat-no" title="statement not covered" >            onChange={handleChange}</span>
-<span class="cstat-no" title="statement not covered" >            className={`w-full min-h-[100px] p-3 rounded-md border text-foreground ${</span>
-<span class="cstat-no" title="statement not covered" >              errors.front ? 'border-destructive' : 'border-input'</span>
-<span class="cstat-no" title="statement not covered" >            } bg-card`}</span>
-<span class="cstat-no" title="statement not covered" >            placeholder="Wprowadź tekst dla przodu fiszki..."</span>
-<span class="cstat-no" title="statement not covered" >            disabled={isSubmitting}</span>
-<span class="cstat-no" title="statement not covered" >          /&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;div className="absolute bottom-2 right-2 text-xs text-muted-foreground"&gt;</span>
-<span class="cstat-no" title="statement not covered" >            {flashcard.front.length}/{MAX_FRONT_LENGTH}</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >        {errors.front &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;p className="text-sm text-destructive"&gt;{errors.front}&lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >        )}</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >    &lt;div className="bg-red-500/20 border border-red-500/30 p-3 rounded-md"&gt;</span>
+<span class="cstat-no" title="statement not covered" >      &lt;p className="text-sm text-red-300"&gt;{error}&lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" >    &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >  );</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >interface DebugInfoProps {</span>
+<span class="cstat-no" title="statement not covered" >  info: any;</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >export function DebugInfo({ info }: DebugInfoProps) {</span>
+<span class="cstat-no" title="statement not covered" >  if (!info) return null;</span>
+<span class="cstat-no" title="statement not covered" >  </span>
+<span class="cstat-no" title="statement not covered" >  return (</span>
+<span class="cstat-no" title="statement not covered" >    &lt;div className="bg-gray-500/20 border border-gray-500/30 p-3 rounded-md text-xs"&gt;</span>
+<span class="cstat-no" title="statement not covered" >      &lt;p&gt;Status: {info.status}&lt;/p&gt;</span>
+<span class="cstat-no" title="statement not covered" >      &lt;pre&gt;{JSON.stringify(info.data, null, 2)}&lt;/pre&gt;</span>
+<span class="cstat-no" title="statement not covered" >    &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >  );</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >interface SuccessMessageProps {</span>
+<span class="cstat-no" title="statement not covered" >  title: string;</span>
+<span class="cstat-no" title="statement not covered" >  message: string;</span>
+<span class="cstat-no" title="statement not covered" >  actionLink?: {</span>
+<span class="cstat-no" title="statement not covered" >    text: string;</span>
+<span class="cstat-no" title="statement not covered" >    href: string;</span>
+<span class="cstat-no" title="statement not covered" >  };</span>
+<span class="cstat-no" title="statement not covered" >  onBackClick?: () =&gt; void;</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >export function SuccessMessage({ </span>
+<span class="cstat-no" title="statement not covered" >  title, </span>
+<span class="cstat-no" title="statement not covered" >  message,</span>
+<span class="cstat-no" title="statement not covered" >  actionLink,</span>
+<span class="cstat-no" title="statement not covered" >  onBackClick</span>
+<span class="cstat-no" title="statement not covered" >}: SuccessMessageProps) {</span>
+<span class="cstat-no" title="statement not covered" >  return (</span>
+<span class="cstat-no" title="statement not covered" >    &lt;div className="p-4 bg-green-500/20 border border-green-500/30 rounded-md text-center"&gt;</span>
+<span class="cstat-no" title="statement not covered" >      &lt;h3 className="text-xl font-semibold mb-2"&gt;{title}&lt;/h3&gt;</span>
+<span class="cstat-no" title="statement not covered" >      &lt;p className="mb-4"&gt;{message}&lt;/p&gt;</span>
 <span class="cstat-no" title="statement not covered" >      </span>
-<span class="cstat-no" title="statement not covered" >      &lt;div className="space-y-2"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;label htmlFor="back" className="block text-sm font-medium"&gt;</span>
-<span class="cstat-no" title="statement not covered" >          Tył fiszki</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/label&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;div className="relative"&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;textarea</span>
-<span class="cstat-no" title="statement not covered" >            id="back"</span>
-<span class="cstat-no" title="statement not covered" >            name="back"</span>
-<span class="cstat-no" title="statement not covered" >            value={flashcard.back}</span>
-<span class="cstat-no" title="statement not covered" >            onChange={handleChange}</span>
-<span class="cstat-no" title="statement not covered" >            className={`w-full min-h-[200px] p-3 rounded-md border text-foreground ${</span>
-<span class="cstat-no" title="statement not covered" >              errors.back ? 'border-destructive' : 'border-input'</span>
-<span class="cstat-no" title="statement not covered" >            } bg-card`}</span>
-<span class="cstat-no" title="statement not covered" >            placeholder="Wprowadź tekst dla tyłu fiszki..."</span>
-<span class="cstat-no" title="statement not covered" >            disabled={isSubmitting}</span>
-<span class="cstat-no" title="statement not covered" >          /&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;div className="absolute bottom-2 right-2 text-xs text-muted-foreground"&gt;</span>
-<span class="cstat-no" title="statement not covered" >            {flashcard.back.length}/{MAX_BACK_LENGTH}</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >        {errors.back &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >          &lt;p className="text-sm text-destructive"&gt;{errors.back}&lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >        )}</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >      {actionLink &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" >        &lt;a href={actionLink.href} className="text-blue-400 hover:text-blue-300 font-medium"&gt;</span>
+<span class="cstat-no" title="statement not covered" >          {actionLink.text}</span>
+<span class="cstat-no" title="statement not covered" >        &lt;/a&gt;</span>
+<span class="cstat-no" title="statement not covered" >      )}</span>
 <span class="cstat-no" title="statement not covered" >      </span>
-<span class="cstat-no" title="statement not covered" >      &lt;div className="flex justify-end gap-3"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;Button </span>
-<span class="cstat-no" title="statement not covered" >          type="button" </span>
-<span class="cstat-no" title="statement not covered" >          variant="outline" </span>
-<span class="cstat-no" title="statement not covered" >          onClick={handleReset}</span>
-<span class="cstat-no" title="statement not covered" >          disabled={isSubmitting}</span>
-<span class="cstat-no" title="statement not covered" >          className="text-secondary-foreground"</span>
+<span class="cstat-no" title="statement not covered" >      {onBackClick &amp;&amp; (</span>
+<span class="cstat-no" title="statement not covered" >        &lt;button </span>
+<span class="cstat-no" title="statement not covered" >          onClick={onBackClick}</span>
+<span class="cstat-no" title="statement not covered" >          className="text-blue-400 hover:text-blue-300 font-medium"</span>
 <span class="cstat-no" title="statement not covered" >        &gt;</span>
-<span class="cstat-no" title="statement not covered" >          Wyczyść</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/Button&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;Button </span>
-<span class="cstat-no" title="statement not covered" >          type="submit" </span>
-<span class="cstat-no" title="statement not covered" >          disabled={isSubmitting || Object.keys(errors).length &gt; 0}</span>
-<span class="cstat-no" title="statement not covered" >        &gt;</span>
-<span class="cstat-no" title="statement not covered" >          {isSubmitting ? 'Zapisywanie...' : 'Zapisz fiszkę'}</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/Button&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >    &lt;/form&gt;</span>
+<span class="cstat-no" title="statement not covered" >          Powrót do formularza</span>
+<span class="cstat-no" title="statement not covered" >        &lt;/button&gt;</span>
+<span class="cstat-no" title="statement not covered" >      )}</span>
+<span class="cstat-no" title="statement not covered" >    &lt;/div&gt;</span>
 <span class="cstat-no" title="statement not covered" >  );</span>
 <span class="cstat-no" title="statement not covered" >} </span></pre></td></tr></table></pre>
 

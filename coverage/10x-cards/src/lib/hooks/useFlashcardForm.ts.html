@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for 10x-cards/src/components/auth/UpdatePasswordForm.tsx</title>
+    <title>Code coverage report for 10x-cards/src/lib/hooks/useFlashcardForm.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">10x-cards/src/components/auth</a> UpdatePasswordForm.tsx</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">10x-cards/src/lib/hooks</a> useFlashcardForm.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/128</span>
+                <span class='fraction'>0/146</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/128</span>
+                <span class='fraction'>0/146</span>
             </div>
         
             
@@ -190,7 +190,25 @@
 <a name='L125'></a><a href='#L125'>125</a>
 <a name='L126'></a><a href='#L126'>126</a>
 <a name='L127'></a><a href='#L127'>127</a>
-<a name='L128'></a><a href='#L128'>128</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L128'></a><a href='#L128'>128</a>
+<a name='L129'></a><a href='#L129'>129</a>
+<a name='L130'></a><a href='#L130'>130</a>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a>
+<a name='L141'></a><a href='#L141'>141</a>
+<a name='L142'></a><a href='#L142'>142</a>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a>
+<a name='L145'></a><a href='#L145'>145</a>
+<a name='L146'></a><a href='#L146'>146</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -317,133 +335,169 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >import React from "react";</span></span></span>
-<span class="cstat-no" title="statement not covered" >import { Button } from "../ui/button";</span>
-<span class="cstat-no" title="statement not covered" >import { usePasswordForm } from "@/lib/hooks/usePasswordForm";</span>
-<span class="cstat-no" title="statement not covered" >import { FormError } from "./FormElements";</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import { useState, useCallback, useRef, useEffect } from 'react';<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >interface UpdatePasswordFormProps {</span>
-<span class="cstat-no" title="statement not covered" >  token?: string;</span>
+<span class="cstat-no" title="statement not covered" >export interface FlashcardFormData {</span>
+<span class="cstat-no" title="statement not covered" >  front: string;</span>
+<span class="cstat-no" title="statement not covered" >  back: string;</span>
+<span class="cstat-no" title="statement not covered" >  source: string;</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >export default function UpdatePasswordForm({ token }: UpdatePasswordFormProps) {</span>
-<span class="cstat-no" title="statement not covered" >  const {</span>
-<span class="cstat-no" title="statement not covered" >    formData,</span>
-<span class="cstat-no" title="statement not covered" >    errors,</span>
-<span class="cstat-no" title="statement not covered" >    isLoading,</span>
-<span class="cstat-no" title="statement not covered" >    isSuccess,</span>
-<span class="cstat-no" title="statement not covered" >    tokenError,</span>
-<span class="cstat-no" title="statement not covered" >    handleChange,</span>
-<span class="cstat-no" title="statement not covered" >    handleSubmit</span>
-<span class="cstat-no" title="statement not covered" >  } = usePasswordForm({</span>
-<span class="cstat-no" title="statement not covered" >    token,</span>
-<span class="cstat-no" title="statement not covered" >    onSubmit: async (data) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      console.log("Aktualizacja hasła z użyciem tokenu:", token);</span>
-<span class="cstat-no" title="statement not covered" >      // Symulacja opóźnienia - do usunięcia przy implementacji backendu</span>
-<span class="cstat-no" title="statement not covered" >      await new Promise(resolve =&gt; setTimeout(resolve, 1000));</span>
-<span class="cstat-no" title="statement not covered" >      return true;</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >interface ValidationErrors {</span>
+<span class="cstat-no" title="statement not covered" >  front: string;</span>
+<span class="cstat-no" title="statement not covered" >  back: string;</span>
+<span class="cstat-no" title="statement not covered" >  [key: string]: string;</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >interface UseFlashcardFormOptions {</span>
+<span class="cstat-no" title="statement not covered" >  initialValues?: FlashcardFormData;</span>
+<span class="cstat-no" title="statement not covered" >  onSubmit: (data: FlashcardFormData) =&gt; void;</span>
+<span class="cstat-no" title="statement not covered" >  onCancel?: () =&gt; void;</span>
+<span class="cstat-no" title="statement not covered" >  isSubmitting?: boolean;</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >export function useFlashcardForm({</span>
+<span class="cstat-no" title="statement not covered" >  initialValues = { front: '', back: '', source: 'manual' },</span>
+<span class="cstat-no" title="statement not covered" >  onSubmit,</span>
+<span class="cstat-no" title="statement not covered" >  onCancel</span>
+<span class="cstat-no" title="statement not covered" >}: UseFlashcardFormOptions) {</span>
+<span class="cstat-no" title="statement not covered" >  // Stan formularza</span>
+<span class="cstat-no" title="statement not covered" >  const [formData, setFormData] = useState&lt;FlashcardFormData&gt;({</span>
+<span class="cstat-no" title="statement not covered" >    front: initialValues.front,</span>
+<span class="cstat-no" title="statement not covered" >    back: initialValues.back,</span>
+<span class="cstat-no" title="statement not covered" >    source: initialValues.source</span>
+<span class="cstat-no" title="statement not covered" >  });</span>
+<span class="cstat-no" title="statement not covered" >  </span>
+<span class="cstat-no" title="statement not covered" >  // Stan błędów</span>
+<span class="cstat-no" title="statement not covered" >  const [errors, setErrors] = useState&lt;ValidationErrors&gt;({</span>
+<span class="cstat-no" title="statement not covered" >    front: '',</span>
+<span class="cstat-no" title="statement not covered" >    back: ''</span>
 <span class="cstat-no" title="statement not covered" >  });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  if (tokenError) {</span>
-<span class="cstat-no" title="statement not covered" >    return (</span>
-<span class="cstat-no" title="statement not covered" >      &lt;div className="p-4 bg-red-500/20 border border-red-500/30 rounded-md"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;p className="text-sm text-red-300"&gt;{tokenError}&lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;a </span>
-<span class="cstat-no" title="statement not covered" >          href="/auth/reset-password" </span>
-<span class="cstat-no" title="statement not covered" >          className="block mt-4 text-sm font-medium text-blue-300 hover:text-blue-200"</span>
-<span class="cstat-no" title="statement not covered" >        &gt;</span>
-<span class="cstat-no" title="statement not covered" >          Wróć do formularza resetowania hasła</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/a&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >    );</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >  // Referencja do pierwszego pola dla dostępności</span>
+<span class="cstat-no" title="statement not covered" >  const frontInputRef = useRef&lt;HTMLTextAreaElement&gt;(null);</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  if (isSuccess) {</span>
-<span class="cstat-no" title="statement not covered" >    return (</span>
-<span class="cstat-no" title="statement not covered" >      &lt;div className="space-y-6"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;div className="p-4 bg-green-500/20 border border-green-500/30 rounded-md"&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;p className="text-sm text-green-300"&gt;</span>
-<span class="cstat-no" title="statement not covered" >            Hasło zostało pomyślnie zaktualizowane.</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;Button</span>
-<span class="cstat-no" title="statement not covered" >          type="button"</span>
-<span class="cstat-no" title="statement not covered" >          onClick={() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >            window.location.href = "/auth/login";</span>
-<span class="cstat-no" title="statement not covered" >          }}</span>
-<span class="cstat-no" title="statement not covered" >          className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-medium py-2 px-4 rounded-md"</span>
-<span class="cstat-no" title="statement not covered" >        &gt;</span>
-<span class="cstat-no" title="statement not covered" >          Przejdź do logowania</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/Button&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >    );</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >  // Ustawienie fokusu na pierwsze pole po załadowaniu</span>
+<span class="cstat-no" title="statement not covered" >  useEffect(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    if (frontInputRef.current) {</span>
+<span class="cstat-no" title="statement not covered" >      frontInputRef.current.focus();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >  }, []);</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;form onSubmit={handleSubmit} className="space-y-6"&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;div className="space-y-4"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;div&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;label </span>
-<span class="cstat-no" title="statement not covered" >            htmlFor="password" </span>
-<span class="cstat-no" title="statement not covered" >            className="block text-sm font-medium text-blue-100 mb-1"</span>
-<span class="cstat-no" title="statement not covered" >          &gt;</span>
-<span class="cstat-no" title="statement not covered" >            Nowe hasło</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/label&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;input</span>
-<span class="cstat-no" title="statement not covered" >            id="password"</span>
-<span class="cstat-no" title="statement not covered" >            name="password"</span>
-<span class="cstat-no" title="statement not covered" >            type="password"</span>
-<span class="cstat-no" title="statement not covered" >            autoComplete="new-password"</span>
-<span class="cstat-no" title="statement not covered" >            required</span>
-<span class="cstat-no" title="statement not covered" >            value={formData.password}</span>
-<span class="cstat-no" title="statement not covered" >            onChange={handleChange}</span>
-<span class="cstat-no" title="statement not covered" >            className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-md text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50"</span>
-<span class="cstat-no" title="statement not covered" >            placeholder="••••••••"</span>
-<span class="cstat-no" title="statement not covered" >          /&gt;</span>
-<span class="cstat-no" title="statement not covered" >          {errors.password &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >            &lt;p className="mt-1 text-sm text-red-300"&gt;{errors.password}&lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >          )}</span>
-<span class="cstat-no" title="statement not covered" >          &lt;p className="mt-1 text-xs text-blue-100/70"&gt;</span>
-<span class="cstat-no" title="statement not covered" >            Minimum 8 znaków, 1 wielka litera, 1 cyfra, 1 znak specjalny</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >  // Obsługa zmiany pól formularza</span>
+<span class="cstat-no" title="statement not covered" >  const handleChange = useCallback((</span>
+<span class="cstat-no" title="statement not covered" >    e: React.ChangeEvent&lt;HTMLTextAreaElement | HTMLSelectElement&gt;</span>
+<span class="cstat-no" title="statement not covered" >  ) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    const { name, value } = e.target;</span>
+<span class="cstat-no" title="statement not covered" >    setFormData(prev =&gt; ({</span>
+<span class="cstat-no" title="statement not covered" >      ...prev,</span>
+<span class="cstat-no" title="statement not covered" >      [name]: value</span>
+<span class="cstat-no" title="statement not covered" >    }));</span>
+<span class="cstat-no" title="statement not covered" >    </span>
+<span class="cstat-no" title="statement not covered" >    // Walidacja</span>
+<span class="cstat-no" title="statement not covered" >    if (name === 'front' || name === 'back') {</span>
+<span class="cstat-no" title="statement not covered" >      if (!value.trim()) {</span>
+<span class="cstat-no" title="statement not covered" >        setErrors(prev =&gt; ({</span>
+<span class="cstat-no" title="statement not covered" >          ...prev,</span>
+<span class="cstat-no" title="statement not covered" >          [name]: 'To pole jest wymagane'</span>
+<span class="cstat-no" title="statement not covered" >        }));</span>
+<span class="cstat-no" title="statement not covered" >      } else if (value.length &gt; 500) {</span>
+<span class="cstat-no" title="statement not covered" >        setErrors(prev =&gt; ({</span>
+<span class="cstat-no" title="statement not covered" >          ...prev,</span>
+<span class="cstat-no" title="statement not covered" >          [name]: 'Tekst nie może przekraczać 500 znaków'</span>
+<span class="cstat-no" title="statement not covered" >        }));</span>
+<span class="cstat-no" title="statement not covered" >      } else {</span>
+<span class="cstat-no" title="statement not covered" >        setErrors(prev =&gt; ({</span>
+<span class="cstat-no" title="statement not covered" >          ...prev,</span>
+<span class="cstat-no" title="statement not covered" >          [name]: ''</span>
+<span class="cstat-no" title="statement not covered" >        }));</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >  }, []);</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >        &lt;div&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;label </span>
-<span class="cstat-no" title="statement not covered" >            htmlFor="confirmPassword" </span>
-<span class="cstat-no" title="statement not covered" >            className="block text-sm font-medium text-blue-100 mb-1"</span>
-<span class="cstat-no" title="statement not covered" >          &gt;</span>
-<span class="cstat-no" title="statement not covered" >            Potwierdź nowe hasło</span>
-<span class="cstat-no" title="statement not covered" >          &lt;/label&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;input</span>
-<span class="cstat-no" title="statement not covered" >            id="confirmPassword"</span>
-<span class="cstat-no" title="statement not covered" >            name="confirmPassword"</span>
-<span class="cstat-no" title="statement not covered" >            type="password"</span>
-<span class="cstat-no" title="statement not covered" >            autoComplete="new-password"</span>
-<span class="cstat-no" title="statement not covered" >            required</span>
-<span class="cstat-no" title="statement not covered" >            value={formData.confirmPassword}</span>
-<span class="cstat-no" title="statement not covered" >            onChange={handleChange}</span>
-<span class="cstat-no" title="statement not covered" >            className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-md text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50"</span>
-<span class="cstat-no" title="statement not covered" >            placeholder="••••••••"</span>
-<span class="cstat-no" title="statement not covered" >          /&gt;</span>
-<span class="cstat-no" title="statement not covered" >          {errors.confirmPassword &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >            &lt;p className="mt-1 text-sm text-red-300"&gt;{errors.confirmPassword}&lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >          )}</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >  // Resetowanie formularza</span>
+<span class="cstat-no" title="statement not covered" >  const resetForm = useCallback(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    setFormData({</span>
+<span class="cstat-no" title="statement not covered" >      front: '',</span>
+<span class="cstat-no" title="statement not covered" >      back: '',</span>
+<span class="cstat-no" title="statement not covered" >      source: 'manual'</span>
+<span class="cstat-no" title="statement not covered" >    });</span>
+<span class="cstat-no" title="statement not covered" >    setErrors({</span>
+<span class="cstat-no" title="statement not covered" >      front: '',</span>
+<span class="cstat-no" title="statement not covered" >      back: ''</span>
+<span class="cstat-no" title="statement not covered" >    });</span>
+<span class="cstat-no" title="statement not covered" >    </span>
+<span class="cstat-no" title="statement not covered" >    // Przywrócenie fokusu na pierwszy input</span>
+<span class="cstat-no" title="statement not covered" >    if (frontInputRef.current) {</span>
+<span class="cstat-no" title="statement not covered" >      frontInputRef.current.focus();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >  }, []);</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >      &lt;FormError error={errors.form} /&gt;</span>
+<span class="cstat-no" title="statement not covered" >  // Walidacja formularza</span>
+<span class="cstat-no" title="statement not covered" >  const validateForm = useCallback(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    const newErrors = {</span>
+<span class="cstat-no" title="statement not covered" >      front: '',</span>
+<span class="cstat-no" title="statement not covered" >      back: ''</span>
+<span class="cstat-no" title="statement not covered" >    };</span>
+<span class="cstat-no" title="statement not covered" >    </span>
+<span class="cstat-no" title="statement not covered" >    if (!formData.front.trim()) {</span>
+<span class="cstat-no" title="statement not covered" >      newErrors.front = 'To pole jest wymagane';</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >    </span>
+<span class="cstat-no" title="statement not covered" >    if (!formData.back.trim()) {</span>
+<span class="cstat-no" title="statement not covered" >      newErrors.back = 'To pole jest wymagane';</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >    </span>
+<span class="cstat-no" title="statement not covered" >    setErrors(newErrors);</span>
+<span class="cstat-no" title="statement not covered" >    return !newErrors.front &amp;&amp; !newErrors.back;</span>
+<span class="cstat-no" title="statement not covered" >  }, [formData]);</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >      &lt;Button</span>
-<span class="cstat-no" title="statement not covered" >        type="submit"</span>
-<span class="cstat-no" title="statement not covered" >        className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-medium py-2 px-4 rounded-md"</span>
-<span class="cstat-no" title="statement not covered" >        disabled={isLoading}</span>
-<span class="cstat-no" title="statement not covered" >      &gt;</span>
-<span class="cstat-no" title="statement not covered" >        {isLoading ? "Aktualizowanie..." : "Ustaw nowe hasło"}</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/Button&gt;</span>
-<span class="cstat-no" title="statement not covered" >    &lt;/form&gt;</span>
-<span class="cstat-no" title="statement not covered" >  );</span>
+<span class="cstat-no" title="statement not covered" >  // Obsługa zapisu fiszki</span>
+<span class="cstat-no" title="statement not covered" >  const handleSubmit = useCallback((e: React.FormEvent) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    e.preventDefault();</span>
+<span class="cstat-no" title="statement not covered" >    </span>
+<span class="cstat-no" title="statement not covered" >    if (!validateForm()) {</span>
+<span class="cstat-no" title="statement not covered" >      return;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >    </span>
+<span class="cstat-no" title="statement not covered" >    onSubmit(formData);</span>
+<span class="cstat-no" title="statement not covered" >    resetForm();</span>
+<span class="cstat-no" title="statement not covered" >  }, [formData, onSubmit, validateForm, resetForm]);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  // Obsługa anulowania</span>
+<span class="cstat-no" title="statement not covered" >  const handleCancel = useCallback(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    if (onCancel) {</span>
+<span class="cstat-no" title="statement not covered" >      onCancel();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >    resetForm();</span>
+<span class="cstat-no" title="statement not covered" >  }, [onCancel, resetForm]);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  return {</span>
+<span class="cstat-no" title="statement not covered" >    formData,</span>
+<span class="cstat-no" title="statement not covered" >    errors,</span>
+<span class="cstat-no" title="statement not covered" >    frontInputRef,</span>
+<span class="cstat-no" title="statement not covered" >    handleChange,</span>
+<span class="cstat-no" title="statement not covered" >    handleSubmit,</span>
+<span class="cstat-no" title="statement not covered" >    handleCancel</span>
+<span class="cstat-no" title="statement not covered" >  };</span>
 <span class="cstat-no" title="statement not covered" >} </span></pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->

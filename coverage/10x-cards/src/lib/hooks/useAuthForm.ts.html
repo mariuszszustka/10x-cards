@@ -3,15 +3,15 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for 10x-cards/src/pages/api/leitner/sessions.ts</title>
+    <title>Code coverage report for 10x-cards/src/lib/hooks/useAuthForm.ts</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../../../../../prettify.css" />
-    <link rel="stylesheet" href="../../../../../base.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="../../../../../favicon.png" />
+    <link rel="stylesheet" href="../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(../../../../../sort-arrow-sprite.png);
+            background-image: url(../../../../sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../../index.html">All files</a> / <a href="index.html">10x-cards/src/pages/api/leitner</a> sessions.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">10x-cards/src/lib/hooks</a> useAuthForm.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/263</span>
+                <span class='fraction'>0/259</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/263</span>
+                <span class='fraction'>0/259</span>
             </div>
         
             
@@ -321,11 +321,7 @@
 <a name='L256'></a><a href='#L256'>256</a>
 <a name='L257'></a><a href='#L257'>257</a>
 <a name='L258'></a><a href='#L258'>258</a>
-<a name='L259'></a><a href='#L259'>259</a>
-<a name='L260'></a><a href='#L260'>260</a>
-<a name='L261'></a><a href='#L261'>261</a>
-<a name='L262'></a><a href='#L262'>262</a>
-<a name='L263'></a><a href='#L263'>263</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L259'></a><a href='#L259'>259</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -583,273 +579,265 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import { createErrorResponse, type CreateReviewSessionDTO, type UpdateReviewSessionDTO, type ReviewSessionDTO } from '@/types';<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
-<span class="cstat-no" title="statement not covered" >import { createClient } from '@supabase/supabase-js';</span>
-<span class="cstat-no" title="statement not covered" >import type { APIRoute } from 'astro';</span>
-<span class="cstat-no" title="statement not covered" >import type { Database } from '@/db/database.types';</span>
+<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import { useState } from "react";<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >// Inicjalizacja klienta Supabase</span>
-<span class="cstat-no" title="statement not covered" >const supabaseUrl = import.meta.env.SUPABASE_URL;</span>
-<span class="cstat-no" title="statement not covered" >const supabaseAnonKey = import.meta.env.SUPABASE_KEY;</span>
-<span class="cstat-no" title="statement not covered" >const supabase = createClient&lt;Database&gt;(supabaseUrl, supabaseAnonKey);</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >// Tymczasowe rozwiązanie dla uwierzytelniania podczas developmentu</span>
-<span class="cstat-no" title="statement not covered" >const DEFAULT_USER_ID = '123e4567-e89b-12d3-a456-426614174000';</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >// Funkcja do uwierzytelniania użytkownika</span>
-<span class="cstat-no" title="statement not covered" >async function getUser(request: Request) {</span>
-<span class="cstat-no" title="statement not covered" >  // Tymczasowe uproszczone uwierzytelnianie dla developmentu</span>
-<span class="cstat-no" title="statement not covered" >  return { </span>
-<span class="cstat-no" title="statement not covered" >    id: DEFAULT_USER_ID,</span>
-<span class="cstat-no" title="statement not covered" >    email: 'test@example.com'</span>
-<span class="cstat-no" title="statement not covered" >  };</span>
+<span class="cstat-no" title="statement not covered" >interface AuthFormState {</span>
+<span class="cstat-no" title="statement not covered" >  email: string;</span>
+<span class="cstat-no" title="statement not covered" >  password: string;</span>
+<span class="cstat-no" title="statement not covered" >  confirmPassword?: string;</span>
+<span class="cstat-no" title="statement not covered" >  acceptTerms?: boolean;</span>
+<span class="cstat-no" title="statement not covered" >  [key: string]: string | boolean | undefined;</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >/**</span>
-<span class="cstat-no" title="statement not covered" > * POST /api/leitner/sessions - Tworzenie nowej sesji nauki</span>
-<span class="cstat-no" title="statement not covered" > * Tworzy nową sesję nauki lub aktualizuje istniejącą, gdy użytkownik kontynuuje naukę</span>
-<span class="cstat-no" title="statement not covered" > */</span>
-<span class="cstat-no" title="statement not covered" >export const POST: APIRoute = async ({ request }) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >  try {</span>
-<span class="cstat-no" title="statement not covered" >    // 1. Ekstrakcja i weryfikacja tokenu użytkownika</span>
-<span class="cstat-no" title="statement not covered" >    const user = await getUser(request);</span>
-<span class="cstat-no" title="statement not covered" >    if (!user) {</span>
-<span class="cstat-no" title="statement not covered" >      return new Response(</span>
-<span class="cstat-no" title="statement not covered" >        JSON.stringify(createErrorResponse('unauthorized', 'Brak autoryzacji')),</span>
-<span class="cstat-no" title="statement not covered" >        { status: 401, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >      );</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >interface AuthFormOptions {</span>
+<span class="cstat-no" title="statement not covered" >  initialState: AuthFormState;</span>
+<span class="cstat-no" title="statement not covered" >  onSuccess?: (data: any) =&gt; void;</span>
+<span class="cstat-no" title="statement not covered" >  onError?: (error: Error) =&gt; void;</span>
+<span class="cstat-no" title="statement not covered" >  endpoint: string;</span>
+<span class="cstat-no" title="statement not covered" >  redirect?: string;</span>
+<span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // 2. Walidacja danych wejściowych</span>
-<span class="cstat-no" title="statement not covered" >    let sessionData: CreateReviewSessionDTO;</span>
-<span class="cstat-no" title="statement not covered" >    try {</span>
-<span class="cstat-no" title="statement not covered" >      sessionData = await request.json();</span>
-<span class="cstat-no" title="statement not covered" >    } catch (e) {</span>
-<span class="cstat-no" title="statement not covered" >      return new Response(</span>
-<span class="cstat-no" title="statement not covered" >        JSON.stringify(createErrorResponse('validation_error', 'Nieprawidłowy format JSON')),</span>
-<span class="cstat-no" title="statement not covered" >        { status: 400, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >      );</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >export function useAuthForm({</span>
+<span class="cstat-no" title="statement not covered" >  initialState,</span>
+<span class="cstat-no" title="statement not covered" >  onSuccess,</span>
+<span class="cstat-no" title="statement not covered" >  onError,</span>
+<span class="cstat-no" title="statement not covered" >  endpoint,</span>
+<span class="cstat-no" title="statement not covered" >  redirect</span>
+<span class="cstat-no" title="statement not covered" >}: AuthFormOptions) {</span>
+<span class="cstat-no" title="statement not covered" >  const [formData, setFormData] = useState&lt;AuthFormState&gt;(initialState);</span>
+<span class="cstat-no" title="statement not covered" >  const [errors, setErrors] = useState&lt;Record&lt;string, string&gt;&gt;({});</span>
+<span class="cstat-no" title="statement not covered" >  const [isLoading, setIsLoading] = useState(false);</span>
+<span class="cstat-no" title="statement not covered" >  const [status, setStatus] = useState&lt;"idle" | "success" | "error"&gt;("idle");</span>
+<span class="cstat-no" title="statement not covered" >  const [debugInfo, setDebugInfo] = useState&lt;any&gt;(null);</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    let session: ReviewSessionDTO;</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // 3. Sprawdzenie, czy chcemy kontynuować istniejącą sesję</span>
-<span class="cstat-no" title="statement not covered" >    if (sessionData.session_id) {</span>
-<span class="cstat-no" title="statement not covered" >      // Pobranie istniejącej sesji</span>
-<span class="cstat-no" title="statement not covered" >      const { data: existingSession, error: sessionError } = await supabase</span>
-<span class="cstat-no" title="statement not covered" >        .from('review_sessions')</span>
-<span class="cstat-no" title="statement not covered" >        .select('*')</span>
-<span class="cstat-no" title="statement not covered" >        .eq('id', sessionData.session_id)</span>
-<span class="cstat-no" title="statement not covered" >        .eq('user_id', user.id)</span>
-<span class="cstat-no" title="statement not covered" >        .single();</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >      if (sessionError || !existingSession) {</span>
-<span class="cstat-no" title="statement not covered" >        return new Response(</span>
-<span class="cstat-no" title="statement not covered" >          JSON.stringify(createErrorResponse('not_found', 'Nie znaleziono sesji o podanym ID')),</span>
-<span class="cstat-no" title="statement not covered" >          { status: 404, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >        );</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >      // Sprawdź, czy sesja nie jest już zakończona</span>
-<span class="cstat-no" title="statement not covered" >      if (existingSession.completed_at) {</span>
-<span class="cstat-no" title="statement not covered" >        return new Response(</span>
-<span class="cstat-no" title="statement not covered" >          JSON.stringify(createErrorResponse('conflict', 'Sesja została już zakończona')),</span>
-<span class="cstat-no" title="statement not covered" >          { status: 409, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >        );</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >      session = {</span>
-<span class="cstat-no" title="statement not covered" >        id: existingSession.id,</span>
-<span class="cstat-no" title="statement not covered" >        started_at: existingSession.started_at,</span>
-<span class="cstat-no" title="statement not covered" >        completed_at: existingSession.completed_at,</span>
-<span class="cstat-no" title="statement not covered" >        cards_reviewed: existingSession.cards_reviewed,</span>
-<span class="cstat-no" title="statement not covered" >        correct_answers: existingSession.correct_answers,</span>
-<span class="cstat-no" title="statement not covered" >        incorrect_answers: existingSession.incorrect_answers,</span>
-<span class="cstat-no" title="statement not covered" >        total_review_time_ms: existingSession.total_review_time_ms,</span>
-<span class="cstat-no" title="statement not covered" >        created_at: existingSession.created_at,</span>
-<span class="cstat-no" title="statement not covered" >        updated_at: existingSession.updated_at</span>
-<span class="cstat-no" title="statement not covered" >      };</span>
-<span class="cstat-no" title="statement not covered" >    } else {</span>
-<span class="cstat-no" title="statement not covered" >      // 4. Utworzenie nowej sesji nauki</span>
-<span class="cstat-no" title="statement not covered" >      const { data: newSession, error: createError } = await supabase</span>
-<span class="cstat-no" title="statement not covered" >        .from('review_sessions')</span>
-<span class="cstat-no" title="statement not covered" >        .insert({</span>
-<span class="cstat-no" title="statement not covered" >          user_id: user.id,</span>
-<span class="cstat-no" title="statement not covered" >          started_at: new Date().toISOString(),</span>
-<span class="cstat-no" title="statement not covered" >          cards_reviewed: 0,</span>
-<span class="cstat-no" title="statement not covered" >          correct_answers: 0,</span>
-<span class="cstat-no" title="statement not covered" >          incorrect_answers: 0</span>
-<span class="cstat-no" title="statement not covered" >        })</span>
-<span class="cstat-no" title="statement not covered" >        .select()</span>
-<span class="cstat-no" title="statement not covered" >        .single();</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >      if (createError) {</span>
-<span class="cstat-no" title="statement not covered" >        console.error('Błąd podczas tworzenia sesji nauki:', createError);</span>
-<span class="cstat-no" title="statement not covered" >        return new Response(</span>
-<span class="cstat-no" title="statement not covered" >          JSON.stringify(createErrorResponse('server_error', 'Wystąpił błąd podczas tworzenia sesji nauki')),</span>
-<span class="cstat-no" title="statement not covered" >          { status: 500, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >        );</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >      session = {</span>
-<span class="cstat-no" title="statement not covered" >        id: newSession.id,</span>
-<span class="cstat-no" title="statement not covered" >        started_at: newSession.started_at,</span>
-<span class="cstat-no" title="statement not covered" >        completed_at: newSession.completed_at,</span>
-<span class="cstat-no" title="statement not covered" >        cards_reviewed: newSession.cards_reviewed,</span>
-<span class="cstat-no" title="statement not covered" >        correct_answers: newSession.correct_answers,</span>
-<span class="cstat-no" title="statement not covered" >        incorrect_answers: newSession.incorrect_answers,</span>
-<span class="cstat-no" title="statement not covered" >        total_review_time_ms: newSession.total_review_time_ms,</span>
-<span class="cstat-no" title="statement not covered" >        created_at: newSession.created_at,</span>
-<span class="cstat-no" title="statement not covered" >        updated_at: newSession.updated_at</span>
-<span class="cstat-no" title="statement not covered" >      };</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // 5. Zwrócenie danych o sesji</span>
-<span class="cstat-no" title="statement not covered" >    return new Response(JSON.stringify(session), {</span>
-<span class="cstat-no" title="statement not covered" >      status: 201,</span>
-<span class="cstat-no" title="statement not covered" >      headers: { 'Content-Type': 'application/json' }</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
+<span class="cstat-no" title="statement not covered" >  // Aktualizuje dane formularza i usuwa błędy dla aktualizowanego pola</span>
+<span class="cstat-no" title="statement not covered" >  const handleChange = (e: React.ChangeEvent&lt;HTMLInputElement&gt;) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    const { name, value, type, checked } = e.target;</span>
+<span class="cstat-no" title="statement not covered" >    const newValue = type === "checkbox" ? checked : value;</span>
 <span class="cstat-no" title="statement not covered" >    </span>
-<span class="cstat-no" title="statement not covered" >  } catch (error) {</span>
-<span class="cstat-no" title="statement not covered" >    console.error('Nieoczekiwany błąd:', error);</span>
-<span class="cstat-no" title="statement not covered" >    return new Response(</span>
-<span class="cstat-no" title="statement not covered" >      JSON.stringify(createErrorResponse('server_error', 'Wystąpił nieoczekiwany błąd')),</span>
-<span class="cstat-no" title="statement not covered" >      { status: 500, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >    );</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >};</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >/**</span>
-<span class="cstat-no" title="statement not covered" > * PUT /api/leitner/sessions - Aktualizacja sesji nauki</span>
-<span class="cstat-no" title="statement not covered" > * Aktualizuje sesję nauki o nowe wyniki przeglądania fiszek lub oznacza ją jako zakończoną</span>
-<span class="cstat-no" title="statement not covered" > */</span>
-<span class="cstat-no" title="statement not covered" >export const PUT: APIRoute = async ({ request }) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >  try {</span>
-<span class="cstat-no" title="statement not covered" >    // 1. Ekstrakcja i weryfikacja tokenu użytkownika</span>
-<span class="cstat-no" title="statement not covered" >    const user = await getUser(request);</span>
-<span class="cstat-no" title="statement not covered" >    if (!user) {</span>
-<span class="cstat-no" title="statement not covered" >      return new Response(</span>
-<span class="cstat-no" title="statement not covered" >        JSON.stringify(createErrorResponse('unauthorized', 'Brak autoryzacji')),</span>
-<span class="cstat-no" title="statement not covered" >        { status: 401, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >      );</span>
+<span class="cstat-no" title="statement not covered" >    setFormData((prev) =&gt; ({ ...prev, [name]: newValue }));</span>
+<span class="cstat-no" title="statement not covered" >    </span>
+<span class="cstat-no" title="statement not covered" >    if (errors[name]) {</span>
+<span class="cstat-no" title="statement not covered" >      setErrors((prev) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        const newErrors = { ...prev };</span>
+<span class="cstat-no" title="statement not covered" >        delete newErrors[name];</span>
+<span class="cstat-no" title="statement not covered" >        return newErrors;</span>
+<span class="cstat-no" title="statement not covered" >      });</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >  };</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // 2. Walidacja danych wejściowych</span>
-<span class="cstat-no" title="statement not covered" >    let updateData: UpdateReviewSessionDTO;</span>
+<span class="cstat-no" title="statement not covered" >  // Walidacja adresu email</span>
+<span class="cstat-no" title="statement not covered" >  const validateEmail = (email: string) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    if (!email) {</span>
+<span class="cstat-no" title="statement not covered" >      return "Email jest wymagany";</span>
+<span class="cstat-no" title="statement not covered" >    } else if (!/\S+@\S+\.\S+/.test(email)) {</span>
+<span class="cstat-no" title="statement not covered" >      return "Nieprawidłowy format adresu email";</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >    return "";</span>
+<span class="cstat-no" title="statement not covered" >  };</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  // Walidacja hasła</span>
+<span class="cstat-no" title="statement not covered" >  const validatePassword = (password: string, isRegistration = false) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    if (!password) {</span>
+<span class="cstat-no" title="statement not covered" >      return "Hasło jest wymagane";</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >    </span>
+<span class="cstat-no" title="statement not covered" >    if (isRegistration) {</span>
+<span class="cstat-no" title="statement not covered" >      if (password.length &lt; 8) {</span>
+<span class="cstat-no" title="statement not covered" >        return "Hasło musi mieć minimum 8 znaków";</span>
+<span class="cstat-no" title="statement not covered" >      } else if (!/[A-Z]/.test(password)) {</span>
+<span class="cstat-no" title="statement not covered" >        return "Hasło musi zawierać co najmniej jedną wielką literę";</span>
+<span class="cstat-no" title="statement not covered" >      } else if (!/[0-9]/.test(password)) {</span>
+<span class="cstat-no" title="statement not covered" >        return "Hasło musi zawierać co najmniej jedną cyfrę";</span>
+<span class="cstat-no" title="statement not covered" >      } else if (!/[^a-zA-Z0-9]/.test(password)) {</span>
+<span class="cstat-no" title="statement not covered" >        return "Hasło musi zawierać co najmniej jeden znak specjalny";</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >    </span>
+<span class="cstat-no" title="statement not covered" >    return "";</span>
+<span class="cstat-no" title="statement not covered" >  };</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  // Walidacja potwierdzenia hasła</span>
+<span class="cstat-no" title="statement not covered" >  const validateConfirmPassword = (password: string, confirmPassword: string) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    if (password !== confirmPassword) {</span>
+<span class="cstat-no" title="statement not covered" >      return "Hasła nie są zgodne";</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >    return "";</span>
+<span class="cstat-no" title="statement not covered" >  };</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  // Walidacja akceptacji warunków</span>
+<span class="cstat-no" title="statement not covered" >  const validateTerms = (acceptTerms?: boolean) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    if (acceptTerms === false) {</span>
+<span class="cstat-no" title="statement not covered" >      return "Musisz zaakceptować warunki użytkowania";</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >    return "";</span>
+<span class="cstat-no" title="statement not covered" >  };</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  // Walidacja formularza</span>
+<span class="cstat-no" title="statement not covered" >  const validateForm = (isRegistration = false) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    const newErrors: Record&lt;string, string&gt; = {};</span>
+<span class="cstat-no" title="statement not covered" >    </span>
+<span class="cstat-no" title="statement not covered" >    const emailError = validateEmail(formData.email);</span>
+<span class="cstat-no" title="statement not covered" >    if (emailError) newErrors.email = emailError;</span>
+<span class="cstat-no" title="statement not covered" >    </span>
+<span class="cstat-no" title="statement not covered" >    const passwordError = validatePassword(formData.password, isRegistration);</span>
+<span class="cstat-no" title="statement not covered" >    if (passwordError) newErrors.password = passwordError;</span>
+<span class="cstat-no" title="statement not covered" >    </span>
+<span class="cstat-no" title="statement not covered" >    if (formData.confirmPassword !== undefined) {</span>
+<span class="cstat-no" title="statement not covered" >      const confirmPasswordError = validateConfirmPassword(</span>
+<span class="cstat-no" title="statement not covered" >        formData.password, </span>
+<span class="cstat-no" title="statement not covered" >        formData.confirmPassword</span>
+<span class="cstat-no" title="statement not covered" >      );</span>
+<span class="cstat-no" title="statement not covered" >      if (confirmPasswordError) newErrors.confirmPassword = confirmPasswordError;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >    </span>
+<span class="cstat-no" title="statement not covered" >    if (formData.acceptTerms !== undefined) {</span>
+<span class="cstat-no" title="statement not covered" >      const termsError = validateTerms(formData.acceptTerms);</span>
+<span class="cstat-no" title="statement not covered" >      if (termsError) newErrors.acceptTerms = termsError;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >    </span>
+<span class="cstat-no" title="statement not covered" >    setErrors(newErrors);</span>
+<span class="cstat-no" title="statement not covered" >    return Object.keys(newErrors).length === 0;</span>
+<span class="cstat-no" title="statement not covered" >  };</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  // Wysłanie formularza</span>
+<span class="cstat-no" title="statement not covered" >  const submitForm = async (e: React.FormEvent, isRegistration = false) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    e.preventDefault();</span>
+<span class="cstat-no" title="statement not covered" >    </span>
+<span class="cstat-no" title="statement not covered" >    if (!validateForm(isRegistration)) {</span>
+<span class="cstat-no" title="statement not covered" >      return;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >    </span>
+<span class="cstat-no" title="statement not covered" >    setIsLoading(true);</span>
+<span class="cstat-no" title="statement not covered" >    setDebugInfo(null);</span>
+<span class="cstat-no" title="statement not covered" >    </span>
 <span class="cstat-no" title="statement not covered" >    try {</span>
-<span class="cstat-no" title="statement not covered" >      updateData = await request.json();</span>
-<span class="cstat-no" title="statement not covered" >    } catch (e) {</span>
-<span class="cstat-no" title="statement not covered" >      return new Response(</span>
-<span class="cstat-no" title="statement not covered" >        JSON.stringify(createErrorResponse('validation_error', 'Nieprawidłowy format JSON')),</span>
-<span class="cstat-no" title="statement not covered" >        { status: 400, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >      );</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // Sprawdzenie wymaganych pól</span>
-<span class="cstat-no" title="statement not covered" >    if (!updateData.session_id) {</span>
-<span class="cstat-no" title="statement not covered" >      return new Response(</span>
-<span class="cstat-no" title="statement not covered" >        JSON.stringify(createErrorResponse('validation_error', 'Pole session_id jest wymagane')),</span>
-<span class="cstat-no" title="statement not covered" >        { status: 400, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >      );</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // 3. Pobranie istniejącej sesji</span>
-<span class="cstat-no" title="statement not covered" >    const { data: existingSession, error: sessionError } = await supabase</span>
-<span class="cstat-no" title="statement not covered" >      .from('review_sessions')</span>
-<span class="cstat-no" title="statement not covered" >      .select('*')</span>
-<span class="cstat-no" title="statement not covered" >      .eq('id', updateData.session_id)</span>
-<span class="cstat-no" title="statement not covered" >      .eq('user_id', user.id)</span>
-<span class="cstat-no" title="statement not covered" >      .single();</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    if (sessionError || !existingSession) {</span>
-<span class="cstat-no" title="statement not covered" >      return new Response(</span>
-<span class="cstat-no" title="statement not covered" >        JSON.stringify(createErrorResponse('not_found', 'Nie znaleziono sesji o podanym ID')),</span>
-<span class="cstat-no" title="statement not covered" >        { status: 404, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >      );</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // Sprawdź, czy sesja nie jest już zakończona</span>
-<span class="cstat-no" title="statement not covered" >    if (existingSession.completed_at) {</span>
-<span class="cstat-no" title="statement not covered" >      return new Response(</span>
-<span class="cstat-no" title="statement not covered" >        JSON.stringify(createErrorResponse('conflict', 'Sesja została już zakończona')),</span>
-<span class="cstat-no" title="statement not covered" >        { status: 409, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >      );</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // 4. Rozpocznij transakcję do aktualizacji sesji i dodania wyników</span>
-<span class="cstat-no" title="statement not covered" >    let totalCorrect = existingSession.correct_answers || 0;</span>
-<span class="cstat-no" title="statement not covered" >    let totalIncorrect = existingSession.incorrect_answers || 0;</span>
-<span class="cstat-no" title="statement not covered" >    let totalReviewed = existingSession.cards_reviewed || 0;</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // Aktualizacja liczników na podstawie wyników</span>
-<span class="cstat-no" title="statement not covered" >    if (updateData.results &amp;&amp; updateData.results.length &gt; 0) {</span>
-<span class="cstat-no" title="statement not covered" >      const correctCount = updateData.results.filter(r =&gt; r.is_correct).length;</span>
-<span class="cstat-no" title="statement not covered" >      const incorrectCount = updateData.results.length - correctCount;</span>
+<span class="cstat-no" title="statement not covered" >      const response = await fetch(endpoint, {</span>
+<span class="cstat-no" title="statement not covered" >        method: 'POST',</span>
+<span class="cstat-no" title="statement not covered" >        headers: {</span>
+<span class="cstat-no" title="statement not covered" >          'Content-Type': 'application/json',</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        body: JSON.stringify(formData),</span>
+<span class="cstat-no" title="statement not covered" >        credentials: 'include',</span>
+<span class="cstat-no" title="statement not covered" >      });</span>
 <span class="cstat-no" title="statement not covered" >      </span>
-<span class="cstat-no" title="statement not covered" >      totalCorrect += correctCount;</span>
-<span class="cstat-no" title="statement not covered" >      totalIncorrect += incorrectCount;</span>
-<span class="cstat-no" title="statement not covered" >      totalReviewed += updateData.results.length;</span>
+<span class="cstat-no" title="statement not covered" >      const data = await response.json();</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      setDebugInfo({</span>
+<span class="cstat-no" title="statement not covered" >        status: response.status,</span>
+<span class="cstat-no" title="statement not covered" >        data: data</span>
+<span class="cstat-no" title="statement not covered" >      });</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      if (!response.ok) {</span>
+<span class="cstat-no" title="statement not covered" >        throw new Error(data.error || 'Wystąpił błąd podczas przetwarzania żądania');</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      setStatus("success");</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      if (data.success &amp;&amp; data.session) {</span>
+<span class="cstat-no" title="statement not covered" >        localStorage.setItem('authSession', JSON.stringify(data.session));</span>
+<span class="cstat-no" title="statement not covered" >        </span>
+<span class="cstat-no" title="statement not covered" >        if (data.session.expires_at) {</span>
+<span class="cstat-no" title="statement not covered" >          localStorage.setItem('sessionExpiresAt', data.session.expires_at.toString());</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        </span>
+<span class="cstat-no" title="statement not covered" >        localStorage.setItem('userId', data.session.user_id);</span>
+<span class="cstat-no" title="statement not covered" >        localStorage.setItem('userEmail', data.session.email || '');</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      if (redirect) {</span>
+<span class="cstat-no" title="statement not covered" >        window.location.href = redirect;</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      if (onSuccess) {</span>
+<span class="cstat-no" title="statement not covered" >        onSuccess(data);</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >    } catch (error) {</span>
+<span class="cstat-no" title="statement not covered" >      console.error("Błąd:", error);</span>
+<span class="cstat-no" title="statement not covered" >      setStatus("error");</span>
+<span class="cstat-no" title="statement not covered" >      setErrors({ </span>
+<span class="cstat-no" title="statement not covered" >        form: error instanceof Error ? error.message : "Wystąpił nieznany błąd"</span>
+<span class="cstat-no" title="statement not covered" >      });</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      if (onError &amp;&amp; error instanceof Error) {</span>
+<span class="cstat-no" title="statement not covered" >        onError(error);</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >    } finally {</span>
+<span class="cstat-no" title="statement not covered" >      setIsLoading(false);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >  };</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  // Wysłanie magicznego linka</span>
+<span class="cstat-no" title="statement not covered" >  const sendMagicLink = async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) {</span>
+<span class="cstat-no" title="statement not covered" >      setErrors({</span>
+<span class="cstat-no" title="statement not covered" >        email: "Podaj prawidłowy adres email, aby otrzymać link do logowania"</span>
+<span class="cstat-no" title="statement not covered" >      });</span>
+<span class="cstat-no" title="statement not covered" >      return;</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // Przygotowanie danych do aktualizacji</span>
-<span class="cstat-no" title="statement not covered" >    const updateFields: any = {</span>
-<span class="cstat-no" title="statement not covered" >      cards_reviewed: totalReviewed,</span>
-<span class="cstat-no" title="statement not covered" >      correct_answers: totalCorrect,</span>
-<span class="cstat-no" title="statement not covered" >      incorrect_answers: totalIncorrect</span>
-<span class="cstat-no" title="statement not covered" >    };</span>
+<span class="cstat-no" title="statement not covered" >    setIsLoading(true);</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // Jeśli sesja ma być zakończona, dodaj timestamp zakończenia</span>
-<span class="cstat-no" title="statement not covered" >    if (updateData.completed) {</span>
-<span class="cstat-no" title="statement not covered" >      updateFields.completed_at = new Date().toISOString();</span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+<span class="cstat-no" title="statement not covered" >      const response = await fetch('/api/auth/magic-link', {</span>
+<span class="cstat-no" title="statement not covered" >        method: 'POST',</span>
+<span class="cstat-no" title="statement not covered" >        headers: {</span>
+<span class="cstat-no" title="statement not covered" >          'Content-Type': 'application/json',</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        body: JSON.stringify({ email: formData.email }),</span>
+<span class="cstat-no" title="statement not covered" >      });</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >      const data = await response.json();</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >      if (!response.ok) {</span>
+<span class="cstat-no" title="statement not covered" >        throw new Error(data.error || 'Nie udało się wysłać linku do logowania');</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >      setStatus("success");</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      if (onSuccess) {</span>
+<span class="cstat-no" title="statement not covered" >        onSuccess(data);</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >    } catch (error) {</span>
+<span class="cstat-no" title="statement not covered" >      console.error("Błąd wysyłania magicznego linku:", error);</span>
+<span class="cstat-no" title="statement not covered" >      setStatus("error");</span>
+<span class="cstat-no" title="statement not covered" >      setErrors({ </span>
+<span class="cstat-no" title="statement not covered" >        form: error instanceof Error ? error.message : "Wystąpił nieznany błąd podczas wysyłania linku" </span>
+<span class="cstat-no" title="statement not covered" >      });</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >      if (onError &amp;&amp; error instanceof Error) {</span>
+<span class="cstat-no" title="statement not covered" >        onError(error);</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >    } finally {</span>
+<span class="cstat-no" title="statement not covered" >      setIsLoading(false);</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >  };</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // 5. Aktualizacja sesji nauki</span>
-<span class="cstat-no" title="statement not covered" >    const { data: updatedSession, error: updateError } = await supabase</span>
-<span class="cstat-no" title="statement not covered" >      .from('review_sessions')</span>
-<span class="cstat-no" title="statement not covered" >      .update(updateFields)</span>
-<span class="cstat-no" title="statement not covered" >      .eq('id', updateData.session_id)</span>
-<span class="cstat-no" title="statement not covered" >      .eq('user_id', user.id)</span>
-<span class="cstat-no" title="statement not covered" >      .select()</span>
-<span class="cstat-no" title="statement not covered" >      .single();</span>
+<span class="cstat-no" title="statement not covered" >  // Reset formularza</span>
+<span class="cstat-no" title="statement not covered" >  const resetForm = () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    setFormData(initialState);</span>
+<span class="cstat-no" title="statement not covered" >    setErrors({});</span>
+<span class="cstat-no" title="statement not covered" >    setStatus("idle");</span>
+<span class="cstat-no" title="statement not covered" >    setDebugInfo(null);</span>
+<span class="cstat-no" title="statement not covered" >  };</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    if (updateError) {</span>
-<span class="cstat-no" title="statement not covered" >      console.error('Błąd podczas aktualizacji sesji nauki:', updateError);</span>
-<span class="cstat-no" title="statement not covered" >      return new Response(</span>
-<span class="cstat-no" title="statement not covered" >        JSON.stringify(createErrorResponse('server_error', 'Wystąpił błąd podczas aktualizacji sesji nauki')),</span>
-<span class="cstat-no" title="statement not covered" >        { status: 500, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >      );</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // 6. Zwrócenie zaktualizowanych danych o sesji</span>
-<span class="cstat-no" title="statement not covered" >    const session: ReviewSessionDTO = {</span>
-<span class="cstat-no" title="statement not covered" >      id: updatedSession.id,</span>
-<span class="cstat-no" title="statement not covered" >      started_at: updatedSession.started_at,</span>
-<span class="cstat-no" title="statement not covered" >      completed_at: updatedSession.completed_at,</span>
-<span class="cstat-no" title="statement not covered" >      cards_reviewed: updatedSession.cards_reviewed,</span>
-<span class="cstat-no" title="statement not covered" >      correct_answers: updatedSession.correct_answers,</span>
-<span class="cstat-no" title="statement not covered" >      incorrect_answers: updatedSession.incorrect_answers,</span>
-<span class="cstat-no" title="statement not covered" >      total_review_time_ms: updatedSession.total_review_time_ms,</span>
-<span class="cstat-no" title="statement not covered" >      created_at: updatedSession.created_at,</span>
-<span class="cstat-no" title="statement not covered" >      updated_at: updatedSession.updated_at</span>
-<span class="cstat-no" title="statement not covered" >    };</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    return new Response(JSON.stringify(session), {</span>
-<span class="cstat-no" title="statement not covered" >      status: 200,</span>
-<span class="cstat-no" title="statement not covered" >      headers: { 'Content-Type': 'application/json' }</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
-<span class="cstat-no" title="statement not covered" >    </span>
-<span class="cstat-no" title="statement not covered" >  } catch (error) {</span>
-<span class="cstat-no" title="statement not covered" >    console.error('Nieoczekiwany błąd:', error);</span>
-<span class="cstat-no" title="statement not covered" >    return new Response(</span>
-<span class="cstat-no" title="statement not covered" >      JSON.stringify(createErrorResponse('server_error', 'Wystąpił nieoczekiwany błąd')),</span>
-<span class="cstat-no" title="statement not covered" >      { status: 500, headers: { 'Content-Type': 'application/json' } }</span>
-<span class="cstat-no" title="statement not covered" >    );</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >}; </span></pre></td></tr></table></pre>
+<span class="cstat-no" title="statement not covered" >  return {</span>
+<span class="cstat-no" title="statement not covered" >    formData,</span>
+<span class="cstat-no" title="statement not covered" >    errors,</span>
+<span class="cstat-no" title="statement not covered" >    isLoading,</span>
+<span class="cstat-no" title="statement not covered" >    status,</span>
+<span class="cstat-no" title="statement not covered" >    debugInfo,</span>
+<span class="cstat-no" title="statement not covered" >    handleChange,</span>
+<span class="cstat-no" title="statement not covered" >    validateForm,</span>
+<span class="cstat-no" title="statement not covered" >    submitForm,</span>
+<span class="cstat-no" title="statement not covered" >    sendMagicLink,</span>
+<span class="cstat-no" title="statement not covered" >    resetForm,</span>
+<span class="cstat-no" title="statement not covered" >    setFormData,</span>
+<span class="cstat-no" title="statement not covered" >    setErrors,</span>
+<span class="cstat-no" title="statement not covered" >    setStatus</span>
+<span class="cstat-no" title="statement not covered" >  };</span>
+<span class="cstat-no" title="statement not covered" >} </span></pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
@@ -858,14 +846,14 @@
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
                 at 2025-05-14T22:07:38.023Z
             </div>
-        <script src="../../../../../prettify.js"></script>
+        <script src="../../../../prettify.js"></script>
         <script>
             window.onload = function () {
                 prettyPrint();
             };
         </script>
-        <script src="../../../../../sorter.js"></script>
-        <script src="../../../../../block-navigation.js"></script>
+        <script src="../../../../sorter.js"></script>
+        <script src="../../../../block-navigation.js"></script>
     </body>
 </html>
     
