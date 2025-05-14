@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import type { SearchParams, SortOptions } from '@/lib/hooks/useFlashcards';
 
-type SourceType = 'ai-full' | 'ai-edited' | 'manual' | undefined;
+export type SourceType = 'ai-full' | 'ai-edited' | 'manual' | undefined;
 
 interface SearchAndFilterBarProps {
   searchValue: string;

@@ -5,6 +5,7 @@ import useToast from '@/lib/hooks/useToast';
 import useModal from '@/lib/hooks/useModal';
 import Header from './Header';
 import SearchAndFilterBar from './SearchAndFilterBar';
+import type { SourceType } from './SearchAndFilterBar';
 import FlashcardGrid from './FlashcardGrid';
 import Pagination from './Pagination';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
@@ -20,6 +21,120 @@ const defaultSearchParams: SearchParams = {
   sort_by: 'created_at',
   sort_dir: 'desc'
 };
+
+/**
+ * Komponent prezentacyjny dla widoku fiszek
+ */
+interface FlashcardsViewProps {
+  flashcards: FlashcardDTO[];
+  loading: boolean;
+  error: string | null;
+  pagination: {
+    page: number;
+    total_pages: number;
+  };
+  params: SearchParams;
+  editingCardId: number | null;
+  isFormOpen: boolean;
+  isSubmitting: boolean;
+  onAddClick: () => void;
+  onEditCard: (id: number) => void;
+  onCancelEdit: () => void;
+  onDeleteCard: (id: number, front: string) => void;
+  onUpdateFlashcard: (id: number, data: { front: string; back: string }) => void;
+  onSearchChange: (query: string) => void;
+  onFilterChange: (filters: Partial<SearchParams>) => void;
+  onSortChange: (sortOptions: SortOptions) => void;
+  onPageChange: (page: number) => void;
+  onSaveNewCard: (data: FlashcardFormData) => void;
+  onCancelForm: () => void;
+  onRetry: () => void;
+}
+
+function FlashcardsView({
+  flashcards,
+  loading,
+  error,
+  pagination,
+  params,
+  editingCardId,
+  isFormOpen,
+  isSubmitting,
+  onAddClick,
+  onEditCard,
+  onCancelEdit,
+  onDeleteCard,
+  onUpdateFlashcard,
+  onSearchChange,
+  onFilterChange,
+  onSortChange,
+  onPageChange,
+  onSaveNewCard,
+  onCancelForm,
+  onRetry
+}: FlashcardsViewProps) {
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <Header onAddClick={onAddClick} />
+      
+      <div className="mb-6">
+        <SearchAndFilterBar
+          searchValue={params.search || ''}
+          onSearch={onSearchChange}
+          onFilterChange={onFilterChange}
+          onSortChange={onSortChange}
+          currentSort={{ 
+            field: params.sort_by || 'created_at', 
+            direction: params.sort_dir || 'desc' 
+          }}
+          currentSource={params.source as SourceType}
+        />
+      </div>
+      
+      {/* Wyświetlanie błędu */}
+      {error && (
+        <div className="bg-destructive/20 p-4 rounded-md mb-6">
+          <p className="text-destructive">{error}</p>
+          <button 
+            onClick={onRetry}
+            className="mt-2 text-sm underline text-primary"
+          >
+            Spróbuj ponownie
+          </button>
+        </div>
+      )}
+      
+      <FlashcardGrid
+        flashcards={flashcards}
+        onEdit={onEditCard}
+        onDelete={onDeleteCard}
+        onUpdate={onUpdateFlashcard}
+        onCancelEdit={onCancelEdit}
+        editingCardId={editingCardId}
+        isLoading={loading}
+      />
+      
+      {pagination.total_pages > 1 && (
+        <div className="mt-6">
+          <Pagination
+            currentPage={pagination.page}
+            totalPages={pagination.total_pages}
+            onPageChange={onPageChange}
+          />
+        </div>
+      )}
+      
+      {/* Modal dodawania nowej fiszki */}
+      {isFormOpen && (
+        <FlashcardForm
+          onSubmit={onSaveNewCard}
+          onCancel={onCancelForm}
+          isSubmitting={isSubmitting}
+        />
+      )}
+    </div>
+  );
+}
 
 /**
  * Główny kontener widoku fiszek
@@ -167,61 +282,29 @@ export default function FlashcardsPage() {
   };
   
   return (
-    <div className="container mx-auto px-4 py-8">
-      <Header onAddClick={handleAddCard} />
-      
-      <div className="mb-6">
-        <SearchAndFilterBar
-          searchValue={params.search || ''}
-          onSearch={handleSearch}
-          onFilterChange={handleFilterChange}
-          onSortChange={handleSortChange}
-          currentSort={{ field: params.sort_by || 'created_at', direction: params.sort_dir || 'desc' }}
-          currentSource={params.source}
-        />
-      </div>
-      
-      {/* Wyświetlanie błędu */}
-      {error && (
-        <div className="bg-destructive/20 p-4 rounded-md mb-6">
-          <p className="text-destructive">{error}</p>
-          <button 
-            onClick={handleRetry}
-            className="mt-2 text-sm underline text-primary"
-          >
-            Spróbuj ponownie
-          </button>
-        </div>
-      )}
-      
-      <FlashcardGrid
+    <>
+      <FlashcardsView
         flashcards={flashcards}
-        onEdit={handleEditCard}
-        onDelete={handleDeleteCard}
-        onUpdate={handleUpdateFlashcard}
-        onCancelEdit={handleCancelEdit}
+        loading={loading}
+        error={error}
+        pagination={pagination}
+        params={params}
         editingCardId={editingCardId}
-        isLoading={loading}
+        isFormOpen={isFormOpen}
+        isSubmitting={isSubmitting}
+        onAddClick={handleAddCard}
+        onEditCard={handleEditCard}
+        onCancelEdit={handleCancelEdit}
+        onDeleteCard={handleDeleteCard}
+        onUpdateFlashcard={handleUpdateFlashcard}
+        onSearchChange={handleSearch}
+        onFilterChange={handleFilterChange}
+        onSortChange={handleSortChange}
+        onPageChange={setPage}
+        onSaveNewCard={handleSaveNewCard}
+        onCancelForm={handleCancelForm}
+        onRetry={handleRetry}
       />
-      
-      {pagination.total_pages > 1 && (
-        <div className="mt-6">
-          <Pagination
-            currentPage={pagination.page}
-            totalPages={pagination.total_pages}
-            onPageChange={setPage}
-          />
-        </div>
-      )}
-      
-      {/* Modal dodawania nowej fiszki */}
-      {isFormOpen && (
-        <FlashcardForm
-          onSubmit={handleSaveNewCard}
-          onCancel={handleCancelForm}
-          isSubmitting={isSubmitting}
-        />
-      )}
       
       {/* Modal potwierdzenia usunięcia */}
       <DeleteConfirmationModal
@@ -233,6 +316,6 @@ export default function FlashcardsPage() {
       />
       
       <ToastNotifications toasts={toasts} removeToast={removeToast} />
-    </div>
+    </>
   );
 } 

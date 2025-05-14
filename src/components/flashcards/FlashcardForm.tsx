@@ -1,12 +1,7 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
-
-export interface FlashcardFormData {
-  front: string;
-  back: string;
-  source: string;
-}
+import { useFlashcardForm, type FlashcardFormData } from '@/lib/hooks/useFlashcardForm';
 
 interface FlashcardFormProps {
   onSubmit: (data: FlashcardFormData) => void;
@@ -18,105 +13,21 @@ interface FlashcardFormProps {
 export default function FlashcardForm({ 
   onSubmit, 
   onCancel, 
-  initialValues = { front: '', back: '', source: 'manual' },
+  initialValues,
   isSubmitting = false
 }: FlashcardFormProps) {
-  // Stan formularza
-  const [formData, setFormData] = useState({
-    front: initialValues.front,
-    back: initialValues.back,
-    source: initialValues.source
+  const {
+    formData,
+    errors,
+    frontInputRef,
+    handleChange,
+    handleSubmit,
+    handleCancel
+  } = useFlashcardForm({
+    initialValues,
+    onSubmit,
+    onCancel
   });
-  
-  // Stan błędów
-  const [errors, setErrors] = useState({
-    front: '',
-    back: ''
-  });
-
-  // Referencja do pierwszego pola dla dostępności
-  const frontInputRef = useRef<HTMLTextAreaElement>(null);
-
-  // Ustawienie fokusu na pierwsze pole po załadowaniu
-  useEffect(() => {
-    if (frontInputRef.current) {
-      frontInputRef.current.focus();
-    }
-  }, []);
-
-  // Obsługa zmiany pól formularza
-  const handleChange = useCallback((
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    
-    // Walidacja
-    if (name === 'front' || name === 'back') {
-      if (!value.trim()) {
-        setErrors(prev => ({
-          ...prev,
-          [name]: 'To pole jest wymagane'
-        }));
-      } else if (value.length > 500) {
-        setErrors(prev => ({
-          ...prev,
-          [name]: 'Tekst nie może przekraczać 500 znaków'
-        }));
-      } else {
-        setErrors(prev => ({
-          ...prev,
-          [name]: ''
-        }));
-      }
-    }
-  }, []);
-
-  // Obsługa zapisu fiszki
-  const handleSubmit = useCallback((e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Walidacja przed zapisem
-    const newErrors = {
-      front: '',
-      back: ''
-    };
-    
-    if (!formData.front.trim()) {
-      newErrors.front = 'To pole jest wymagane';
-    }
-    
-    if (!formData.back.trim()) {
-      newErrors.back = 'To pole jest wymagane';
-    }
-    
-    if (newErrors.front || newErrors.back) {
-      setErrors(newErrors);
-      return;
-    }
-    
-    onSubmit(formData);
-    
-    // Reset formularza po wysłaniu
-    setFormData({
-      front: '',
-      back: '',
-      source: 'manual'
-    });
-    
-    setErrors({
-      front: '',
-      back: ''
-    });
-    
-    // Przywrócenie fokusu na pierwszy input
-    if (frontInputRef.current) {
-      frontInputRef.current.focus();
-    }
-  }, [formData, onSubmit]);
 
   return (
     <form onSubmit={handleSubmit} className="border rounded-lg p-4 shadow flex flex-col h-full">
@@ -127,7 +38,7 @@ export default function FlashcardForm({
             type="button"
             variant="ghost"
             size="icon"
-            onClick={onCancel}
+            onClick={handleCancel}
             aria-label="Zamknij formularz"
           >
             <X size={18} />

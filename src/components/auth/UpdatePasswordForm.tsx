@@ -1,89 +1,30 @@
-import { useState, useEffect } from "react";
+import React from "react";
 import { Button } from "../ui/button";
+import { usePasswordForm } from "@/lib/hooks/usePasswordForm";
+import { FormError } from "./FormElements";
 
 interface UpdatePasswordFormProps {
   token?: string;
 }
 
 export default function UpdatePasswordForm({ token }: UpdatePasswordFormProps) {
-  const [formData, setFormData] = useState({
-    password: "",
-    confirmPassword: "",
-  });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [tokenError, setTokenError] = useState("");
-
-  // Sprawdzanie tokenu
-  useEffect(() => {
-    if (!token) {
-      setTokenError("Brak tokenu resetowania hasła. Link może być nieprawidłowy lub wygasł.");
-    }
-  }, [token]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    
-    // Usuwanie błędu po rozpoczęciu edycji pola
-    if (errors[name]) {
-      setErrors((prev) => {
-        const newErrors = { ...prev };
-        delete newErrors[name];
-        return newErrors;
-      });
-    }
-  };
-
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-    
-    if (!formData.password) {
-      newErrors.password = "Hasło jest wymagane";
-    } else if (formData.password.length < 8) {
-      newErrors.password = "Hasło musi mieć minimum 8 znaków";
-    } else if (!/[A-Z]/.test(formData.password)) {
-      newErrors.password = "Hasło musi zawierać co najmniej jedną wielką literę";
-    } else if (!/[0-9]/.test(formData.password)) {
-      newErrors.password = "Hasło musi zawierać co najmniej jedną cyfrę";
-    } else if (!/[^a-zA-Z0-9]/.test(formData.password)) {
-      newErrors.password = "Hasło musi zawierać co najmniej jeden znak specjalny";
-    }
-    
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Hasła nie są zgodne";
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!validateForm() || !token) {
-      return;
-    }
-    
-    setIsLoading(true);
-    
-    try {
-      // Tutaj będzie implementacja logiki aktualizacji hasła
+  const {
+    formData,
+    errors,
+    isLoading,
+    isSuccess,
+    tokenError,
+    handleChange,
+    handleSubmit
+  } = usePasswordForm({
+    token,
+    onSubmit: async (data) => {
       console.log("Aktualizacja hasła z użyciem tokenu:", token);
-      
       // Symulacja opóźnienia - do usunięcia przy implementacji backendu
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setIsSuccess(true);
-      
-    } catch (error) {
-      console.error("Błąd aktualizacji hasła:", error);
-      setErrors({ form: "Wystąpił błąd podczas aktualizacji hasła" });
-    } finally {
-      setIsLoading(false);
+      return true;
     }
-  };
+  });
 
   if (tokenError) {
     return (
@@ -173,11 +114,7 @@ export default function UpdatePasswordForm({ token }: UpdatePasswordFormProps) {
         </div>
       </div>
 
-      {errors.form && (
-        <div className="p-3 bg-red-500/20 border border-red-500/30 rounded-md">
-          <p className="text-sm text-red-300">{errors.form}</p>
-        </div>
-      )}
+      <FormError error={errors.form} />
 
       <Button
         type="submit"
