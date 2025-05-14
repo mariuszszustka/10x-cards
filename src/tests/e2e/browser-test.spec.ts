@@ -1,12 +1,12 @@
 // src/tests/e2e/browser-test.spec.ts
 import { test, expect } from '@playwright/test';
+import * as fs from 'fs';
 
 test('Diagnoza problemu z ładowaniem strony', async ({ page }) => {
   console.log('Otwieranie strony głównej...');
   
   // Utwórz katalog na artefakty testów, jeśli nie istnieje
   try {
-    const fs = require('fs');
     if (!fs.existsSync('./test-artifacts')) {
       fs.mkdirSync('./test-artifacts', { recursive: true });
     }

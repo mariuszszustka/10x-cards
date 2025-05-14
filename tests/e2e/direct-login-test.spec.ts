@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import * as fs from 'fs';
 
 test('Najprostszy test formularza logowania', async ({ page, context }) => {
   // Wyczyść całą sesję i wszystkie ciasteczka
@@ -44,7 +45,7 @@ test('Najprostszy test formularza logowania', async ({ page, context }) => {
   const htmlContent = await page.content();
   
   // Zapisz pełną treść HTML do pliku
-  await require('fs').promises.writeFile('simple-test-html.txt', htmlContent);
+  await fs.promises.writeFile('simple-test-html.txt', htmlContent);
   console.log('Test prosty: Zapisano pełny HTML strony do pliku simple-test-html.txt');
   
   // Jeśli formularza nie ma, to spróbujmy podejście z nagłówkami
@@ -86,7 +87,7 @@ test('Najprostszy test formularza logowania', async ({ page, context }) => {
     
     // Zapisz HTML z nagłówkami
     const htmlContentWithHeaders = await page.content();
-    await require('fs').promises.writeFile('simple-test-html-with-headers.txt', htmlContentWithHeaders);
+    await fs.promises.writeFile('simple-test-html-with-headers.txt', htmlContentWithHeaders);
     console.log('Test prosty: Zapisano pełny HTML strony z nagłówkami do pliku simple-test-html-with-headers.txt');
   }
   

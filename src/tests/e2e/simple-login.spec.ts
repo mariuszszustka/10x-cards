@@ -1,11 +1,11 @@
 // src/tests/e2e/simple-login.spec.ts
 import { test, expect } from '@playwright/test';
-import { SELECTORS } from '../selectors';
+import { SELECTORS } from './selectors';
+import * as fs from 'fs';
 
 test('Prosty test logowania bez pomocników', async ({ page }) => {
   // Utwórz katalog na artefakty testów, jeśli nie istnieje
   try {
-    const fs = require('fs');
     if (!fs.existsSync('./test-artifacts')) {
       fs.mkdirSync('./test-artifacts', { recursive: true });
     }
@@ -40,7 +40,7 @@ test('Prosty test logowania bez pomocników', async ({ page }) => {
   ];
   
   const selektoryPrzycisku = [
-    SELECTORS.AUTH.LOGIN_BUTTON,
+    SELECTORS.AUTH.SUBMIT_BUTTON,
     'button[type="submit"]',
     'input[type="submit"]',
     'button:has-text("Zaloguj")'

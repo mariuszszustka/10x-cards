@@ -42,11 +42,14 @@ if (!user) {
 </MainLayout>
 
 <script>
-  // Obsługa przycisku usuwania konta
-  document.getElementById('deleteAccount')?.addEventListener('click', () => {
-    if (confirm('Czy na pewno chcesz usunąć swoje konto? Ta operacja jest nieodwracalna.')) {
-      // Tu dodać logikę usuwania konta
-      alert('Funkcja usuwania konta nie została jeszcze zaimplementowana.');
+  document.addEventListener('DOMContentLoaded', () => {
+    const deleteButton = document.getElementById('deleteAccount');
+    if (deleteButton) {
+      deleteButton.addEventListener('click', () => {
+        if (confirm('Czy na pewno chcesz usunąć swoje konto? Ta operacja jest nieodwracalna.')) {
+          alert('Funkcja usuwania konta nie została jeszcze zaimplementowana.');
+        }
+      });
     }
   });
 </script> 
