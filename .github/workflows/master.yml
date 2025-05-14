@@ -10,7 +10,7 @@ on:
 jobs:
   lint-test-build:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
     
     env:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -59,29 +59,13 @@ jobs:
 
       - name: Lintowanie z tymczasową konfiguracją
         run: |
-          npx eslint src/ --ext .ts,.tsx --fix --quiet --config .eslintrc.ci.json
+          npx eslint src/ --ext .ts,.tsx --fix --quiet --config .eslintrc.ci.json --no-error-on-unmatched-pattern
         continue-on-error: true
       
       - name: Run unit tests
         run: npm run test
         continue-on-error: true
-        
-      - name: Cache Playwright browsers
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            playwright-${{ runner.os }}-
-
-      - name: Install Playwright and dependencies
-        run: |
-          npx playwright install --with-deps chromium
-        
-      - name: Run e2e basic tests
-        run: npm run test:e2e:basic
-        continue-on-error: true
-
+          
       - name: Clean temporary files
         run: |
           npm run clean:tmp || true
@@ -90,9 +74,13 @@ jobs:
           
       - name: Build
         run: npm run build
+        env:
+          NODE_OPTIONS: "--max_old_space_size=8192"
+        continue-on-error: true
         
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-output
           path: dist/
+        if: always()

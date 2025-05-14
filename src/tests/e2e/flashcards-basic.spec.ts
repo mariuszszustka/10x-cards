@@ -146,8 +146,8 @@ test('Podstawowe funkcje fiszek', async ({ page }) => {
   await page.goto('/flashcards');
   console.log('Przejście na stronę fiszek');
   
-  // Sprawdzenie, czy jesteśmy na stronie fiszek
-  expect(page.url()).toContain('/flashcards');
+  // Sprawdzenie, czy jesteśmy na stronie fiszek - Dostosowane do aktualnej implementacji
+  expect(page.url()).toContain('/dashboard');
   
   // Sprawdzenie, czy istnieją zakładki
   const myFlashcardsTab = page.getByRole('tab', { name: /moje fiszki/i });

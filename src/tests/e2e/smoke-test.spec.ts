@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { ensureArtifactsDir } from './helpers';
+import { ensureArtifactsDir, saveScreenshot } from './helpers';
 import * as fs from 'fs';
 
 test('Strona główna ładuje się poprawnie', async ({ page }) => {
@@ -12,7 +12,7 @@ test('Strona główna ładuje się poprawnie', async ({ page }) => {
   console.log('Otwarto stronę główną:', page.url());
   
   // 2. Wykonaj zrzut ekranu
-  await page.screenshot({ path: './test-artifacts/homepage.png', fullPage: true });
+  await saveScreenshot(page, 'homepage', true);
   
   // 3. Sprawdź czy strona ma tytuł
   const title = await page.title();
@@ -40,7 +40,7 @@ test('Podstawowy smoke test aplikacji', async ({ page }) => {
   
   // Sprawdzenie czy tytuł strony zawiera właściwy tekst
   const title = await page.title();
-  expect(title).toContain('10x-cards'); // Dopasuj do rzeczywistego tytułu
+  expect(title).toContain('10x Cards'); // Poprawiony tytuł strony
   
   // Sprawdzenie czy menu główne jest dostępne
   const navbar = page.locator('nav');
