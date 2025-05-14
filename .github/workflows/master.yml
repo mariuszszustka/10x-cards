@@ -36,14 +36,14 @@ jobs:
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
 
-      - name: Automatyczne formatowanie kodu
+      - name: Formatowanie tylko głównych plików źródłowych
         run: |
-          npm run format
+          npx prettier --write "src/**/*.{ts,tsx,js,jsx}" --no-error-on-unmatched-pattern
         continue-on-error: true
 
-      - name: Run linter on specific directories with auto-fix
+      - name: Lintowanie tylko głównych plików TypeScript/React
         run: |
-          npx eslint src/ --ext .js,.jsx,.ts,.tsx,.astro --fix --quiet --no-error-on-unmatched-pattern
+          npx eslint src/ --ext .ts,.tsx --fix --quiet --max-warnings=0 --no-error-on-unmatched-pattern
         continue-on-error: true
       
       - name: Run unit tests
