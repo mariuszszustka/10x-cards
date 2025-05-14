@@ -20,4 +20,17 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src')
     },
   },
+  plugins: [
+    {
+      name: 'vitest-plugin-json',
+      transform(code, id) {
+        if (id.endsWith('.json')) {
+          return {
+            code: `export default ${code}`,
+            map: null
+          };
+        }
+      }
+    }
+  ]
 }); 
