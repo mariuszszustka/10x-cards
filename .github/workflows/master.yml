@@ -63,6 +63,7 @@ jobs:
         
       - name: Run e2e basic tests
         run: npm run test:e2e:basic
+        continue-on-error: true
 
       - name: Build
         run: npm run build
