@@ -48,9 +48,6 @@ jobs:
       
       - name: Run unit tests
         run: npm run test
-
-      - name: Setup Playwright
-        uses: microsoft/playwright-github-action@v1
         
       - name: Cache Playwright browsers
         uses: actions/cache@v3
@@ -60,8 +57,9 @@ jobs:
           restore-keys: |
             playwright-${{ runner.os }}-
 
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+      - name: Install Playwright and dependencies
+        run: |
+          npx playwright install --with-deps chromium
         
       - name: Run e2e basic tests
         run: npm run test:e2e:basic
