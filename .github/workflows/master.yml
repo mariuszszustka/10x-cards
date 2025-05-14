@@ -16,7 +16,7 @@ jobs:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-      NODE_OPTIONS: "--max_old_space_size=4096"
+      NODE_OPTIONS: "--max_old_space_size=8192"
     
     steps:
       - name: Checkout repository
@@ -65,6 +65,12 @@ jobs:
         run: npm run test:e2e:basic
         continue-on-error: true
 
+      - name: Clean temporary files
+        run: |
+          npm run clean:tmp || true
+          rm -rf playwright-report || true
+          rm -rf tmp || true
+          
       - name: Build
         run: npm run build
         
