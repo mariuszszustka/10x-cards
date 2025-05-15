@@ -1,16 +1,23 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { SerwisAutoryzacji } from "../SerwisAutoryzacji";
+import type {
+  SupabaseClient,
+  SupabaseResult,
+  SupabaseError,
+  SupabaseUser,
+  SupabaseSession,
+} from "../SerwisAutoryzacji";
 
 // Interfejs dla mocka Supabase
 interface MockSupabaseAuth {
-  signUp: ReturnType<typeof vi.fn>;
-  signIn: ReturnType<typeof vi.fn>;
-  signOut: ReturnType<typeof vi.fn>;
-  refreshSession: ReturnType<typeof vi.fn>;
-  resetPasswordForEmail: ReturnType<typeof vi.fn>;
+  signUp: ReturnType<typeof vi.fn<[{ email: string; password: string }], Promise<SupabaseResult>>>;
+  signIn: ReturnType<typeof vi.fn<[{ email: string; password: string }], Promise<SupabaseResult>>>;
+  signOut: ReturnType<typeof vi.fn<[], Promise<SupabaseResult>>>;
+  refreshSession: ReturnType<typeof vi.fn<[string], Promise<SupabaseResult>>>;
+  resetPasswordForEmail: ReturnType<typeof vi.fn<[string], Promise<SupabaseResult>>>;
 }
 
-interface MockSupabase {
+interface MockSupabase extends SupabaseClient {
   auth: MockSupabaseAuth;
 }
 
@@ -51,8 +58,11 @@ describe("SerwisAutoryzacji", () => {
       const email = "test@example.com";
       const hasło = "Hasło123!";
       mockSupabase.auth.signIn.mockResolvedValue({
-        data: { user: { id: "123" }, session: { access_token: "token123" } },
-        error: null,
+        data: {
+          user: { id: "123" } as SupabaseUser,
+          session: { access_token: "token123" } as SupabaseSession,
+        },
+        error: undefined,
       });
 
       // Act
@@ -67,8 +77,8 @@ describe("SerwisAutoryzacji", () => {
     it("powinien zwrócić błąd gdy dane logowania są nieprawidłowe", async () => {
       // Arrange
       mockSupabase.auth.signIn.mockResolvedValue({
-        data: null,
-        error: { message: "Invalid login credentials" },
+        data: undefined,
+        error: { message: "Invalid login credentials" } as SupabaseError,
       });
 
       // Act
@@ -86,8 +96,11 @@ describe("SerwisAutoryzacji", () => {
       const email = "nowy@example.com";
       const hasło = "NoweHasło123!";
       mockSupabase.auth.signUp.mockResolvedValue({
-        data: { user: { id: "456" }, session: { access_token: "token456" } },
-        error: null,
+        data: {
+          user: { id: "456" } as SupabaseUser,
+          session: { access_token: "token456" } as SupabaseSession,
+        },
+        error: undefined,
       });
 
       // Act
@@ -102,8 +115,8 @@ describe("SerwisAutoryzacji", () => {
     it("powinien zwrócić błąd gdy email już istnieje", async () => {
       // Arrange
       mockSupabase.auth.signUp.mockResolvedValue({
-        data: null,
-        error: { message: "User already registered" },
+        data: undefined,
+        error: { message: "User already registered" } as SupabaseError,
       });
 
       // Act
@@ -118,7 +131,7 @@ describe("SerwisAutoryzacji", () => {
   describe("wylogowanie", () => {
     it("powinien wylogować użytkownika", async () => {
       // Arrange
-      mockSupabase.auth.signOut.mockResolvedValue({ error: null });
+      mockSupabase.auth.signOut.mockResolvedValue({ error: undefined });
 
       // Act
       const wynik = await serwisAutoryzacji.wyloguj();
@@ -133,8 +146,10 @@ describe("SerwisAutoryzacji", () => {
     it("powinien odświeżyć sesję z ważnym refresh tokenem", async () => {
       // Arrange
       mockSupabase.auth.refreshSession.mockResolvedValue({
-        data: { session: { access_token: "nowy_token" } },
-        error: null,
+        data: {
+          session: { access_token: "nowy_token" } as SupabaseSession,
+        },
+        error: undefined,
       });
 
       // Act
@@ -149,8 +164,8 @@ describe("SerwisAutoryzacji", () => {
     it("powinien zwrócić błąd gdy refresh token wygasł", async () => {
       // Arrange
       mockSupabase.auth.refreshSession.mockResolvedValue({
-        data: null,
-        error: { message: "Refresh token has expired" },
+        data: undefined,
+        error: { message: "Refresh token has expired" } as SupabaseError,
       });
 
       // Act
@@ -166,7 +181,7 @@ describe("SerwisAutoryzacji", () => {
     it("powinien wysłać link do resetowania hasła na podany email", async () => {
       // Arrange
       const email = "reset@example.com";
-      mockSupabase.auth.resetPasswordForEmail.mockResolvedValue({ error: null });
+      mockSupabase.auth.resetPasswordForEmail.mockResolvedValue({ error: undefined });
 
       // Act
       const wynik = await serwisAutoryzacji.resetujHasło(email);
@@ -179,7 +194,7 @@ describe("SerwisAutoryzacji", () => {
     it("powinien obsłużyć błąd gdy email nie istnieje", async () => {
       // Arrange
       mockSupabase.auth.resetPasswordForEmail.mockResolvedValue({
-        error: { message: "Email not found" },
+        error: { message: "Email not found" } as SupabaseError,
       });
 
       // Act

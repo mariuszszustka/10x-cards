@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { StateCreator } from "zustand";
 
 export interface Flashcard {
   id: string;
@@ -13,11 +12,11 @@ export interface Flashcard {
   status: "new" | "learning" | "review" | "archived";
 }
 
-type FlashcardFormData = {
+interface FlashcardFormData {
   front: string;
   back: string;
   source: "manual" | "imported" | "ai";
-};
+}
 
 interface FlashcardState {
   flashcards: Flashcard[];
@@ -35,7 +34,7 @@ interface FlashcardState {
 
 export const useFlashcardStore = create<FlashcardState>()(
   persist(
-    (set: (fn: (state: FlashcardState) => Partial<FlashcardState>) => void, get: () => FlashcardState) => ({
+    (set) => ({
       flashcards: [],
       isLoading: false,
       error: null,
@@ -100,11 +99,11 @@ export const useFlashcardStore = create<FlashcardState>()(
       },
 
       // Reset błędu
-      resetError: () => set((state: FlashcardState) => ({ error: null })),
+      resetError: () => set(() => ({ error: null })),
     }),
     {
       name: "flashcards-storage", // Nazwa w local storage
-      partialize: (state: FlashcardState) => ({
+      partialize: (state) => ({
         flashcards: state.flashcards, // Zapisujemy tylko dane fiszek
       }),
     }

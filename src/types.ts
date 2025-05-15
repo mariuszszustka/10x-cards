@@ -97,12 +97,12 @@ export interface CreateGenerationDTO {
  */
 export interface GenerationStatusDTO extends Omit<DBTables["generations"]["Row"], "user_id"> {
   status: "processing" | "completed" | "error";
-  flashcards: Array<{
+  flashcards: {
     id: number;
     front: ValidatedFrontText;
     back: ValidatedBackText;
     source: "ai-full";
-  }>;
+  }[];
 }
 
 /**
@@ -110,12 +110,12 @@ export interface GenerationStatusDTO extends Omit<DBTables["generations"]["Row"]
  * @see api-plan.md - /api/generations/{id}/accept PUT
  */
 export interface AcceptGeneratedFlashcardsDTO {
-  flashcards: Array<{
+  flashcards: {
     id: number;
     front: ValidatedFrontText;
     back: ValidatedBackText;
     edited: boolean;
-  }>;
+  }[];
 }
 
 /**
@@ -124,12 +124,12 @@ export interface AcceptGeneratedFlashcardsDTO {
  */
 export interface AcceptGeneratedFlashcardsResponseDTO {
   accepted_count: number;
-  flashcards: Array<{
+  flashcards: {
     id: number;
     front: string;
     back: string;
     source: "ai-full" | "ai-edited" | "manual";
-  }>;
+  }[];
 }
 
 /**
@@ -261,3 +261,71 @@ export const createErrorResponse = (
     ...(details && { details }),
   },
 });
+
+export interface FlashcardType {
+  id: number;
+  name: string;
+  description?: string;
+  color?: string;
+  icon?: string;
+}
+
+export interface LocaleType {
+  name: string;
+  code: string;
+}
+
+export interface CardLearningStatus {
+  flashcardId: number;
+  leitnerBox: number;
+  nextReviewAt: string | null;
+  consecutiveCorrectAnswers: number;
+}
+
+export interface ReviewHistory {
+  id: number;
+  userId: string;
+  flashcardId: number;
+  isCorrect: boolean;
+  reviewDate: string;
+  leitnerBoxBefore: number;
+  leitnerBoxAfter: number;
+  flashcard?: FlashcardDTO;
+}
+
+export interface ReviewSessionCard {
+  id: number;
+  flashcardId: number;
+  isCorrect?: boolean;
+  reviewDate?: string;
+}
+
+export interface ReviewSession {
+  id: number;
+  userId: string;
+  startedAt: string;
+  completedAt: string | null;
+  totalCards: number;
+  reviewedCards: ReviewSessionCard[];
+}
+
+export interface BoxCount {
+  box: number;
+  count: number;
+}
+
+export interface StreakData {
+  currentStreak: number;
+  longestStreak: number;
+  lastActivity: string | null;
+}
+
+export interface StatsData {
+  totalCards: number;
+  reviewedCards: number;
+  cardsToReview: number;
+  successRate: number;
+  boxCounts: BoxCount[];
+  lastReviewTimestamps: string[];
+  streakData: StreakData;
+}

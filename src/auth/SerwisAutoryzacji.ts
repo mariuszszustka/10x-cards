@@ -82,7 +82,7 @@ export class SerwisAutoryzacji {
           email: result.data.user?.user_metadata?.email,
           name: result.data.user?.user_metadata?.name,
         },
-        użytkownik: { id: result.data.user.id }
+        użytkownik: { id: result.data.user.id },
       };
     } catch (error: unknown) {
       const err = error as Error;
@@ -122,7 +122,7 @@ export class SerwisAutoryzacji {
           email: result.data.user?.user_metadata?.email,
           name: result.data.user?.user_metadata?.name,
         },
-        użytkownik: { id: result.data.user.id }
+        użytkownik: { id: result.data.user.id },
       };
     } catch (error: unknown) {
       const err = error as Error;
@@ -139,20 +139,20 @@ export class SerwisAutoryzacji {
       const result = await this.supabase.auth.signOut();
 
       if (result.error) {
-        return { 
-          sukces: false, 
+        return {
+          sukces: false,
           błąd: result.error.message,
-          komunikat: result.error.message 
+          komunikat: result.error.message,
         };
       }
 
       return { sukces: true };
     } catch (error: unknown) {
       const err = error as Error;
-      return { 
-        sukces: false, 
+      return {
+        sukces: false,
         błąd: err.message,
-        komunikat: err.message 
+        komunikat: err.message,
       };
     }
   }
@@ -162,18 +162,18 @@ export class SerwisAutoryzacji {
       const result = await this.supabase.auth.refreshSession(refreshToken);
 
       if (result.error) {
-        return { 
-          sukces: false, 
+        return {
+          sukces: false,
           błąd: result.error.message,
-          komunikat: result.error.message 
+          komunikat: result.error.message,
         };
       }
 
       if (!result.data || !result.data.session) {
-        return { 
-          sukces: false, 
+        return {
+          sukces: false,
           błąd: "Nie można odświeżyć sesji",
-          komunikat: "Nie można odświeżyć sesji"
+          komunikat: "Nie można odświeżyć sesji",
         };
       }
 
@@ -183,10 +183,10 @@ export class SerwisAutoryzacji {
       };
     } catch (error: unknown) {
       const err = error as Error;
-      return { 
-        sukces: false, 
+      return {
+        sukces: false,
         błąd: err.message,
-        komunikat: err.message 
+        komunikat: err.message,
       };
     }
   }
