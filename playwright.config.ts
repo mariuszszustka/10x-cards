@@ -69,12 +69,18 @@ export default defineConfig({
 
   // Konfiguracje projektów testowych
   projects: [
+    // Projekt konfiguracji bazy danych do testów
+    {
+      name: 'setup db',
+      testMatch: '**/global.setup.ts',
+    },
     // Projekt dla Google Chrome z zależnością od konfiguracji bazy
     {
       name: 'chromium',
       use: { 
         ...devices['Desktop Chrome'],
       },
+      dependencies: ['setup db']
     },
   ],
 
