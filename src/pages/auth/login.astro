@@ -58,6 +58,7 @@ if (supabase && !isTestRequest && !wantsLoginForm) {
   <!-- Skrypt diagnostyczny dla testów E2E -->
   {isTestRequest && (
     <script is:inline>
+      // UWAGA: Ten kod jest poprawny w kontekście Astro, nawet jeśli analizatory składni pokazują błędy
       console.log('[Login Page Test] Strona logowania załadowana w trybie testowym');
       document.addEventListener('DOMContentLoaded', () => {
         // Sprawdź, czy formularz jest widoczny

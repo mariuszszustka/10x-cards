@@ -64,7 +64,21 @@ export const createSupabaseServerInstance = (context: { headers: Headers; cookie
         return parseCookieHeader(context.headers.get("Cookie") ?? "");
       },
       setAll(cookiesToSet: { name: string; value: string; options?: CookieOptions }[]) {
-        cookiesToSet.forEach(({ name, value, options }) => context.cookies.set(name, value, options));
+        cookiesToSet.forEach(({ name, value, options }) => {
+          try {
+            context.cookies.set(name, value, options);
+          } catch (error: unknown) {
+            // Ignorujemy błędy ResponseSentError
+            if (error && typeof error === 'object' && 'name' in error && 'message' in error &&
+                error.name === 'AstroError' && typeof error.message === 'string' && 
+                error.message.includes('already been sent')) {
+              console.warn(`[Supabase Client] Nie można ustawić ciasteczka ${name} - odpowiedź już wysłana`);
+            } else {
+              // Rzucamy inne błędy, aby były widoczne
+              throw error;
+            }
+          }
+        });
       },
     },
   });
