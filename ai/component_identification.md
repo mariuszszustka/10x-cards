@@ -5,23 +5,28 @@
 Na podstawie analizy dokumentów, najważniejsze ścieżki użytkownika do przetestowania z Playwright to:
 
 ### 1. Dostęp do aplikacji
+
 - **Strona główna** (niezalogowany) - weryfikacja że niezalogowany użytkownik widzi tylko zachętę do rejestracji
 - **Rejestracja** - sprawdzenie procesu tworzenia konta
 - **Logowanie** - weryfikacja poprawnego logowania
 - **Odzyskiwanie hasła** - testowanie całego procesu resetowania hasła
 
 ### 2. Zarządzanie fiszkami
+
 - **Generowanie fiszek przez AI** - cały proces od wklejenia tekstu do zapisania fiszek
 - **Ręczne tworzenie fiszek** - dodawanie własnych fiszek
 - **Edycja i usuwanie fiszek** - zarządzanie istniejącymi fiszkami
 
 ### 3. Sesja nauki
+
 - **System Leitnera** - weryfikacja algorytmu powtórek i przechodzenia fiszek między poziomami
 
 ## Komponenty do testowania
 
 ### Komponenty interfejsu:
+
 1. **Formularze**:
+
    - Formularz rejestracji
    - Formularz logowania
    - Formularz odzyskiwania hasła
@@ -29,6 +34,7 @@ Na podstawie analizy dokumentów, najważniejsze ścieżki użytkownika do przet
    - Formularz generowania fiszek (z polem na tekst źródłowy)
 
 2. **Widoki**:
+
    - Strona główna (dla zalogowanych i niezalogowanych)
    - Panel zarządzania fiszkami
    - Widok sesji nauki
@@ -42,6 +48,7 @@ Na podstawie analizy dokumentów, najważniejsze ścieżki użytkownika do przet
 ## Drzewa komponentów (ASCII)
 
 ### 1. Struktura głównego układu aplikacji
+
 ```
 Layout.astro
 ├── Header
@@ -66,6 +73,7 @@ Layout.astro
 ```
 
 ### 2. Proces rejestracji i logowania
+
 ```
 AuthPage
 ├── AuthTabs
@@ -89,6 +97,7 @@ AuthPage
 ```
 
 ### 3. Zarządzanie fiszkami
+
 ```
 FlashcardsManagementPage
 ├── TabNavigation
@@ -127,6 +136,7 @@ FlashcardsManagementPage
 ```
 
 ### 4. Sesja nauki
+
 ```
 StudySessionPage
 ├── SessionProgress
@@ -156,63 +166,66 @@ StudySessionPage
 ## Scenariusze testowe E2E
 
 ### 1. Rejestracja i logowanie
+
 ```typescript
-test('Rejestracja nowego użytkownika', async ({ page }) => {
-  await page.goto('/');
-  await page.click('button:text("Zarejestruj się")'); 
-  await page.fill('input[name="email"]', 'test@example.com');
-  await page.fill('input[name="password"]', 'TestPassword123!');
-  await page.fill('input[name="confirmPassword"]', 'TestPassword123!');
+test("Rejestracja nowego użytkownika", async ({ page }) => {
+  await page.goto("/");
+  await page.click('button:text("Zarejestruj się")');
+  await page.fill('input[name="email"]', "test@example.com");
+  await page.fill('input[name="password"]', "TestPassword123!");
+  await page.fill('input[name="confirmPassword"]', "TestPassword123!");
   await page.click('button[type="submit"]');
-  await expect(page).toHaveURL('/dashboard');
-  await expect(page.locator('h1')).toContainText('Witaj');
+  await expect(page).toHaveURL("/dashboard");
+  await expect(page.locator("h1")).toContainText("Witaj");
 });
 
-test('Logowanie istniejącego użytkownika', async ({ page }) => {
-  await page.goto('/login');
-  await page.fill('input[name="email"]', 'test@example.com');
-  await page.fill('input[name="password"]', 'TestPassword123!');
+test("Logowanie istniejącego użytkownika", async ({ page }) => {
+  await page.goto("/login");
+  await page.fill('input[name="email"]', "test@example.com");
+  await page.fill('input[name="password"]', "TestPassword123!");
   await page.click('button[type="submit"]');
-  await expect(page).toHaveURL('/dashboard');
+  await expect(page).toHaveURL("/dashboard");
 });
 ```
 
 ### 2. Generowanie fiszek przez AI
+
 ```typescript
-test('Generowanie fiszek przez AI', async ({ page }) => {
+test("Generowanie fiszek przez AI", async ({ page }) => {
   await logIn(page); // helper do logowania
   await page.click('a:text("Generuj fiszki")');
-  
-  const tekst = 'Długi tekst źródłowy...' // tekst 1000-10000 znaków
+
+  const tekst = "Długi tekst źródłowy..."; // tekst 1000-10000 znaków
   await page.fill('textarea[name="sourceText"]', tekst);
   await page.click('button:text("Generuj fiszki")');
-  
+
   // Oczekiwanie na wygenerowanie propozycji
-  await expect(page.locator('.flashcard-proposal')).toBeVisible();
-  await expect(page.locator('.flashcard-proposal')).toHaveCount.greaterThan(0);
-  
+  await expect(page.locator(".flashcard-proposal")).toBeVisible();
+  await expect(page.locator(".flashcard-proposal")).toHaveCount.greaterThan(0);
+
   // Zatwierdzenie pierwszej fiszki
   await page.click('.flashcard-proposal:first-child button:text("Zatwierdź")');
-  
+
   // Zapisanie zatwierdzonych fiszek
   await page.click('button:text("Zapisz zatwierdzone")');
-  await expect(page.locator('.notification-success')).toBeVisible();
+  await expect(page.locator(".notification-success")).toBeVisible();
 });
 ```
 
 ### 3. Sesja nauki z systemem Leitnera
+
 ```typescript
-test('Przejście przez sesję nauki', async ({ page }) => {
+test("Przejście przez sesję nauki", async ({ page }) => {
   await logIn(page);
   await page.click('a:text("Sesja nauki")');
   await page.click('button:text("Rozpocznij sesję")');
-  
+
   // Przejście przez kilka fiszek z różnymi ocenami
-  for(let i = 0; i < 3; i++) {
-    await expect(page.locator('.flashcard-front')).toBeVisible();
+  for (let i = 0; i < 3; i++) {
+    await expect(page.locator(".flashcard-front")).toBeVisible();
     await page.click('button:text("Pokaż odpowiedź")');
-    await expect(page.locator('.flashcard-back')).toBeVisible();
-    
+    await expect(page.locator(".flashcard-back")).toBeVisible();
+
     // Wybór różnych ocen dla różnych fiszek
     if (i % 3 === 0) {
       await page.click('button:text("Trudna")'); // Poziom 1
@@ -222,7 +235,7 @@ test('Przejście przez sesję nauki', async ({ page }) => {
       await page.click('button:text("Łatwa")'); // Poziom 3
     }
   }
-  
+
   // Sprawdzenie czy sesja została zakończona
   await expect(page.locator('h2:text("Podsumowanie sesji")')).toBeVisible();
 });
@@ -233,16 +246,19 @@ test('Przejście przez sesję nauki', async ({ page }) => {
 Najważniejsze testy E2E w kolejności priorytetów:
 
 1. **Dostęp do aplikacji** - podstawowa funkcjonalność warunkująca korzystanie z aplikacji
+
    - Rejestracja
-   - Logowanie 
+   - Logowanie
    - Wylogowanie
 
 2. **Zarządzanie fiszkami** - kluczowa funkcjonalność produktu
+
    - Generowanie przez AI (unikalna wartość aplikacji)
    - Tworzenie ręczne
    - Przeglądanie i edycja
 
 3. **Sesja nauki** - realizacja głównego celu produktu
+
    - Przeprowadzenie pełnej sesji nauki
    - Weryfikacja działania algorytmu powtórek
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 /**
  * Komponent kontenera do generowania fiszek przez AI
@@ -12,4 +12,4 @@ export default function AIGenerationContainer() {
       </p>
     </div>
   );
-} 
+}

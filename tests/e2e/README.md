@@ -3,6 +3,7 @@
 ## Uproszczone podejście do testów E2E
 
 W celu ułatwienia procesu rozwoju i utrzymania testów, zdecydowaliśmy się na uproszczone podejście:
+
 - Testy są uruchamiane tylko na przeglądarce **Google Chrome**
 - Skupiamy się na testowaniu kluczowych funkcjonalności aplikacji
 - Kierujemy się zasadą MVP (Minimum Viable Product) dla testów
@@ -71,26 +72,26 @@ Aby testy działały poprawnie, musisz mieć konto użytkownika testowego w bazi
 Możesz również użyć poniższego skryptu, aby utworzyć użytkownika testowego:
 
 ```typescript
-import { createClient } from '@supabase/supabase-js';
-import dotenv from 'dotenv';
-import path from 'path';
+import { createClient } from "@supabase/supabase-js";
+import dotenv from "dotenv";
+import path from "path";
 
 // Wczytanie zmiennych środowiskowych
-dotenv.config({ path: path.resolve(process.cwd(), '.env.test') });
+dotenv.config({ path: path.resolve(process.cwd(), ".env.test") });
 
 async function createTestUser() {
-  const supabaseUrl = process.env.SUPABASE_URL || '';
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+  const supabaseUrl = process.env.SUPABASE_URL || "";
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 
   if (!supabaseUrl || !supabaseKey) {
-    console.error('Brak zmiennych środowiskowych SUPABASE_URL lub SUPABASE_SERVICE_ROLE_KEY');
+    console.error("Brak zmiennych środowiskowych SUPABASE_URL lub SUPABASE_SERVICE_ROLE_KEY");
     return;
   }
 
   const supabase = createClient(supabaseUrl, supabaseKey);
 
-  const email = process.env.TEST_USER_EMAIL || 'test-e2e@example.com';
-  const password = process.env.TEST_USER_PASSWORD || 'Test123!@#';
+  const email = process.env.TEST_USER_EMAIL || "test-e2e@example.com";
+  const password = process.env.TEST_USER_PASSWORD || "Test123!@#";
 
   try {
     const { data, error } = await supabase.auth.admin.createUser({
@@ -100,14 +101,14 @@ async function createTestUser() {
     });
 
     if (error) {
-      console.error('Błąd podczas tworzenia użytkownika:', error.message);
+      console.error("Błąd podczas tworzenia użytkownika:", error.message);
       return;
     }
 
-    console.log('Utworzono użytkownika testowego:', data.user);
-    console.log('ID użytkownika (do .env.test):', data.user.id);
+    console.log("Utworzono użytkownika testowego:", data.user);
+    console.log("ID użytkownika (do .env.test):", data.user.id);
   } catch (err) {
-    console.error('Nieoczekiwany błąd:', err);
+    console.error("Nieoczekiwany błąd:", err);
   }
 }
 
@@ -161,22 +162,22 @@ Po zakończeniu testów, plik `global.teardown.ts` czyści wszystkie dane testow
 Przykład:
 
 ```typescript
-import { test } from '@playwright/test';
-import { LoginPage } from '../pom/auth';
-import { FlashcardsPage } from '../pom/flashcards';
+import { test } from "@playwright/test";
+import { LoginPage } from "../pom/auth";
+import { FlashcardsPage } from "../pom/flashcards";
 
-test('Użytkownik może utworzyć nową fiszkę', async ({ page }) => {
+test("Użytkownik może utworzyć nową fiszkę", async ({ page }) => {
   // Logowanie
   const loginPage = new LoginPage(page);
   await loginPage.goto();
-  await loginPage.login('test-e2e@example.com', 'Test123!@#');
-  
+  await loginPage.login("test-e2e@example.com", "Test123!@#");
+
   // Tworzenie fiszki
   const flashcardsPage = new FlashcardsPage(page);
   await flashcardsPage.goto();
   const formPage = await flashcardsPage.goToAddFlashcard();
-  await formPage.fillAndSave('Pytanie testowe', 'Odpowiedź testowa');
-  
+  await formPage.fillAndSave("Pytanie testowe", "Odpowiedź testowa");
+
   // Weryfikacja
   await flashcardsPage.expectSuccessNotification();
 });
@@ -188,4 +189,4 @@ test('Użytkownik może utworzyć nową fiszkę', async ({ page }) => {
 2. **Unikaj skomplikowanych scenariuszy** - złożone testy są trudniejsze w utrzymaniu
 3. **Izoluj testy** - każdy test powinien być niezależny od innych
 4. **Używaj selektorów testowych** - zdefiniuj selektory w pliku `test-selectors.ts`
-5. **Sprawdzaj logi** - w przypadku problemów, analiza raportów może pomóc zidentyfikować przyczynę 
+5. **Sprawdzaj logi** - w przypadku problemów, analiza raportów może pomóc zidentyfikować przyczynę

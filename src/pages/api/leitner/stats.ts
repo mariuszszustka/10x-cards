@@ -1,7 +1,7 @@
-import { createErrorResponse, type LearningStatsDTO, type LeitnerBox } from '@/types';
-import { createClient } from '@supabase/supabase-js';
-import type { APIRoute } from 'astro';
-import type { Database } from '@/db/database.types';
+import { createErrorResponse, type LearningStatsDTO, type LeitnerBox } from "@/types";
+import { createClient } from "@supabase/supabase-js";
+import type { APIRoute } from "astro";
+import type { Database } from "@/db/database.types";
 
 // Inicjalizacja klienta Supabase
 const supabaseUrl = import.meta.env.SUPABASE_URL;
@@ -9,14 +9,14 @@ const supabaseAnonKey = import.meta.env.SUPABASE_KEY;
 const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
 
 // Tymczasowe rozwiązanie dla uwierzytelniania podczas developmentu
-const DEFAULT_USER_ID = '123e4567-e89b-12d3-a456-426614174000';
+const DEFAULT_USER_ID = "123e4567-e89b-12d3-a456-426614174000";
 
 // Funkcja do uwierzytelniania użytkownika
 async function getUser(request: Request) {
   // Tymczasowe uproszczone uwierzytelnianie dla developmentu
-  return { 
+  return {
     id: DEFAULT_USER_ID,
-    email: 'test@example.com'
+    email: "test@example.com",
   };
 }
 
@@ -29,24 +29,24 @@ export const GET: APIRoute = async ({ request }) => {
     // 1. Ekstrakcja i weryfikacja tokenu użytkownika
     const user = await getUser(request);
     if (!user) {
-      return new Response(
-        JSON.stringify(createErrorResponse('unauthorized', 'Brak autoryzacji')),
-        { status: 401, headers: { 'Content-Type': 'application/json' } }
-      );
+      return new Response(JSON.stringify(createErrorResponse("unauthorized", "Brak autoryzacji")), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     // 2. Pobranie liczby fiszek w każdym pudełku Leitnera
     const { data: boxCounts, error: boxCountError } = await supabase
-      .from('flashcard_learning_progress')
-      .select('leitner_box, count')
-      .eq('user_id', user.id)
-      .group('leitner_box');
+      .from("flashcard_learning_progress")
+      .select("leitner_box, count")
+      .eq("user_id", user.id)
+      .group("leitner_box");
 
     if (boxCountError) {
-      console.error('Błąd podczas pobierania liczby fiszek w pudełkach:', boxCountError);
+      console.error("Błąd podczas pobierania liczby fiszek w pudełkach:", boxCountError);
       return new Response(
-        JSON.stringify(createErrorResponse('server_error', 'Wystąpił błąd podczas pobierania statystyk nauki')),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
+        JSON.stringify(createErrorResponse("server_error", "Wystąpił błąd podczas pobierania statystyk nauki")),
+        { status: 500, headers: { "Content-Type": "application/json" } }
       );
     }
 
@@ -56,7 +56,7 @@ export const GET: APIRoute = async ({ request }) => {
       2: 0,
       3: 0,
       4: 0,
-      5: 0
+      5: 0,
     };
 
     // Wypełnienie danych z bazy
@@ -66,74 +66,74 @@ export const GET: APIRoute = async ({ request }) => {
 
     // 4. Pobranie łącznej liczby fiszek
     const { count: totalCards, error: totalCountError } = await supabase
-      .from('flashcard_learning_progress')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', user.id);
+      .from("flashcard_learning_progress")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id);
 
     if (totalCountError) {
-      console.error('Błąd podczas pobierania łącznej liczby fiszek:', totalCountError);
+      console.error("Błąd podczas pobierania łącznej liczby fiszek:", totalCountError);
       return new Response(
-        JSON.stringify(createErrorResponse('server_error', 'Wystąpił błąd podczas pobierania statystyk nauki')),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
+        JSON.stringify(createErrorResponse("server_error", "Wystąpił błąd podczas pobierania statystyk nauki")),
+        { status: 500, headers: { "Content-Type": "application/json" } }
       );
     }
 
     // 5. Pobranie liczby fiszek do powtórki dzisiaj
     const { count: cardsToReviewToday, error: reviewCountError } = await supabase
-      .from('flashcard_learning_progress')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', user.id)
-      .lte('next_review_at', new Date().toISOString());
+      .from("flashcard_learning_progress")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .lte("next_review_at", new Date().toISOString());
 
     if (reviewCountError) {
-      console.error('Błąd podczas pobierania liczby fiszek do powtórki:', reviewCountError);
+      console.error("Błąd podczas pobierania liczby fiszek do powtórki:", reviewCountError);
       return new Response(
-        JSON.stringify(createErrorResponse('server_error', 'Wystąpił błąd podczas pobierania statystyk nauki')),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
+        JSON.stringify(createErrorResponse("server_error", "Wystąpił błąd podczas pobierania statystyk nauki")),
+        { status: 500, headers: { "Content-Type": "application/json" } }
       );
     }
 
     // 6. Pobranie informacji o sesjach nauki
     const { data: sessionData, error: sessionError } = await supabase
-      .from('review_sessions')
-      .select('COUNT(*), SUM(cards_reviewed)')
-      .eq('user_id', user.id)
+      .from("review_sessions")
+      .select("COUNT(*), SUM(cards_reviewed)")
+      .eq("user_id", user.id)
       .single();
 
     if (sessionError) {
-      console.error('Błąd podczas pobierania informacji o sesjach:', sessionError);
+      console.error("Błąd podczas pobierania informacji o sesjach:", sessionError);
       return new Response(
-        JSON.stringify(createErrorResponse('server_error', 'Wystąpił błąd podczas pobierania statystyk nauki')),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
+        JSON.stringify(createErrorResponse("server_error", "Wystąpił błąd podczas pobierania statystyk nauki")),
+        { status: 500, headers: { "Content-Type": "application/json" } }
       );
     }
 
     const totalSessions = parseInt(sessionData.count as unknown as string) || 0;
     const totalReviews = parseInt(sessionData.sum as unknown as string) || 0;
-    
+
     // 7. Obliczenie średniej liczby fiszek na sesję
-    const avgCardsPerSession = totalSessions > 0 ? Math.round(totalReviews / totalSessions * 10) / 10 : 0;
+    const avgCardsPerSession = totalSessions > 0 ? Math.round((totalReviews / totalSessions) * 10) / 10 : 0;
 
     // 8. Pobranie wskaźnika skuteczności (poprawne odpowiedzi / wszystkie odpowiedzi)
     const { data: historyData, error: historyError } = await supabase
-      .from('review_history')
-      .select('COUNT(*), SUM(CASE WHEN is_correct THEN 1 ELSE 0 END)')
-      .eq('user_id', user.id)
+      .from("review_history")
+      .select("COUNT(*), SUM(CASE WHEN is_correct THEN 1 ELSE 0 END)")
+      .eq("user_id", user.id)
       .single();
 
     if (historyError) {
-      console.error('Błąd podczas pobierania historii odpowiedzi:', historyError);
+      console.error("Błąd podczas pobierania historii odpowiedzi:", historyError);
       return new Response(
-        JSON.stringify(createErrorResponse('server_error', 'Wystąpił błąd podczas pobierania statystyk nauki')),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
+        JSON.stringify(createErrorResponse("server_error", "Wystąpił błąd podczas pobierania statystyk nauki")),
+        { status: 500, headers: { "Content-Type": "application/json" } }
       );
     }
 
     const totalAnswers = parseInt(historyData.count as unknown as string) || 0;
     const correctAnswers = parseInt(historyData.sum as unknown as string) || 0;
-    
+
     // Obliczenie wskaźnika skuteczności (w procentach)
-    const reviewSuccessRate = totalAnswers > 0 ? Math.round(correctAnswers / totalAnswers * 1000) / 10 : 0;
+    const reviewSuccessRate = totalAnswers > 0 ? Math.round((correctAnswers / totalAnswers) * 1000) / 10 : 0;
 
     // 9. Przygotowanie obiektu wynikowego
     const stats: LearningStatsDTO = {
@@ -143,20 +143,19 @@ export const GET: APIRoute = async ({ request }) => {
       review_success_rate: reviewSuccessRate,
       avg_cards_per_session: avgCardsPerSession,
       total_review_sessions: totalSessions,
-      total_reviews: totalReviews
+      total_reviews: totalReviews,
     };
 
     // 10. Zwrócenie statystyk
     return new Response(JSON.stringify(stats), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { "Content-Type": "application/json" },
     });
-    
   } catch (error) {
-    console.error('Nieoczekiwany błąd:', error);
-    return new Response(
-      JSON.stringify(createErrorResponse('server_error', 'Wystąpił nieoczekiwany błąd')),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
+    console.error("Nieoczekiwany błąd:", error);
+    return new Response(JSON.stringify(createErrorResponse("server_error", "Wystąpił nieoczekiwany błąd")), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
-}; 
+};

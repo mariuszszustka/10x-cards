@@ -5,6 +5,7 @@
 ### 1.1 Analiza procesów autentykacji
 
 #### Główne przepływy autentykacji
+
 1. Rejestracja nowego użytkownika
 2. Logowanie użytkownika
 3. Automatyczne logowanie po rejestracji
@@ -14,18 +15,21 @@
 7. Wygaśnięcie sesji i odświeżenie tokenu
 
 #### Główni aktorzy
+
 1. Przeglądarka (klient)
 2. Middleware (weryfikacja tokenów i autoryzacja)
 3. Astro API (logika biznesowa)
 4. Supabase Auth (usługa uwierzytelniania)
 
 #### Procesy weryfikacji i odświeżania tokenów
+
 1. Weryfikacja tokenu JWT przy każdym żądaniu do chronionych zasobów
 2. Automatyczne odświeżanie tokenu przy wygaśnięciu
 3. Przechowywanie tokenu w bezpieczny sposób po stronie klienta
 4. Unieważnianie tokenu przy wylogowaniu
 
 ### 1.2 Opis kroków autentykacji
+
 1. **Rejestracja**: Użytkownik podaje email i hasło, system tworzy konto w Supabase Auth, użytkownik zostaje automatycznie zalogowany.
 2. **Logowanie**: Użytkownik podaje dane logowania, Supabase Auth weryfikuje je i zwraca token JWT.
 3. **Autoryzacja**: Token JWT jest przesyłany w nagłówku Authorization przy każdym żądaniu do API.
@@ -97,7 +101,7 @@ sequenceDiagram
     AstroAPI->>SupabaseAuth: Unieważnienie tokenu
     SupabaseAuth-->>AstroAPI: Potwierdzenie wylogowania
     AstroAPI-->>Przeglądarka: Usunięcie tokenów + przekierowanie
-    
+
     Note over Przeglądarka,SupabaseAuth: Odzyskiwanie hasła
 
     Przeglądarka->>AstroAPI: Żądanie resetowania hasła (email)
@@ -117,6 +121,7 @@ sequenceDiagram
 ### 2.1 Struktura stron i komponentów
 
 #### Strony publiczne (dostępne dla niezalogowanych użytkowników):
+
 - **`/` (strona główna)** - Zachęcająca strona z informacjami o aplikacji i przyciskami do logowania/rejestracji
 - **`/auth/login`** - Strona z formularzem logowania
 - **`/auth/register`** - Strona z formularzem rejestracji
@@ -124,6 +129,7 @@ sequenceDiagram
 - **`/auth/update-password`** - Strona do ustawienia nowego hasła (dostępna po kliknięciu w link z emaila)
 
 #### Komponenty React:
+
 - **`AuthLayout.tsx`** - Layout dla stron autoryzacyjnych z logo i stylizacją
 - **`LoginForm.tsx`** - Interaktywny formularz logowania
 - **`RegisterForm.tsx`** - Interaktywny formularz rejestracji
@@ -135,6 +141,7 @@ sequenceDiagram
 ### 2.2 Przepływ interfejsu użytkownika
 
 #### Rejestracja:
+
 1. Użytkownik wchodzi na stronę `/auth/register`
 2. Formularz `RegisterForm.tsx` zawiera pola:
    - Adres email (walidacja formatu email)
@@ -144,6 +151,7 @@ sequenceDiagram
 4. W przypadku sukcesu użytkownik jest automatycznie zalogowany i przekierowany do `/dashboard`
 
 #### Logowanie:
+
 1. Użytkownik wchodzi na stronę `/auth/login`
 2. Formularz `LoginForm.tsx` zawiera pola:
    - Adres email
@@ -153,6 +161,7 @@ sequenceDiagram
 4. W przypadku sukcesu użytkownik jest przekierowany do `/dashboard`
 
 #### Wylogowanie:
+
 1. Zalogowany użytkownik klika przycisk "Wyloguj" w komponencie `UserMenu.tsx`
 2. Komponent wywołuje odpowiedni endpoint Supabase Auth
 3. Po wylogowaniu następuje przekierowanie na stronę główną `/`
@@ -160,11 +169,13 @@ sequenceDiagram
 ### 2.3 Walidacja i obsługa błędów
 
 #### Walidacja formularzy:
+
 - Wykorzystanie biblioteki `zod` do walidacji danych
 - Schematy walidacyjne dla logowania i rejestracji
 - Komunikaty błędów w języku polskim, wyświetlane pod odpowiednimi polami
 
 #### Obsługa błędów API:
+
 - Mapowanie kodów błędów Supabase na przyjazne komunikaty
 - Wyświetlanie powiadomień o błędach w formie toastów lub komunikatów inline
 - Zabezpieczenia przed atakami brute force (opóźnienie, ograniczenia prób)
@@ -174,6 +185,7 @@ sequenceDiagram
 ### 3.1 Struktura endpointów API
 
 #### Endpointy Supabase Auth:
+
 - **`POST /auth/v1/signup`** - Rejestracja nowego użytkownika
 - **`POST /auth/v1/token?grant_type=password`** - Logowanie użytkownika
 - **`POST /auth/v1/logout`** - Wylogowanie użytkownika
@@ -181,6 +193,7 @@ sequenceDiagram
 - **`PUT /auth/v1/user`** - Aktualizacja danych użytkownika (w tym zmiana hasła)
 
 #### Endpointy Astro API (wrappery dla Supabase):
+
 - **`POST /api/auth/register`** - Rejestracja
 - **`POST /api/auth/login`** - Logowanie
 - **`POST /api/auth/logout`** - Wylogowanie
@@ -191,6 +204,7 @@ sequenceDiagram
 ### 3.2 Szczegóły żądań i odpowiedzi
 
 #### Rejestracja użytkownika
+
 - Metoda: POST
 - Ścieżka: /api/auth/register
 - Request Body:
@@ -213,6 +227,7 @@ sequenceDiagram
   - 409 Conflict (Email już istnieje)
 
 #### Logowanie użytkownika
+
 - Metoda: POST
 - Ścieżka: /api/auth/login
 - Request Body:
@@ -250,29 +265,31 @@ sequenceDiagram
 
 ```typescript
 // src/middleware.ts
-import { defineMiddleware } from 'astro:middleware';
-import { supabase } from './lib/supabase';
+import { defineMiddleware } from "astro:middleware";
+import { supabase } from "./lib/supabase";
 
 export const onRequest = defineMiddleware(async ({ request, locals, redirect }, next) => {
   // Pobieranie i ustawienie sesji użytkownika
-  const { data: { session } } = await supabase.auth.getSession();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
   locals.session = session;
   locals.user = session?.user || null;
-  
+
   // Sprawdzanie autoryzacji dla chronionych ścieżek
   const url = new URL(request.url);
-  const isAuthRoute = url.pathname.startsWith('/auth/');
-  const isApiRoute = url.pathname.startsWith('/api/');
-  const isPublicRoute = url.pathname === '/' || isAuthRoute || isApiRoute;
-  
+  const isAuthRoute = url.pathname.startsWith("/auth/");
+  const isApiRoute = url.pathname.startsWith("/api/");
+  const isPublicRoute = url.pathname === "/" || isAuthRoute || isApiRoute;
+
   if (!isPublicRoute && !session) {
-    return redirect('/auth/login');
+    return redirect("/auth/login");
   }
-  
-  if (isAuthRoute && session && !url.pathname.includes('logout')) {
-    return redirect('/dashboard');
+
+  if (isAuthRoute && session && !url.pathname.includes("logout")) {
+    return redirect("/dashboard");
   }
-  
+
   return next();
 });
 ```
@@ -281,39 +298,41 @@ export const onRequest = defineMiddleware(async ({ request, locals, redirect }, 
 
 ```typescript
 // src/hooks/useAuth.ts
-import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { useState, useEffect } from "react";
+import { supabase } from "../lib/supabase";
 
 export function useAuth() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  
+
   useEffect(() => {
     // Pobierz aktualną sesję
     const fetchSession = async () => {
       setLoading(true);
       try {
-        const { data: { user } } = await supabase.auth.getUser();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
         setUser(user);
       } finally {
         setLoading(false);
       }
     };
-    
+
     fetchSession();
-    
+
     // Nasłuchuj zmian sesji
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setUser(session?.user || null);
-      }
-    );
-    
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user || null);
+    });
+
     return () => {
       subscription.unsubscribe();
     };
   }, []);
-  
+
   return { user, loading };
 }
 ```
@@ -323,4 +342,4 @@ export function useAuth() {
 - Weryfikacja email nie będzie implementowana w MVP
 - Uproszczony mechanizm refresh tokenu w wersji początkowej
 - Limity prób logowania mogą być pominięte w pierwszej wersji
-- W MVP wdrożyć podstawowe mechanizmy bezpieczeństwa, pełną implementację zaplanować w kolejnych iteracjach 
+- W MVP wdrożyć podstawowe mechanizmy bezpieczeństwa, pełną implementację zaplanować w kolejnych iteracjach

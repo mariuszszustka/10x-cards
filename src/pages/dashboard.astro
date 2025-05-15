@@ -18,90 +18,90 @@ if (supabase) {
 <MainLayout title="Panel główny | 10x Cards">
   <div class="max-w-4xl mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold text-center mb-2">Witaj w aplikacji 10x Cards!</h1>
-    
+
     <div id="user-info" class="text-center mb-8">
       <p class="text-gray-400">Ładowanie informacji o użytkowniku...</p>
     </div>
-    
+
     <div class="grid md:grid-cols-2 gap-6">
       <a href="/generate" class="bg-blue-600 hover:bg-blue-700 p-6 rounded-lg shadow-md transition-colors">
         <h2 class="text-xl font-bold mb-2">Kreator fiszek</h2>
         <p>Twórz fiszki ręcznie lub z wykorzystaniem sztucznej inteligencji.</p>
       </a>
-      
+
       <a href="/flashcards" class="bg-purple-600 hover:bg-purple-700 p-6 rounded-lg shadow-md transition-colors">
         <h2 class="text-xl font-bold mb-2">Zarządzaj fiszkami</h2>
         <p>Przeglądaj, edytuj i organizuj swoje fiszki.</p>
       </a>
-      
+
       <a href="/leitner" class="bg-green-600 hover:bg-green-700 p-6 rounded-lg shadow-md transition-colors">
         <h2 class="text-xl font-bold mb-2">Nauka z systemem Leitnera</h2>
         <p>Rozpocznij sesję nauki z wykorzystaniem systemu interwałów.</p>
       </a>
-      
+
       <a href="/stats" class="bg-amber-600 hover:bg-amber-700 p-6 rounded-lg shadow-md transition-colors">
         <h2 class="text-xl font-bold mb-2">Statystyki</h2>
         <p>Sprawdź swoje postępy i skuteczność nauki.</p>
       </a>
     </div>
-    
+
     <div class="mt-8 text-center">
       <a href="/auth/debug" class="text-blue-400 hover:text-blue-300">Diagnostyka sesji</a>
     </div>
   </div>
-  
+
   <script>
     // Skrypt uruchamiany po stronie klienta
-    document.addEventListener('DOMContentLoaded', async () => {
-      const userInfoEl = document.getElementById('user-info');
-      
+    document.addEventListener("DOMContentLoaded", async () => {
+      const userInfoEl = document.getElementById("user-info");
+
       // Funkcja sprawdzająca sesję na serwerze
       async function checkServerSession() {
         try {
           // Sprawdź sesję na serwerze
-          const response = await fetch('/api/auth/session', {
-            method: 'GET',
-            credentials: 'include' // Dołącz ciasteczka
+          const response = await fetch("/api/auth/session", {
+            method: "GET",
+            credentials: "include", // Dołącz ciasteczka
           });
-          
+
           if (response.ok) {
             const data = await response.json();
             return data.user || null;
           }
           return null;
         } catch (error) {
-          console.error('Błąd sprawdzania sesji:', error);
+          console.error("Błąd sprawdzania sesji:", error);
           return null;
         }
       }
-      
+
       // Sprawdź sesję lokalną
-      const userId = localStorage.getItem('userId');
-      const userEmail = localStorage.getItem('userEmail');
-      
+      const userId = localStorage.getItem("userId");
+      const userEmail = localStorage.getItem("userEmail");
+
       // Sprawdź sesję na serwerze
       const serverSession = await checkServerSession();
-      
+
       // Jeśli mamy sesję na serwerze, użyj jej
       if (serverSession) {
         userInfoEl.innerHTML = `
-          <p class="text-xl">Zalogowany jako: <span class="font-semibold">${serverSession.email || 'Użytkownik'}</span></p>
+          <p class="text-xl">Zalogowany jako: <span class="font-semibold">${serverSession.email || "Użytkownik"}</span></p>
           <p class="text-sm text-gray-400">User ID: ${serverSession.id}</p>
         `;
-        
+
         // Aktualizuj localStorage, jeśli potrzeba
         if (!userId || !userEmail) {
-          localStorage.setItem('userId', serverSession.id);
-          localStorage.setItem('userEmail', serverSession.email || '');
+          localStorage.setItem("userId", serverSession.id);
+          localStorage.setItem("userEmail", serverSession.email || "");
         }
-        
+
         // Zapisz dane użytkownika w window dla dostępu z innych skryptów
         window.userSession = {
           user: {
             id: serverSession.id,
-            email: serverSession.email
+            email: serverSession.email,
           },
-          isAuthenticated: true
+          isAuthenticated: true,
         };
       }
       // Jeśli mamy dane w localStorage, ale nie na serwerze
@@ -111,32 +111,33 @@ if (supabase) {
           <p class="text-sm text-gray-400">User ID: ${userId}</p>
           <p class="text-sm text-yellow-500">Uwaga: Sesja serwerowa nie została znaleziona. Niektóre funkcje mogą nie działać.</p>
         `;
-        
+
         window.userSession = {
           user: {
             id: userId,
-            email: userEmail
+            email: userEmail,
           },
-          isAuthenticated: true
+          isAuthenticated: true,
         };
-        
+
         // Sprawdź ponownie po chwili
         setTimeout(() => {
           window.location.reload();
         }, 5000);
-      } 
+      }
       // Brak sesji
       else {
         userInfoEl.innerHTML = `
           <p class="text-yellow-500">Brak informacji o użytkowniku. Wymagane zalogowanie.</p>
           <p class="text-sm"><a href="/auth/login" class="text-blue-400 hover:text-blue-300">Przejdź do logowania</a></p>
         `;
-        
+
         // Przekieruj na stronę logowania po krótkiej chwili
         setTimeout(() => {
-          window.location.href = '/auth/login';
+          window.location.href = "/auth/login";
         }, 2000);
       }
     });
   </script>
-</MainLayout> 
+</MainLayout>
+

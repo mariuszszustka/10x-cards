@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect } from "react";
 
 export interface FlashcardFormData {
   front: string;
@@ -20,21 +20,21 @@ interface UseFlashcardFormOptions {
 }
 
 export function useFlashcardForm({
-  initialValues = { front: '', back: '', source: 'manual' },
+  initialValues = { front: "", back: "", source: "manual" },
   onSubmit,
-  onCancel
+  onCancel,
 }: UseFlashcardFormOptions) {
   // Stan formularza
   const [formData, setFormData] = useState<FlashcardFormData>({
     front: initialValues.front,
     back: initialValues.back,
-    source: initialValues.source
+    source: initialValues.source,
   });
-  
+
   // Stan błędów
   const [errors, setErrors] = useState<ValidationErrors>({
-    front: '',
-    back: ''
+    front: "",
+    back: "",
   });
 
   // Referencja do pierwszego pola dla dostępności
@@ -48,31 +48,29 @@ export function useFlashcardForm({
   }, []);
 
   // Obsługa zmiany pól formularza
-  const handleChange = useCallback((
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
-    
+
     // Walidacja
-    if (name === 'front' || name === 'back') {
+    if (name === "front" || name === "back") {
       if (!value.trim()) {
-        setErrors(prev => ({
+        setErrors((prev) => ({
           ...prev,
-          [name]: 'To pole jest wymagane'
+          [name]: "To pole jest wymagane",
         }));
       } else if (value.length > 500) {
-        setErrors(prev => ({
+        setErrors((prev) => ({
           ...prev,
-          [name]: 'Tekst nie może przekraczać 500 znaków'
+          [name]: "Tekst nie może przekraczać 500 znaków",
         }));
       } else {
-        setErrors(prev => ({
+        setErrors((prev) => ({
           ...prev,
-          [name]: ''
+          [name]: "",
         }));
       }
     }
@@ -81,15 +79,15 @@ export function useFlashcardForm({
   // Resetowanie formularza
   const resetForm = useCallback(() => {
     setFormData({
-      front: '',
-      back: '',
-      source: 'manual'
+      front: "",
+      back: "",
+      source: "manual",
     });
     setErrors({
-      front: '',
-      back: ''
+      front: "",
+      back: "",
     });
-    
+
     // Przywrócenie fokusu na pierwszy input
     if (frontInputRef.current) {
       frontInputRef.current.focus();
@@ -99,33 +97,36 @@ export function useFlashcardForm({
   // Walidacja formularza
   const validateForm = useCallback(() => {
     const newErrors = {
-      front: '',
-      back: ''
+      front: "",
+      back: "",
     };
-    
+
     if (!formData.front.trim()) {
-      newErrors.front = 'To pole jest wymagane';
+      newErrors.front = "To pole jest wymagane";
     }
-    
+
     if (!formData.back.trim()) {
-      newErrors.back = 'To pole jest wymagane';
+      newErrors.back = "To pole jest wymagane";
     }
-    
+
     setErrors(newErrors);
     return !newErrors.front && !newErrors.back;
   }, [formData]);
 
   // Obsługa zapisu fiszki
-  const handleSubmit = useCallback((e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
-    
-    onSubmit(formData);
-    resetForm();
-  }, [formData, onSubmit, validateForm, resetForm]);
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+
+      if (!validateForm()) {
+        return;
+      }
+
+      onSubmit(formData);
+      resetForm();
+    },
+    [formData, onSubmit, validateForm, resetForm]
+  );
 
   // Obsługa anulowania
   const handleCancel = useCallback(() => {
@@ -141,6 +142,6 @@ export function useFlashcardForm({
     frontInputRef,
     handleChange,
     handleSubmit,
-    handleCancel
+    handleCancel,
   };
-} 
+}

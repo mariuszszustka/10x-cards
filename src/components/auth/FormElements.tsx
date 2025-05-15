@@ -25,14 +25,11 @@ export function InputField({
   placeholder,
   required = false,
   autoComplete,
-  testId
+  testId,
 }: InputFieldProps) {
   return (
     <div>
-      <label 
-        htmlFor={id} 
-        className="block text-sm font-medium text-blue-100 mb-1"
-      >
+      <label htmlFor={id} className="block text-sm font-medium text-blue-100 mb-1">
         {label}
       </label>
       <input
@@ -48,9 +45,7 @@ export function InputField({
         data-testid={testId}
         style={{ caretColor: "transparent" }}
       />
-      {error && (
-        <p className="mt-1 text-sm text-red-300">{error}</p>
-      )}
+      {error && <p className="mt-1 text-sm text-red-300">{error}</p>}
     </div>
   );
 }
@@ -65,15 +60,7 @@ interface CheckboxFieldProps {
   testId?: string;
 }
 
-export function CheckboxField({
-  id,
-  name,
-  label,
-  checked,
-  onChange,
-  error,
-  testId
-}: CheckboxFieldProps) {
+export function CheckboxField({ id, name, label, checked, onChange, error, testId }: CheckboxFieldProps) {
   return (
     <div className="flex items-start">
       <div className="flex items-center h-5">
@@ -91,9 +78,7 @@ export function CheckboxField({
         <label htmlFor={id} className="text-blue-100">
           {label}
         </label>
-        {error && (
-          <p className="mt-1 text-sm text-red-300">{error}</p>
-        )}
+        {error && <p className="mt-1 text-sm text-red-300">{error}</p>}
       </div>
     </div>
   );
@@ -105,7 +90,7 @@ interface FormErrorProps {
 
 export function FormError({ error }: FormErrorProps) {
   if (!error) return null;
-  
+
   return (
     <div className="bg-red-500/20 border border-red-500/30 p-3 rounded-md">
       <p className="text-sm text-red-300">{error}</p>
@@ -119,7 +104,7 @@ interface DebugInfoProps {
 
 export function DebugInfo({ info }: DebugInfoProps) {
   if (!info) return null;
-  
+
   return (
     <div className="bg-gray-500/20 border border-gray-500/30 p-3 rounded-md text-xs">
       <p>Status: {info.status}</p>
@@ -138,31 +123,23 @@ interface SuccessMessageProps {
   onBackClick?: () => void;
 }
 
-export function SuccessMessage({ 
-  title, 
-  message,
-  actionLink,
-  onBackClick
-}: SuccessMessageProps) {
+export function SuccessMessage({ title, message, actionLink, onBackClick }: SuccessMessageProps) {
   return (
     <div className="p-4 bg-green-500/20 border border-green-500/30 rounded-md text-center">
       <h3 className="text-xl font-semibold mb-2">{title}</h3>
       <p className="mb-4">{message}</p>
-      
+
       {actionLink && (
         <a href={actionLink.href} className="text-blue-400 hover:text-blue-300 font-medium">
           {actionLink.text}
         </a>
       )}
-      
+
       {onBackClick && (
-        <button 
-          onClick={onBackClick}
-          className="text-blue-400 hover:text-blue-300 font-medium"
-        >
+        <button onClick={onBackClick} className="text-blue-400 hover:text-blue-300 font-medium">
           Powrót do formularza
         </button>
       )}
     </div>
   );
-} 
+}

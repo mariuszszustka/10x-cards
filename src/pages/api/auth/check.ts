@@ -1,4 +1,4 @@
-import type { APIRoute } from 'astro';
+import type { APIRoute } from "astro";
 
 /**
  * Prosty endpoint do sprawdzania, czy API jest dostępne
@@ -7,15 +7,15 @@ import type { APIRoute } from 'astro';
 export const GET: APIRoute = async ({ request }) => {
   return new Response(
     JSON.stringify({
-      status: 'ok',
-      message: 'API is running',
-      timestamp: new Date().toISOString()
+      status: "ok",
+      message: "API is running",
+      timestamp: new Date().toISOString(),
     }),
     {
       status: 200,
       headers: {
-        'Content-Type': 'application/json'
-      }
+        "Content-Type": "application/json",
+      },
     }
   );
-}; 
+};

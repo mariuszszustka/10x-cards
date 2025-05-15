@@ -1,7 +1,7 @@
-import React from 'react';
-import FlashcardItem from './FlashcardItem';
-import EditableFlashcard from './EditableFlashcard';
-import type { FlashcardDTO } from '@/types';
+import React from "react";
+import FlashcardItem from "./FlashcardItem";
+import EditableFlashcard from "./EditableFlashcard";
+import type { FlashcardDTO } from "@/types";
 
 interface FlashcardGridProps {
   flashcards: FlashcardDTO[];
@@ -23,7 +23,7 @@ export default function FlashcardGrid({
   onUpdate,
   onCancelEdit,
   editingCardId,
-  isLoading
+  isLoading,
 }: FlashcardGridProps) {
   // Wyświetlanie informacji o ładowaniu
   if (isLoading) {
@@ -36,25 +36,21 @@ export default function FlashcardGrid({
       </div>
     );
   }
-  
+
   // Wyświetlanie informacji o braku fiszek
   if (flashcards.length === 0) {
     return (
       <div className="text-center py-12 border rounded-lg bg-muted/20">
         <h3 className="text-lg font-medium mb-2">Brak fiszek</h3>
-        <p className="text-muted-foreground mb-6">
-          Nie znaleziono żadnych fiszek spełniających kryteria.
-        </p>
-        <p className="text-sm text-muted-foreground">
-          Spróbuj zmienić kryteria wyszukiwania lub dodaj nowe fiszki.
-        </p>
+        <p className="text-muted-foreground mb-6">Nie znaleziono żadnych fiszek spełniających kryteria.</p>
+        <p className="text-sm text-muted-foreground">Spróbuj zmienić kryteria wyszukiwania lub dodaj nowe fiszki.</p>
       </div>
     );
   }
-  
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {flashcards.map(flashcard => (
+      {flashcards.map((flashcard) => (
         <div key={flashcard.id}>
           {editingCardId === flashcard.id ? (
             <EditableFlashcard
@@ -73,4 +69,4 @@ export default function FlashcardGrid({
       ))}
     </div>
   );
-} 
+}

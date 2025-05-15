@@ -4,22 +4,15 @@ import { useAuthForm } from "@/lib/hooks/useAuthForm";
 import { InputField, CheckboxField, FormError, SuccessMessage } from "./FormElements";
 
 export default function RegisterForm() {
-  const {
-    formData,
-    errors,
-    isLoading,
-    status,
-    handleChange,
-    submitForm
-  } = useAuthForm({
+  const { formData, errors, isLoading, status, handleChange, submitForm } = useAuthForm({
     initialState: {
       email: "",
       password: "",
       confirmPassword: "",
-      acceptTerms: false
+      acceptTerms: false,
     },
-    endpoint: '/api/auth/register',
-    redirect: '/dashboard'
+    endpoint: "/api/auth/register",
+    redirect: "/dashboard",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -33,7 +26,7 @@ export default function RegisterForm() {
         message="Zostaniesz przekierowany do panelu głównego..."
         actionLink={{
           text: "Przejdź do panelu",
-          href: "/dashboard"
+          href: "/dashboard",
         }}
       />
     );
@@ -70,9 +63,7 @@ export default function RegisterForm() {
             autoComplete="new-password"
             testId="auth-password-input"
           />
-          <p className="mt-1 text-xs text-blue-100/70">
-            Minimum 8 znaków, 1 wielka litera, 1 cyfra, 1 znak specjalny
-          </p>
+          <p className="mt-1 text-xs text-blue-100/70">Minimum 8 znaków, 1 wielka litera, 1 cyfra, 1 znak specjalny</p>
         </div>
 
         <InputField
@@ -94,7 +85,14 @@ export default function RegisterForm() {
           name="acceptTerms"
           label={
             <>
-              Akceptuję <a href="/terms" className="text-blue-300 hover:text-blue-200">warunki użytkowania</a> oraz <a href="/privacy" className="text-blue-300 hover:text-blue-200">politykę prywatności</a>
+              Akceptuję{" "}
+              <a href="/terms" className="text-blue-300 hover:text-blue-200">
+                warunki użytkowania
+              </a>{" "}
+              oraz{" "}
+              <a href="/privacy" className="text-blue-300 hover:text-blue-200">
+                politykę prywatności
+              </a>
             </>
           }
           checked={formData.acceptTerms as boolean}
@@ -116,4 +114,4 @@ export default function RegisterForm() {
       </Button>
     </form>
   );
-} 
+}

@@ -1,14 +1,17 @@
 # API Endpoint Implementation Plan: Autentykacja użytkownika
 
 ## 1. Przegląd punktów końcowych
+
 Endpointy autentykacji umożliwiają rejestrację nowych użytkowników oraz logowanie istniejących użytkowników do systemu.
 
 ### Endpoint rejestracji użytkownika
+
 - Umożliwia utworzenie nowego konta użytkownika
 - Zapisuje dane użytkownika w bazie danych
 - Zwraca podstawowe informacje o nowo utworzonym użytkowniku
 
-### Endpoint logowania użytkownika 
+### Endpoint logowania użytkownika
+
 - Weryfikuje dane uwierzytelniające użytkownika
 - Generuje token JWT dla autoryzacji
 - Zwraca token oraz podstawowe informacje o użytkowniku
@@ -16,6 +19,7 @@ Endpointy autentykacji umożliwiają rejestrację nowych użytkowników oraz log
 ## 2. Szczegóły żądania
 
 ### Rejestracja użytkownika
+
 - Metoda HTTP: POST
 - Ścieżka URL: /api/auth/register
 - Parametry: brak
@@ -29,6 +33,7 @@ Endpointy autentykacji umożliwiają rejestrację nowych użytkowników oraz log
   ```
 
 ### Logowanie użytkownika
+
 - Metoda HTTP: POST
 - Ścieżka URL: /api/auth/login
 - Parametry: brak
@@ -42,6 +47,7 @@ Endpointy autentykacji umożliwiają rejestrację nowych użytkowników oraz log
   ```
 
 ## 3. Wykorzystywane typy
+
 - `RegisterUserDTO` - dane potrzebne do rejestracji użytkownika
 - `RegisterUserResponseDTO` - dane zwracane po rejestracji
 - `LoginDTO` - dane uwierzytelniające do logowania
@@ -50,6 +56,7 @@ Endpointy autentykacji umożliwiają rejestrację nowych użytkowników oraz log
 ## 4. Szczegóły odpowiedzi
 
 ### Rejestracja użytkownika
+
 - Sukces (201 Created):
   ```json
   {
@@ -63,6 +70,7 @@ Endpointy autentykacji umożliwiają rejestrację nowych użytkowników oraz log
   - 409 Conflict - email już istnieje w systemie
 
 ### Logowanie użytkownika
+
 - Sukces (200 OK):
   ```json
   {
@@ -80,6 +88,7 @@ Endpointy autentykacji umożliwiają rejestrację nowych użytkowników oraz log
 ## 5. Przepływ danych
 
 ### Rejestracja użytkownika
+
 1. Walidacja danych wejściowych (format email, siła hasła)
 2. Sprawdzenie czy email jest unikalny w bazie danych
 3. Haszowanie hasła
@@ -87,6 +96,7 @@ Endpointy autentykacji umożliwiają rejestrację nowych użytkowników oraz log
 5. Zwrócenie danych o nowo utworzonym użytkowniku
 
 ### Logowanie użytkownika
+
 1. Walidacja danych wejściowych
 2. Pobranie użytkownika z bazy danych na podstawie email
 3. Weryfikacja hasła
@@ -96,12 +106,14 @@ Endpointy autentykacji umożliwiają rejestrację nowych użytkowników oraz log
 ## 6. Względy bezpieczeństwa
 
 ### Rejestracja użytkownika
+
 - Hasła muszą spełniać minimalne wymagania bezpieczeństwa (np. min. 8 znaków, zawierać litery i cyfry)
 - Hasła muszą być haszowane (np. bcrypt) przed zapisaniem w bazie danych
 - Email musi być walidowany pod kątem poprawnego formatu
 - Należy zastosować ograniczenie liczby prób rejestracji z jednego IP (rate limiting)
 
 ### Logowanie użytkownika
+
 - Stosowanie opóźnienia przy błędnym logowaniu w celu zapobiegania atakom brute force
 - Limity prób logowania (np. 5 prób na minutę na adres IP)
 - Bezpieczne generowanie i przechowywanie tokenów JWT
@@ -110,18 +122,21 @@ Endpointy autentykacji umożliwiają rejestrację nowych użytkowników oraz log
 ## 7. Obsługa błędów
 
 ### Rejestracja użytkownika
+
 - Niepoprawny format email - 400 Bad Request z odpowiednim komunikatem
 - Hasło nie spełnia wymagań bezpieczeństwa - 400 Bad Request z odpowiednim komunikatem
 - Email już istnieje w bazie - 409 Conflict z odpowiednim komunikatem
 - Błąd bazy danych - 500 Internal Server Error z logowaniem błędu
 
 ### Logowanie użytkownika
+
 - Brak użytkownika o podanym email - 400 Bad Request (nie ujawniać, że użytkownik nie istnieje)
 - Niepoprawne hasło - 400 Bad Request z ogólnym komunikatem o błędnych danych (nie ujawniać, która część jest błędna)
 - Przekroczony limit prób logowania - 429 Too Many Requests
 - Błąd bazy danych - 500 Internal Server Error z logowaniem błędu
 
 ## 8. Rozważania dotyczące wydajności
+
 - Indeksowanie kolumny `email` w tabeli `users` dla szybszego wyszukiwania
 - Cachowanie często używanych danych użytkownika
 - Asynchroniczna obsługa żądań dla lepszej skalowalności
@@ -130,6 +145,7 @@ Endpointy autentykacji umożliwiają rejestrację nowych użytkowników oraz log
 ## 9. Etapy wdrożenia
 
 ### Rejestracja użytkownika
+
 1. Implementacja walidacji danych wejściowych (RegisterUserDTO)
 2. Implementacja metody w serwisie do sprawdzania unikalności email
 3. Implementacja serwisu do haszowania hasła
@@ -141,6 +157,7 @@ Endpointy autentykacji umożliwiają rejestrację nowych użytkowników oraz log
 9. Dokumentacja API
 
 ### Logowanie użytkownika
+
 1. Implementacja walidacji danych wejściowych (LoginDTO)
 2. Implementacja serwisu do weryfikacji hasła
 3. Implementacja serwisu do generowania tokenów JWT
@@ -154,10 +171,12 @@ Endpointy autentykacji umożliwiają rejestrację nowych użytkowników oraz log
 ## 10. Uwagi dotyczące MVP
 
 ### Weryfikacja maili
+
 - W wersji MVP nie będzie implementowana weryfikacja adresów e-mail.
 - Użytkownik może podać dowolny adres e-mail podczas rejestracji (wymagana jedynie walidacja formatu).
 - Pole `confirmed_at` w bazie danych pozostaje na potrzeby przyszłej implementacji weryfikacji.
 
 ### Rate Limiting i JWT
+
 - W MVP możemy pominąć implementację rate limitingu.
 - Szczegóły implementacji JWT (w tym mechanizm refresh tokena) zostaną doprecyzowane w późniejszych etapach projektu.

@@ -1,26 +1,32 @@
 # API Endpoint Implementation Plan: Generowanie fiszek przez AI
 
 ## 1. Przegląd punktów końcowych
+
 Endpointy generowania fiszek umożliwiają użytkownikom tworzenie fiszek automatycznie przy pomocy AI, sprawdzanie statusu procesu generacji oraz akceptację wygenerowanych fiszek.
 
 ### Wykorzystanie lokalnego serwera Ollama
+
 W wersji MVP system korzysta z lokalnego serwera Ollama dostępnego pod adresem http://192.168.0.11:11434.
 Wykorzystywane modele:
+
 - gemma3:27b - duży model o wysokiej jakości generacji
 - llama3.2:3b - mniejszy model (domyślny) zapewniający szybsze działanie
 - deepseek-r1:32b - zaawansowany model z rozszerzonym kontekstem
 - llama3.3:latest - najnowsza wersja modelu llama
 
 ### Endpoint tworzenia generacji
+
 - Rozpoczyna proces generowania fiszek przez AI
 - Zapisuje początkowe dane generacji w bazie danych
 - Zwraca informacje o utworzonej generacji
 
 ### Endpoint statusu generacji
+
 - Sprawdza aktualny status procesu generacji
 - Zwraca informacje o generacji wraz z wygenerowanymi fiszkami
 
 ### Endpoint akceptacji wygenerowanych fiszek
+
 - Zapisuje wybrane wygenerowane fiszki do kolekcji użytkownika
 - Aktualizuje statystyki generacji
 - Zwraca informacje o zaakceptowanych fiszkach
@@ -28,10 +34,11 @@ Wykorzystywane modele:
 ## 2. Szczegóły żądania
 
 ### Tworzenie generacji
+
 - Metoda HTTP: POST
 - Ścieżka URL: /api/generations
 - Parametry: brak
-- Nagłówki: 
+- Nagłówki:
   - Content-Type: application/json
   - Authorization: Bearer {token}
 - Request Body:
@@ -43,6 +50,7 @@ Wykorzystywane modele:
   ```
 
 ### Status generacji
+
 - Metoda HTTP: GET
 - Ścieżka URL: /api/generations/{id}
 - Parametry:
@@ -51,12 +59,13 @@ Wykorzystywane modele:
 - Nagłówki: Authorization: Bearer {token}
 
 ### Akceptacja wygenerowanych fiszek
+
 - Metoda HTTP: PUT
 - Ścieżka URL: /api/generations/{id}/accept
 - Parametry:
   - Wymagane:
     - id: integer (identyfikator generacji)
-- Nagłówki: 
+- Nagłówki:
   - Content-Type: application/json
   - Authorization: Bearer {token}
 - Request Body:
@@ -74,6 +83,7 @@ Wykorzystywane modele:
   ```
 
 ## 3. Wykorzystywane typy
+
 - `CreateGenerationDTO` - dane potrzebne do rozpoczęcia procesu generacji
 - `GenerationStatusDTO` - status procesu generacji wraz z wygenerowanymi fiszkami
 - `AcceptGeneratedFlashcardsDTO` - dane fiszek do zaakceptowania
@@ -83,6 +93,7 @@ Wykorzystywane modele:
 ## 4. Szczegóły odpowiedzi
 
 ### Tworzenie generacji
+
 - Sukces (202 Accepted):
   ```json
   {
@@ -99,6 +110,7 @@ Wykorzystywane modele:
   - 401 Unauthorized - brak/niepoprawna autoryzacja
 
 ### Status generacji
+
 - Sukces (200 OK):
   ```json
   {
@@ -127,6 +139,7 @@ Wykorzystywane modele:
   - 404 Not Found - generacja nie istnieje lub nie należy do użytkownika
 
 ### Akceptacja wygenerowanych fiszek
+
 - Sukces (200 OK):
   ```json
   {
@@ -149,6 +162,7 @@ Wykorzystywane modele:
 ## 5. Przepływ danych
 
 ### Tworzenie generacji
+
 1. Ekstrakcja tokenu JWT z nagłówka i weryfikacja tożsamości użytkownika
 2. Walidacja danych wejściowych (długość tekstu źródłowego, dostępność modelu)
 3. Obliczenie hasha tekstu źródłowego
@@ -157,12 +171,14 @@ Wykorzystywane modele:
 6. Zwrócenie odpowiedzi 202 Accepted z danymi utworzonej generacji
 
 ### Status generacji
+
 1. Ekstrakcja tokenu JWT z nagłówka i weryfikacja tożsamości użytkownika
 2. Sprawdzenie czy generacja istnieje i należy do żądającego użytkownika
 3. Pobranie danych generacji i wygenerowanych fiszek z bazy danych
 4. Zwrócenie statusu generacji i wygenerowanych fiszek
 
 ### Akceptacja wygenerowanych fiszek
+
 1. Implementacja middleware uwierzytelniania
 2. Implementacja walidacji danych wejściowych (AcceptGeneratedFlashcardsDTO) z wykorzystaniem funkcji `validateFrontText` i `validateBackText` do weryfikacji limitów długości tekstów każdej fiszki
 3. Implementacja serwisu do zapisywania zaakceptowanych fiszek
@@ -173,6 +189,7 @@ Wykorzystywane modele:
 8. Dokumentacja API
 
 ## 6. Względy bezpieczeństwa
+
 - Wymaganie tokenu JWT dla wszystkich endpointów
 - Weryfikacja, czy użytkownik ma dostęp tylko do swoich własnych generacji
 - Walidacja danych wejściowych (zwłaszcza długości tekstu źródłowego)
@@ -181,6 +198,7 @@ Wykorzystywane modele:
 - Implementacja Row Level Security (RLS) na poziomie bazy danych
 
 ## 7. Obsługa błędów
+
 - Zbyt krótki/długi tekst źródłowy - 400 Bad Request z opisem błędu
 - Nieznany model AI - 400 Bad Request z opisem błędu
 - Brak/nieprawidłowy token JWT - 401 Unauthorized
@@ -191,6 +209,7 @@ Wykorzystywane modele:
 - Błędy bazy danych - 500 Internal Server Error z logowaniem błędu
 
 ## 8. Rozważania dotyczące wydajności
+
 - Asynchroniczne przetwarzanie generacji fiszek (kolejka zadań)
 - Timeout dla procesu generacji (maksymalnie 5 minut)
 - Indeksowanie kolumn używanych w zapytaniach (`user_id`, `id`)
@@ -201,6 +220,7 @@ Wykorzystywane modele:
 ## 9. Etapy wdrożenia
 
 ### Tworzenie generacji
+
 1. Implementacja middleware uwierzytelniania
 2. Implementacja walidacji danych wejściowych (CreateGenerationDTO)
 3. Implementacja serwisu do obliczania hasha tekstu
@@ -213,6 +233,7 @@ Wykorzystywane modele:
 10. Dokumentacja API
 
 ### Status generacji
+
 1. Implementacja middleware uwierzytelniania
 2. Implementacja serwisu do pobierania danych generacji
 3. Implementacja kontrolera obsługującego żądanie statusu generacji
@@ -221,6 +242,7 @@ Wykorzystywane modele:
 6. Dokumentacja API
 
 ### Akceptacja wygenerowanych fiszek
+
 1. Implementacja middleware uwierzytelniania
 2. Implementacja walidacji danych wejściowych (AcceptGeneratedFlashcardsDTO)
 3. Implementacja serwisu do zapisywania zaakceptowanych fiszek

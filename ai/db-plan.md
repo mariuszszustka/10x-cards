@@ -3,6 +3,7 @@
 ## 1. Tabele i kolumny
 
 ### Tabela: users
+
 - `id` UUID PRIMARY KEY DEFAULT gen_random_uuid()
 - `email` VARCHAR(255) NOT NULL UNIQUE
 - `encrypted_password` VARCHAR(255) NOT NULL
@@ -10,6 +11,7 @@
 - `created_at` TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 
 ### Tabela: flashcards
+
 - `id` SERIAL PRIMARY KEY
 - `user_id` UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE
 - `front` VARCHAR(200) NOT NULL
@@ -20,6 +22,7 @@
 - `updated_at` TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 
 ### Tabela: generations
+
 - `id` SERIAL PRIMARY KEY
 - `user_id` UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE
 - `model` VARCHAR(255) NOT NULL
@@ -33,6 +36,7 @@
 - `generation_duration` INTEGER NOT NULL
 
 ### Tabela: generation_error_logs
+
 - `id` SERIAL PRIMARY KEY
 - `user_id` UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE
 - `model` VARCHAR(255) NOT NULL
@@ -44,6 +48,7 @@
 - `updated_at` TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 
 ### Tabela: system_error_logs
+
 - `id` SERIAL PRIMARY KEY
 - `error_type` VARCHAR(50) NOT NULL
 - `error_message` TEXT NOT NULL
@@ -55,6 +60,7 @@
 - `resolved` BOOLEAN NOT NULL DEFAULT false
 
 ### Tabela: flashcard_learning_progress
+
 - `id` SERIAL PRIMARY KEY
 - `user_id` UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE
 - `flashcard_id` INTEGER NOT NULL REFERENCES flashcards(id) ON DELETE CASCADE
@@ -66,6 +72,7 @@
 - `updated_at` TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 
 ### Tabela: review_history
+
 - `id` SERIAL PRIMARY KEY
 - `user_id` UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE
 - `flashcard_id` INTEGER NOT NULL REFERENCES flashcards(id) ON DELETE CASCADE
@@ -76,6 +83,7 @@
 - `created_at` TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 
 ### Tabela: review_sessions
+
 - `id` SERIAL PRIMARY KEY
 - `user_id` UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE
 - `started_at` TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -87,6 +95,7 @@
 - `created_at` TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 
 ## 2. Relacje między tabelami
+
 - Każdy rekord w tabeli `users` może posiadać wiele rekordów w tabelach `flashcards`, `generations`, `generation_error_logs`, `flashcard_learning_progress`, `review_history`, `review_sessions` oraz opcjonalnie w `system_error_logs`.
 - Tabela `flashcards` opcjonalnie odnosi się do tabeli `generations` poprzez kolumnę `generation_id`.
 - Tabela `flashcard_learning_progress` łączy użytkownika z fiszką i śledzi postęp nauki.
@@ -96,32 +105,38 @@
 ## 3. Indeksy
 
 - **Tabela generations:**
+
   - `CREATE INDEX idx_generations_user_id ON generations(user_id);`
   - `CREATE INDEX idx_generations_generated_count ON generations(generated_count);`
   - `CREATE INDEX idx_generations_accepted_unedited_count ON generations(accepted_unedited_count);`
   - `CREATE INDEX idx_generations_accepted_edited_count ON generations(accepted_edited_count);`
 
 - **Tabela flashcards:**
+
   - `CREATE INDEX idx_flashcards_user_id ON flashcards(user_id);`
   - `CREATE INDEX idx_flashcards_generation_id ON flashcards(generation_id);`
   - `CREATE INDEX idx_flashcards_front_gin ON flashcards USING gin(to_tsvector('polish', front));`
   - `CREATE INDEX idx_flashcards_back_gin ON flashcards USING gin(to_tsvector('polish', back));`
 
 - **Tabela generation_error_logs:**
+
   - `CREATE INDEX idx_generation_error_logs_user_id ON generation_error_logs(user_id);`
 
 - **Tabela flashcard_learning_progress:**
+
   - `CREATE INDEX idx_flashcard_learning_progress_user_id ON flashcard_learning_progress(user_id);`
   - `CREATE INDEX idx_flashcard_learning_progress_flashcard_id ON flashcard_learning_progress(flashcard_id);`
   - `CREATE INDEX idx_flashcard_learning_progress_leitner_box ON flashcard_learning_progress(leitner_box);`
   - `CREATE INDEX idx_flashcard_learning_progress_next_review_at ON flashcard_learning_progress(next_review_at);`
 
 - **Tabela review_history:**
+
   - `CREATE INDEX idx_review_history_user_id ON review_history(user_id);`
   - `CREATE INDEX idx_review_history_flashcard_id ON review_history(flashcard_id);`
   - `CREATE INDEX idx_review_history_created_at ON review_history(created_at);`
 
 - **Tabela review_sessions:**
+
   - `CREATE INDEX idx_review_sessions_user_id ON review_sessions(user_id);`
   - `CREATE INDEX idx_review_sessions_started_at ON review_sessions(started_at);`
 
@@ -136,6 +151,7 @@
 ### Przykłady polityk RLS dla tabel
 
 #### Tabela users
+
 ```sql
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 
@@ -148,6 +164,7 @@ CREATE POLICY "Users can update their own data" ON public.users
 ```
 
 #### Tabela flashcards
+
 ```sql
 ALTER TABLE public.flashcards ENABLE ROW LEVEL SECURITY;
 
@@ -166,6 +183,7 @@ CREATE POLICY "Users can delete their own flashcards" ON public.flashcards
 ```
 
 #### Tabela generations
+
 ```sql
 ALTER TABLE public.generations ENABLE ROW LEVEL SECURITY;
 
@@ -184,6 +202,7 @@ CREATE POLICY "Users can delete their own generations" ON public.generations
 ```
 
 #### Tabela system_error_logs
+
 ```sql
 ALTER TABLE public.system_error_logs ENABLE ROW LEVEL SECURITY;
 
@@ -195,6 +214,7 @@ CREATE POLICY "Only admins can access system error logs" ON public.system_error_
 ## 5. Triggery i funkcje
 
 ### Trigger dla aktualizacji pola updated_at
+
 ```sql
 CREATE OR REPLACE FUNCTION public.update_updated_at_column()
 RETURNS TRIGGER AS $$
@@ -230,9 +250,11 @@ EXECUTE FUNCTION public.update_updated_at_column();
 Implementacja schematu bazy danych będzie wykonana za pomocą migracji Supabase w plikach:
 
 ### Migracja 1: Schemat początkowy
+
 Plik: `supabase/migrations/20240513161001_initial_schema.sql`
 
 Zawartość:
+
 - Tworzenie tabeli `users`
 - Tworzenie tabeli `generations`
 - Tworzenie tabeli `flashcards`
@@ -243,9 +265,11 @@ Zawartość:
 - Funkcja i trigger dla automatycznej aktualizacji pola `updated_at`
 
 ### Migracja 2: System Leitnera
+
 Plik: `supabase/migrations/20240515235356_add_leitner_system.sql`
 
 Zawartość:
+
 - Tworzenie tabeli `flashcard_learning_progress`
 - Tworzenie tabeli `review_history`
 - Tworzenie tabeli `review_sessions`
@@ -256,16 +280,19 @@ Zawartość:
 ## 7. Uwagi implementacyjne
 
 ### System Leitnera
+
 - MVP używa uproszczonego wariantu z 3 pudełkami zamiast standardowych 5:
   - Poziom 1: Fiszki nowe lub często niepoprawnie odpowiadane (powtarzane codziennie)
   - Poziom 2: Fiszki z podstawową znajomością (powtarzane co 3 dni)
   - Poziom 3: Fiszki dobrze opanowane (powtarzane co 7 dni)
 
 ### Bezpieczeństwo danych
+
 - Wszystkie tabele mają włączone Row Level Security
 - Każda tabela zawierająca dane użytkownika ma polityki dostępu ograniczone do właściciela danych
 - Logi błędów systemowych dostępne są tylko dla administratorów
 
 ### Transakcje
+
 - Operacje modyfikacji rekordów w wielu tabelach powinny być wykonywane wewnątrz transakcji
 - Szczególnie istotne przy zapisywaniu wyników sesji nauki i aktualizacji postępu fiszek

@@ -1,5 +1,5 @@
-import type { APIRoute } from 'astro';
-import { createSupabaseServerInstance } from '../../../db/supabase.client.ts';
+import type { APIRoute } from "astro";
+import { createSupabaseServerInstance } from "../../../db/supabase.client.ts";
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   try {
@@ -11,7 +11,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       return new Response(
         JSON.stringify({
           success: false,
-          error: 'Hasło jest wymagane',
+          error: "Hasło jest wymagane",
         }),
         { status: 400 }
       );
@@ -22,7 +22,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       return new Response(
         JSON.stringify({
           success: false,
-          error: 'Hasło musi mieć co najmniej 8 znaków',
+          error: "Hasło musi mieć co najmniej 8 znaków",
         }),
         { status: 400 }
       );
@@ -36,11 +36,11 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     // const { error } = await supabase.auth.updateUser({ password });
 
     // W MVP sprawdzamy token z URL
-    if (!token || !token.startsWith('example-token-for-')) {
+    if (!token || !token.startsWith("example-token-for-")) {
       return new Response(
         JSON.stringify({
           success: false,
-          error: 'Nieprawidłowy token resetowania hasła',
+          error: "Nieprawidłowy token resetowania hasła",
         }),
         { status: 400 }
       );
@@ -48,25 +48,25 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     // Symulacja dla MVP
     // W rzeczywistości nie potrzebujemy tego symulacyjnego kodu, bo Supabase obsługuje token automatycznie
-    const email = token.replace('example-token-for-', '').replace('-at-', '@');
-    
+    const email = token.replace("example-token-for-", "").replace("-at-", "@");
+
     // Zwracamy sukces (w MVP nie aktualizujemy faktycznie hasła, to tylko symulacja)
     return new Response(
       JSON.stringify({
         success: true,
-        message: 'Hasło zostało zaktualizowane',
+        message: "Hasło zostało zaktualizowane",
         email, // Tylko dla celów demonstracyjnych
       }),
       { status: 200 }
     );
   } catch (error) {
-    console.error('Błąd podczas aktualizacji hasła:', error);
+    console.error("Błąd podczas aktualizacji hasła:", error);
     return new Response(
       JSON.stringify({
         success: false,
-        error: 'Wystąpił nieoczekiwany błąd podczas aktualizacji hasła',
+        error: "Wystąpił nieoczekiwany błąd podczas aktualizacji hasła",
       }),
       { status: 500 }
     );
   }
-}; 
+};

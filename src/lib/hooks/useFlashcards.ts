@@ -1,12 +1,12 @@
-import { useCallback } from 'react';
-import { useCrudOperations } from './useCrudOperations';
-import type { FlashcardDTO } from '@/types';
+import { useCallback } from "react";
+import { useCrudOperations } from "./useCrudOperations";
+import type { FlashcardDTO } from "@/types";
 
 export interface SearchParams {
   page?: number;
   per_page?: number;
   sort_by?: string;
-  sort_dir?: 'asc' | 'desc';
+  sort_dir?: "asc" | "desc";
   search?: string;
   source?: string;
   category?: string;
@@ -16,7 +16,7 @@ export interface SearchParams {
 
 export interface SortOptions {
   field: string;
-  direction: 'asc' | 'desc';
+  direction: "asc" | "desc";
 }
 
 interface FlashcardFormData {
@@ -39,36 +39,45 @@ export default function useFlashcards(defaultParams: SearchParams = {}) {
     setPage,
     setSearch,
     setFilter,
-    setSort
+    setSort,
   } = useCrudOperations<FlashcardDTO, FlashcardFormData, FlashcardFormData>({
-    fetchEndpoint: '/api/flashcards',
-    createEndpoint: '/api/flashcards',
-    updateEndpoint: '/api/flashcards',
-    deleteEndpoint: '/api/flashcards',
+    fetchEndpoint: "/api/flashcards",
+    createEndpoint: "/api/flashcards",
+    updateEndpoint: "/api/flashcards",
+    deleteEndpoint: "/api/flashcards",
     defaultQueryParams: {
       page: 1,
       per_page: 20,
-      sort_by: 'created_at',
-      sort_dir: 'desc',
-      ...defaultParams
+      sort_by: "created_at",
+      sort_dir: "desc",
+      ...defaultParams,
     },
-    getItemId: (flashcard) => flashcard.id
+    getItemId: (flashcard) => flashcard.id,
   });
 
   // Tworzenie fiszki
-  const createFlashcard = useCallback(async (data: FlashcardFormData) => {
-    return await createItem(data);
-  }, [createItem]);
+  const createFlashcard = useCallback(
+    async (data: FlashcardFormData) => {
+      return await createItem(data);
+    },
+    [createItem]
+  );
 
   // Aktualizacja fiszki
-  const updateFlashcard = useCallback(async (id: number, data: { front: string; back: string }) => {
-    return await updateItem(id, data);
-  }, [updateItem]);
+  const updateFlashcard = useCallback(
+    async (id: number, data: { front: string; back: string }) => {
+      return await updateItem(id, data);
+    },
+    [updateItem]
+  );
 
   // Usuwanie fiszki
-  const deleteFlashcard = useCallback(async (id: number) => {
-    return await deleteItem(id);
-  }, [deleteItem]);
+  const deleteFlashcard = useCallback(
+    async (id: number) => {
+      return await deleteItem(id);
+    },
+    [deleteItem]
+  );
 
   return {
     flashcards,
@@ -83,6 +92,6 @@ export default function useFlashcards(defaultParams: SearchParams = {}) {
     setPage,
     setSearch,
     setFilter,
-    setSort
+    setSort,
   };
-} 
+}

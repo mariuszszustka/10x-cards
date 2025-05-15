@@ -4,8 +4,5 @@
 const isAuthenticated = false; // Astro.locals.session ? true : false;
 ---
 
-{isAuthenticated ? (
-  <slot name="authenticated" />
-) : (
-  <slot name="unauthenticated" />
-)} 
+{isAuthenticated ? <slot name="authenticated" /> : <slot name="unauthenticated" />}
+

@@ -11,13 +11,13 @@ jobs:
   lint-test-build:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    
+
     env:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
       NODE_OPTIONS: "--max_old_space_size=8192"
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -25,8 +25,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
+          node-version-file: ".nvmrc"
+          cache: "npm"
 
       - name: Display Node and npm version
         run: |
@@ -57,7 +57,7 @@ jobs:
             --rule "no-useless-escape:off" \
             --no-error-on-unmatched-pattern
         continue-on-error: true
-      
+
       - name: Lintowanie plików testowych
         run: |
           # Lintowanie plików testowych z odpowiednimi regułami
@@ -68,23 +68,23 @@ jobs:
             --rule "import/no-commonjs:error" \
             --no-error-on-unmatched-pattern
         continue-on-error: true
-      
+
       - name: Run unit tests
         run: npm run test
         continue-on-error: true
-          
+
       - name: Clean temporary files
         run: |
           npm run clean:tmp || true
           rm -rf playwright-report || true
           rm -rf tmp || true
-          
+
       - name: Build
         run: npm run build
         env:
           NODE_OPTIONS: "--max_old_space_size=8192"
         continue-on-error: true
-        
+
       - name: Upewnienie się, że folder dist istnieje
         run: |
           if [ ! -d "dist" ]; then
@@ -92,7 +92,7 @@ jobs:
             mkdir -p dist
             echo "Build nie powiódł się, ale stworzyliśmy pusty folder dla CI" > dist/README.txt
           fi
-          
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:

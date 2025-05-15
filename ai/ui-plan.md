@@ -16,6 +16,7 @@ Aplikacja będzie korzystać z komponentów Shadcn/ui dla spójnego wyglądu, z 
 ## 2. Lista widoków
 
 ### Ekran Autoryzacji
+
 - **Ścieżka**: `/auth`
 - **Główny cel**: Umożliwienie użytkownikom rejestracji lub logowania
 - **Kluczowe informacje**:
@@ -34,6 +35,7 @@ Aplikacja będzie korzystać z komponentów Shadcn/ui dla spójnego wyglądu, z 
   - Wsparcie dla czytników ekranu
 
 ### Dashboard
+
 - **Ścieżka**: `/dashboard`
 - **Główny cel**: Centralna nawigacja do głównych funkcji aplikacji
 - **Kluczowe informacje**:
@@ -48,6 +50,7 @@ Aplikacja będzie korzystać z komponentów Shadcn/ui dla spójnego wyglądu, z 
   - Wysoki kontrast dla czytelności
 
 ### Widok Generowania Fiszek
+
 - **Ścieżka**: `/generate`
 - **Główny cel**: Tworzenie fiszek ręcznie lub za pomocą AI
 - **Kluczowe informacje**:
@@ -71,6 +74,7 @@ Aplikacja będzie korzystać z komponentów Shadcn/ui dla spójnego wyglądu, z 
   - Zabezpieczenie przed przypadkową utratą danych
 
 ### Lista Fiszek
+
 - **Ścieżka**: `/flashcards`
 - **Główny cel**: Przeglądanie, wyszukiwanie, sortowanie i zarządzanie fiszkami
 - **Kluczowe informacje**:
@@ -92,6 +96,7 @@ Aplikacja będzie korzystać z komponentów Shadcn/ui dla spójnego wyglądu, z 
   - Efektywna paginacja dla dużych zbiorów fiszek
 
 ### Sesja Nauki
+
 - **Ścieżka**: `/learn`
 - **Główny cel**: Nauka fiszek metodą Leitnera
 - **Kluczowe informacje**:
@@ -114,6 +119,7 @@ Aplikacja będzie korzystać z komponentów Shadcn/ui dla spójnego wyglądu, z 
   - Animacja odkrywania odpowiedzi
 
 ### Panel Użytkownika
+
 - **Ścieżka**: `/profile`
 - **Główny cel**: Wyświetlanie i zarządzanie podstawowymi informacjami o profilu
 - **Kluczowe informacje**:
@@ -134,12 +140,14 @@ Aplikacja będzie korzystać z komponentów Shadcn/ui dla spójnego wyglądu, z 
 ### Główny przepływ użytkownika:
 
 1. **Rejestracja i logowanie**
+
    - Użytkownik trafia na ekran autoryzacji
    - Wybiera zakładkę rejestracji lub logowania
    - Wypełnia formularz i przesyła dane
    - Po pomyślnej autoryzacji jest przekierowywany do dashboardu
 
 2. **Generowanie fiszek przez AI**
+
    - Z dashboardu użytkownik wybiera "Generuj Fiszki"
    - Przełącza się na tryb AI
    - Wkleja tekst źródłowy (1000-10000 znaków)
@@ -155,6 +163,7 @@ Aplikacja będzie korzystać z komponentów Shadcn/ui dla spójnego wyglądu, z 
    - Może wrócić do dashboardu lub kontynuować generowanie
 
 3. **Ręczne tworzenie fiszek**
+
    - Z dashboardu użytkownik wybiera "Generuj Fiszki"
    - Przełącza się na tryb ręczny
    - Wypełnia pola "Przód" (maks. 200 znaków) i "Tył" (maks. 500 znaków)
@@ -163,6 +172,7 @@ Aplikacja będzie korzystać z komponentów Shadcn/ui dla spójnego wyglądu, z 
    - Może utworzyć kolejną fiszkę lub wrócić do dashboardu
 
 4. **Przeglądanie i zarządzanie fiszkami**
+
    - Z dashboardu użytkownik wybiera "Przeglądaj Fiszki"
    - Przegląda listę swoich fiszek
    - Może wyszukiwać, filtrować lub sortować
@@ -188,7 +198,9 @@ Aplikacja będzie korzystać z komponentów Shadcn/ui dla spójnego wyglądu, z 
 ## 4. Układ i struktura nawigacji
 
 ### Globalny pasek nawigacyjny
+
 Dostępny na wszystkich stronach po zalogowaniu, zawiera:
+
 - Logo (link do dashboardu)
 - Główne linki nawigacyjne:
   - Dashboard
@@ -200,16 +212,19 @@ Dostępny na wszystkich stronach po zalogowaniu, zawiera:
   - Wyloguj
 
 ### Nawigacja kontekstowa
+
 - W każdym widoku przyciski akcji specyficzne dla danego kontekstu
 - Przyciski powrotu do dashboardu
 - Przyciski zapisywania/anulowania w formularzach
 
 ### Wizualna hierarchia
+
 - Dashboard jako centralny punkt nawigacji
 - Główne zadania (generowanie, nauka, przeglądanie) jako równorzędne opcje
 - Panel użytkownika jako funkcja poboczna
 
 ### Przepływy wieloetapowe
+
 - Generowanie fiszek przez AI:
   1. Wprowadzenie tekstu → 2. Przetwarzanie → 3. Przegląd propozycji → 4. Zapisywanie
 - Sesja nauki:
@@ -218,6 +233,7 @@ Dostępny na wszystkich stronach po zalogowaniu, zawiera:
 ## 5. Kluczowe komponenty
 
 ### Karta Fiszki
+
 - Uniwersalny komponent do wyświetlania fiszek w różnych kontekstach
 - Właściwości:
   - Przód i tył fiszki
@@ -226,6 +242,7 @@ Dostępny na wszystkich stronach po zalogowaniu, zawiera:
   - Animacja odwracania w trybie nauki
 
 ### Formularz Fiszki
+
 - Komponent do tworzenia i edycji fiszek
 - Właściwości:
   - Pola tekstowe z limitami znaków
@@ -233,6 +250,7 @@ Dostępny na wszystkich stronach po zalogowaniu, zawiera:
   - Przyciski akcji (zapisz, anuluj)
 
 ### System Powiadomień
+
 - Komponent do wyświetlania informacji o wynikach akcji
 - Właściwości:
   - Powiadomienia o sukcesie (zielone)
@@ -241,6 +259,7 @@ Dostępny na wszystkich stronach po zalogowaniu, zawiera:
   - Automatyczne znikanie po określonym czasie
 
 ### Wskaźniki Ładowania
+
 - Kontekstowe spinnery dla operacji asynchronicznych
 - Właściwości:
   - Spójny wygląd w całej aplikacji
@@ -248,6 +267,7 @@ Dostępny na wszystkich stronach po zalogowaniu, zawiera:
   - Możliwość anulowania długotrwałych operacji
 
 ### Modalne Okna Potwierdzenia
+
 - Komponent do potwierdzania krytycznych akcji
 - Właściwości:
   - Jasny komunikat
@@ -255,6 +275,7 @@ Dostępny na wszystkich stronach po zalogowaniu, zawiera:
   - Blokada interakcji z tłem
 
 ### Przełącznik Zakładek
+
 - Komponent do przełączania między zakładkami w ramach widoku
 - Właściwości:
   - Wyraźne wizualne rozróżnienie aktywnej zakładki
@@ -262,6 +283,7 @@ Dostępny na wszystkich stronach po zalogowaniu, zawiera:
   - Zachowanie stanu formularzy
 
 ### Widok Pudełek Leitnera
+
 - Komponent wizualizujący system trzech pudełek
 - Właściwości:
   - Kolorowy kod dla każdego pudełka

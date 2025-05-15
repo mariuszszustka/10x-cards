@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
-import { useFlashcardForm, type FlashcardFormData } from '@/lib/hooks/useFlashcardForm';
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
+import { useFlashcardForm, type FlashcardFormData } from "@/lib/hooks/useFlashcardForm";
 
 interface FlashcardFormProps {
   onSubmit: (data: FlashcardFormData) => void;
@@ -9,23 +9,11 @@ interface FlashcardFormProps {
   isSubmitting?: boolean;
 }
 
-export default function FlashcardForm({ 
-  onSubmit, 
-  onCancel, 
-  initialValues,
-  isSubmitting = false
-}: FlashcardFormProps) {
-  const {
-    formData,
-    errors,
-    frontInputRef,
-    handleChange,
-    handleSubmit,
-    handleCancel
-  } = useFlashcardForm({
+export default function FlashcardForm({ onSubmit, onCancel, initialValues, isSubmitting = false }: FlashcardFormProps) {
+  const { formData, errors, frontInputRef, handleChange, handleSubmit, handleCancel } = useFlashcardForm({
     initialValues,
     onSubmit,
-    onCancel
+    onCancel,
   });
 
   return (
@@ -33,13 +21,7 @@ export default function FlashcardForm({
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold">Nowa fiszka</h2>
         {onCancel && (
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={handleCancel}
-            aria-label="Zamknij formularz"
-          >
+          <Button type="button" variant="ghost" size="icon" onClick={handleCancel} aria-label="Zamknij formularz">
             <X size={18} />
           </Button>
         )}
@@ -57,7 +39,7 @@ export default function FlashcardForm({
             value={formData.front}
             onChange={handleChange}
             className={`w-full p-2 border rounded-md h-24 resize-none text-foreground ${
-              errors.front ? 'border-red-500' : 'border-gray-300'
+              errors.front ? "border-red-500" : "border-gray-300"
             } bg-card`}
             aria-invalid={!!errors.front}
             aria-describedby={errors.front ? "front-error" : undefined}
@@ -69,7 +51,7 @@ export default function FlashcardForm({
             </p>
           )}
         </div>
-        
+
         <div>
           <label htmlFor="back" className="block text-sm font-medium mb-1">
             Tył
@@ -80,7 +62,7 @@ export default function FlashcardForm({
             value={formData.back}
             onChange={handleChange}
             className={`w-full p-2 border rounded-md h-24 resize-none text-foreground ${
-              errors.back ? 'border-red-500' : 'border-gray-300'
+              errors.back ? "border-red-500" : "border-gray-300"
             } bg-card`}
             aria-invalid={!!errors.back}
             aria-describedby={errors.back ? "back-error" : undefined}
@@ -92,7 +74,7 @@ export default function FlashcardForm({
             </p>
           )}
         </div>
-        
+
         <div>
           <label htmlFor="source" className="block text-sm font-medium mb-1">
             Źródło
@@ -110,12 +92,12 @@ export default function FlashcardForm({
           </select>
         </div>
       </div>
-      
+
       <div className="flex justify-end mt-4">
         <Button type="submit" disabled={isSubmitting} data-testid="save-flashcard-button">
-          {isSubmitting ? 'Zapisywanie...' : 'Dodaj fiszkę'}
+          {isSubmitting ? "Zapisywanie..." : "Dodaj fiszkę"}
         </Button>
       </div>
     </form>
   );
-} 
+}

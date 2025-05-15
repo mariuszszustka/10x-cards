@@ -7,8 +7,8 @@ export const prerender = false;
 
 // Pobieranie informacji o sesji i ciasteczkach
 const { supabase, user } = Astro.locals;
-const requestHost = Astro.request.headers.get('host') || '';
-const cookieHeader = Astro.request.headers.get('Cookie') || '';
+const requestHost = Astro.request.headers.get("host") || "";
+const cookieHeader = Astro.request.headers.get("Cookie") || "";
 
 // Pobieranie URL Supabase
 const supabaseUrl = import.meta.env.SUPABASE_URL;
@@ -17,8 +17,8 @@ const sessionCookieName = getSessionCookieName(requestHost);
 const hasCookie = cookieHeader.includes(sessionCookieName);
 
 // Sprawdź alternatywne ciasteczka
-const hasSessionCookie = cookieHeader.includes('session=');
-const hasAuthSessionCookie = cookieHeader.includes('auth-session');
+const hasSessionCookie = cookieHeader.includes("session=");
+const hasAuthSessionCookie = cookieHeader.includes("auth-session");
 
 // Szczegółowe informacje o sesji z Supabase
 let sessionDetails = null;
@@ -27,7 +27,7 @@ if (supabase) {
   // Pobierz sesję
   const { data: sessionData } = await supabase.auth.getSession();
   sessionDetails = sessionData.session;
-  
+
   // Pobierz użytkownika bezpośrednio (bardziej niezawodna metoda)
   if (sessionDetails) {
     const { data: userData } = await supabase.auth.getUser();
@@ -41,18 +41,18 @@ if (userDetails && !user) {
   console.log("Debug: Znaleziono użytkownika przez getUser(), ale nie przez middleware");
   user = {
     id: userDetails.id,
-    email: userDetails.email || null
+    email: userDetails.email || null,
   };
 }
 
 // Funkcja pomocnicza do parsowania ciasteczek
 function parseCookies(cookieStr: string) {
   const cookies: Record<string, string> = {};
-  cookieStr.split(';').forEach(cookie => {
-    const parts = cookie.trim().split('=');
+  cookieStr.split(";").forEach((cookie) => {
+    const parts = cookie.trim().split("=");
     if (parts.length >= 2) {
       const name = parts[0].trim();
-      const value = parts.slice(1).join('=').trim();
+      const value = parts.slice(1).join("=").trim();
       cookies[name] = value;
     }
   });
@@ -64,26 +64,26 @@ const cookiesObj = parseCookies(cookieHeader);
 
 // Próba odczytania alternatywnych ciasteczek
 let sessionFromDirectCookie = null;
-if (cookiesObj['session']) {
+if (cookiesObj["session"]) {
   try {
-    sessionFromDirectCookie = JSON.parse(decodeURIComponent(cookiesObj['session']));
+    sessionFromDirectCookie = JSON.parse(decodeURIComponent(cookiesObj["session"]));
   } catch (e) {
     console.error("Błąd parsowania ciasteczka session:", e);
   }
 }
 
 let sessionFromAuthCookie = null;
-if (cookiesObj['auth-session']) {
+if (cookiesObj["auth-session"]) {
   try {
     // Próba dekodowania URL przed parsowaniem JSON
-    const decodedCookie = decodeURIComponent(cookiesObj['auth-session']);
+    const decodedCookie = decodeURIComponent(cookiesObj["auth-session"]);
     sessionFromAuthCookie = JSON.parse(decodedCookie);
   } catch (e) {
     console.error("Błąd parsowania ciasteczka auth-session:", e);
-    
+
     // Plan B: Spróbuj odczytać bez dekodowania
     try {
-      sessionFromAuthCookie = JSON.parse(cookiesObj['auth-session']);
+      sessionFromAuthCookie = JSON.parse(cookiesObj["auth-session"]);
     } catch (innerError) {
       console.error("Drugi błąd parsowania auth-session:", innerError);
     }
@@ -104,10 +104,12 @@ const diagnosticInfo = {
     cookieHeaderPresent: !!cookieHeader,
     cookieHeaderLength: cookieHeader.length,
   },
-  headers: Object.fromEntries([...Astro.request.headers].filter(([key]) => 
-    ['cookie', 'host', 'user-agent', 'referer', 'origin'].includes(key.toLowerCase())
-  )),
-}
+  headers: Object.fromEntries(
+    [...Astro.request.headers].filter(([key]) =>
+      ["cookie", "host", "user-agent", "referer", "origin"].includes(key.toLowerCase())
+    )
+  ),
+};
 
 // Określenie głównego problemu na podstawie zebranych informacji
 let mainIssue = "";
@@ -133,123 +135,149 @@ if (!hasCookie) {
 <MainLayout title="Debug Sesji | 10x Cards">
   <div class="max-w-4xl mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
     <h1 class="text-3xl font-bold mb-6 text-center">Diagnostyka Sesji</h1>
-    
-    {mainIssue && (
-      <div class="mb-6 p-4 bg-yellow-500/20 border border-yellow-500/30 rounded-md">
-        <h2 class="text-xl font-bold mb-2">Zidentyfikowany problem:</h2>
-        <p class="text-yellow-300">{mainIssue}</p>
-        <p class="mt-2 text-yellow-200">Sugerowane rozwiązanie: {suggestedFix}</p>
-      </div>
-    )}
-    
+
+    {
+      mainIssue && (
+        <div class="mb-6 p-4 bg-yellow-500/20 border border-yellow-500/30 rounded-md">
+          <h2 class="text-xl font-bold mb-2">Zidentyfikowany problem:</h2>
+          <p class="text-yellow-300">{mainIssue}</p>
+          <p class="mt-2 text-yellow-200">Sugerowane rozwiązanie: {suggestedFix}</p>
+        </div>
+      )
+    }
+
     <div class="grid gap-6">
       <div class="p-4 bg-gray-700 rounded-lg">
         <h2 class="text-xl font-bold mb-3">Status Użytkownika</h2>
-        {user ? (
-          <div class="text-green-400">
-            <p>✅ Zalogowany jako: {user.email || "Brak adresu email"}</p>
-            <p>ID użytkownika: {user.id}</p>
-          </div>
-        ) : (
-          <p class="text-red-400">❌ Użytkownik nie jest zalogowany</p>
-        )}
+        {
+          user ? (
+            <div class="text-green-400">
+              <p>✅ Zalogowany jako: {user.email || "Brak adresu email"}</p>
+              <p>ID użytkownika: {user.id}</p>
+            </div>
+          ) : (
+            <p class="text-red-400">❌ Użytkownik nie jest zalogowany</p>
+          )
+        }
       </div>
-      
+
       <div class="p-4 bg-gray-700 rounded-lg">
         <h2 class="text-xl font-bold mb-3">Status Ciasteczka Sesji</h2>
-        {hasCookie ? (
-          <p class="text-green-400">✅ Ciasteczko sesji znalezione</p>
-        ) : (
-          <p class="text-red-400">❌ Brak standardowego ciasteczka sesji</p>
-        )}
+        {
+          hasCookie ? (
+            <p class="text-green-400">✅ Ciasteczko sesji znalezione</p>
+          ) : (
+            <p class="text-red-400">❌ Brak standardowego ciasteczka sesji</p>
+          )
+        }
         <p class="mt-2 text-gray-400">Nazwa szukanego ciasteczka: {sessionCookieName}</p>
         <p class="mt-1 text-gray-400">Dostosowany URL Supabase: {adjustedSupabaseUrl}</p>
-        
+
         <div class="mt-4">
           <h3 class="font-bold text-lg">Alternatywne ciasteczka:</h3>
-          <p class="mt-1">{hasSessionCookie ? 
-            <span class="text-green-400">✅ Ciasteczko 'session' znalezione</span> : 
-            <span class="text-red-400">❌ Brak ciasteczka 'session'</span>}</p>
-          <p class="mt-1">{hasAuthSessionCookie ? 
-            <span class="text-green-400">✅ Ciasteczko 'auth-session' znalezione</span> : 
-            <span class="text-red-400">❌ Brak ciasteczka 'auth-session'</span>}</p>
+          <p class="mt-1">
+            {
+              hasSessionCookie ? (
+                <span class="text-green-400">✅ Ciasteczko 'session' znalezione</span>
+              ) : (
+                <span class="text-red-400">❌ Brak ciasteczka 'session'</span>
+              )
+            }
+          </p>
+          <p class="mt-1">
+            {
+              hasAuthSessionCookie ? (
+                <span class="text-green-400">✅ Ciasteczko 'auth-session' znalezione</span>
+              ) : (
+                <span class="text-red-400">❌ Brak ciasteczka 'auth-session'</span>
+              )
+            }
+          </p>
         </div>
-        
-        {sessionFromDirectCookie && (
-          <div class="mt-4">
-            <h3 class="font-bold text-lg">Dane z ciasteczka 'session':</h3>
-            <pre class="p-2 bg-gray-900 rounded text-xs overflow-auto max-h-40">
-              {JSON.stringify(sessionFromDirectCookie, null, 2)}
-            </pre>
-          </div>
-        )}
-        
-        {sessionFromAuthCookie && (
-          <div class="mt-4">
-            <h3 class="font-bold text-lg">Dane z ciasteczka 'auth-session':</h3>
-            <pre class="p-2 bg-gray-900 rounded text-xs overflow-auto max-h-40">
-              {JSON.stringify(sessionFromAuthCookie, null, 2)}
-            </pre>
-          </div>
-        )}
+
+        {
+          sessionFromDirectCookie && (
+            <div class="mt-4">
+              <h3 class="font-bold text-lg">Dane z ciasteczka 'session':</h3>
+              <pre class="p-2 bg-gray-900 rounded text-xs overflow-auto max-h-40">
+                {JSON.stringify(sessionFromDirectCookie, null, 2)}
+              </pre>
+            </div>
+          )
+        }
+
+        {
+          sessionFromAuthCookie && (
+            <div class="mt-4">
+              <h3 class="font-bold text-lg">Dane z ciasteczka 'auth-session':</h3>
+              <pre class="p-2 bg-gray-900 rounded text-xs overflow-auto max-h-40">
+                {JSON.stringify(sessionFromAuthCookie, null, 2)}
+              </pre>
+            </div>
+          )
+        }
       </div>
-      
+
       <div class="p-4 bg-gray-700 rounded-lg">
         <h2 class="text-xl font-bold mb-3">Sesja Supabase</h2>
-        {sessionDetails ? (
-          <div class="text-green-400">
-            <p>✅ Aktywna sesja Supabase</p>
-            <pre class="mt-2 p-3 bg-gray-900 rounded text-xs overflow-auto max-h-60">
-              {JSON.stringify(sessionDetails, null, 2)}
-            </pre>
-          </div>
-        ) : (
-          <p class="text-red-400">❌ Brak aktywnej sesji Supabase</p>
-        )}
+        {
+          sessionDetails ? (
+            <div class="text-green-400">
+              <p>✅ Aktywna sesja Supabase</p>
+              <pre class="mt-2 p-3 bg-gray-900 rounded text-xs overflow-auto max-h-60">
+                {JSON.stringify(sessionDetails, null, 2)}
+              </pre>
+            </div>
+          ) : (
+            <p class="text-red-400">❌ Brak aktywnej sesji Supabase</p>
+          )
+        }
       </div>
-      
+
       <div class="p-4 bg-gray-700 rounded-lg">
         <h2 class="text-xl font-bold mb-3">Wszystkie Ciasteczka</h2>
-        <pre class="p-3 bg-gray-900 rounded text-xs overflow-auto max-h-60">
+        <pre
+          class="p-3 bg-gray-900 rounded text-xs overflow-auto max-h-60">
           {JSON.stringify(cookiesObj, null, 2)}
         </pre>
       </div>
-      
+
       <div class="p-4 bg-gray-700 rounded-lg">
         <h2 class="text-xl font-bold mb-3">Informacje Diagnostyczne</h2>
-        <pre class="p-3 bg-gray-900 rounded text-xs overflow-auto max-h-60">
+        <pre
+          class="p-3 bg-gray-900 rounded text-xs overflow-auto max-h-60">
           {JSON.stringify(diagnosticInfo, null, 2)}
         </pre>
       </div>
-      
+
       <div class="p-4 bg-gray-700 rounded-lg">
         <h2 class="text-xl font-bold mb-3">Dane z localStorage</h2>
         <p class="text-gray-400 mb-3">Te dane są widoczne i aktualizowane tylko po stronie klienta:</p>
         <div id="localStorage-data" class="text-red-400 mb-4">Brak danych w localStorage</div>
-        
+
         <script>
           // Skrypt uruchamiany po stronie klienta
-          document.addEventListener('DOMContentLoaded', () => {
-            const localStorageDataEl = document.getElementById('localStorage-data');
-            
+          document.addEventListener("DOMContentLoaded", () => {
+            const localStorageDataEl = document.getElementById("localStorage-data");
+
             try {
               // Pobierz dane z localStorage
-              const authSession = localStorage.getItem('authSession');
-              const userId = localStorage.getItem('userId');
-              const userEmail = localStorage.getItem('userEmail');
-              const expiresAt = localStorage.getItem('sessionExpiresAt');
-              
+              const authSession = localStorage.getItem("authSession");
+              const userId = localStorage.getItem("userId");
+              const userEmail = localStorage.getItem("userEmail");
+              const expiresAt = localStorage.getItem("sessionExpiresAt");
+
               if (authSession && userId) {
                 // Parsuj dane sesji
                 const sessionData = JSON.parse(authSession);
-                
+
                 // Ustaw HTML z danymi
                 localStorageDataEl.innerHTML = `
                   <div class="text-green-400">
                     <p>✅ Znaleziono dane sesji w localStorage</p>
                     <p class="mt-2">User ID: ${userId}</p>
-                    <p>Email: ${userEmail || 'brak'}</p>
-                    <p>Wygasa: ${expiresAt ? new Date(parseInt(expiresAt) * 1000).toLocaleString() : 'brak'}</p>
+                    <p>Email: ${userEmail || "brak"}</p>
+                    <p>Wygasa: ${expiresAt ? new Date(parseInt(expiresAt) * 1000).toLocaleString() : "brak"}</p>
                     
                     <div class="mt-4">
                       <h3 class="font-bold">Pełne dane sesji:</h3>
@@ -268,7 +296,7 @@ if (!hasCookie) {
           });
         </script>
       </div>
-      
+
       <div class="flex justify-center mt-4">
         <a href="/dashboard" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md mr-3">
           Spróbuj otworzyć Dashboard
@@ -279,22 +307,20 @@ if (!hasCookie) {
         <button id="clear-storage-btn" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md mr-3">
           Wyczyść localStorage
         </button>
-        <a href="/api/auth/logout" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md">
-          Wyloguj się
-        </a>
+        <a href="/api/auth/logout" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md"> Wyloguj się </a>
       </div>
-      
+
       <script>
         // Dodaj obsługę przycisku czyszczenia localStorage
-        document.addEventListener('DOMContentLoaded', () => {
-          const clearStorageBtn = document.getElementById('clear-storage-btn');
-          clearStorageBtn.addEventListener('click', () => {
+        document.addEventListener("DOMContentLoaded", () => {
+          const clearStorageBtn = document.getElementById("clear-storage-btn");
+          clearStorageBtn.addEventListener("click", () => {
             // Wyczyść dane sesji
-            localStorage.removeItem('authSession');
-            localStorage.removeItem('userId');
-            localStorage.removeItem('userEmail');
-            localStorage.removeItem('sessionExpiresAt');
-            
+            localStorage.removeItem("authSession");
+            localStorage.removeItem("userId");
+            localStorage.removeItem("userEmail");
+            localStorage.removeItem("sessionExpiresAt");
+
             // Odśwież stronę
             window.location.reload();
           });
@@ -302,4 +328,5 @@ if (!hasCookie) {
       </script>
     </div>
   </div>
-</MainLayout> 
+</MainLayout>
+

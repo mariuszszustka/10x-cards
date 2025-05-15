@@ -13,6 +13,7 @@ Testy w projekcie są zorganizowane w następującej strukturze:
 ## Testy jednostkowe
 
 Testy jednostkowe są realizowane przy użyciu:
+
 - **Vitest** - szybki framework testowy, kompatybilny z API Jest
 - **Testing Library** - biblioteka ułatwiająca testowanie komponentów React
 - **jsdom** - implementacja środowiska DOM dla testów w Node.js
@@ -38,6 +39,7 @@ npm run test:coverage
 Testy jednostkowe są zorganizowane w dwóch obszarach:
 
 1. **Testy komponentów UI** - znajdują się w katalogu `tests/unit/components/`
+
    - Testują renderowanie i interakcje z komponentami UI
    - Wszystkie komponenty Shadcn/ui powinny być pokryte testami
 
@@ -53,6 +55,7 @@ Testy jednostkowe są zorganizowane w dwóch obszarach:
 Aby dodać nowy test jednostkowy:
 
 1. Dla komponentów UI:
+
    - Stwórz nowy plik w `tests/unit/components/` o nazwie `NazwaKomponentu.test.tsx`
    - Użyj `render` z Testing Library do renderowania komponentu
    - Wykorzystaj `screen` do wykonywania zapytań do wyrenderowanego DOM
@@ -66,14 +69,14 @@ Aby dodać nowy test jednostkowy:
 ### Przykład testu komponentu
 
 ```tsx
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import { MójKomponent } from '../../../src/components/MójKomponent';
+import { describe, it, expect } from "vitest";
+import { render, screen } from "@testing-library/react";
+import { MójKomponent } from "../../../src/components/MójKomponent";
 
-describe('MójKomponent', () => {
-  it('renderuje się poprawnie', () => {
+describe("MójKomponent", () => {
+  it("renderuje się poprawnie", () => {
     render(<MójKomponent />);
-    expect(screen.getByText('Oczekiwany tekst')).toBeInTheDocument();
+    expect(screen.getByText("Oczekiwany tekst")).toBeInTheDocument();
   });
 });
 ```
@@ -85,6 +88,7 @@ Testy E2E (end-to-end) są realizowane przy użyciu Playwright. Pozwalają na te
 ### Uproszczone podejście do testów E2E
 
 W celu ułatwienia procesu rozwoju i utrzymania testów, zdecydowaliśmy się na uproszczone podejście:
+
 - Testy są uruchamiane tylko na przeglądarce **Google Chrome**
 - Skupiamy się na testowaniu kluczowych funkcjonalności aplikacji
 - Kierujemy się zasadą MVP (Minimum Viable Product) dla testów
@@ -109,6 +113,7 @@ Szczegółowe informacje na temat testów E2E znajdują się w pliku [tests/e2e/
 Testy są automatycznie uruchamiane przy każdym pull requeście do głównych gałęzi (main, master) za pomocą GitHub Actions. Konfiguracja znajduje się w pliku `.github/workflows/tests.yml`.
 
 Proces CI obejmuje:
+
 1. Uruchomienie testów jednostkowych
 2. Generowanie raportu pokrycia testami
 3. Weryfikację typu TypeScript
@@ -116,4 +121,4 @@ Proces CI obejmuje:
 
 ## Wymagania dotyczące pokrycia testami
 
-Celem projektu jest utrzymanie pokrycia testami na poziomie co najmniej 70%. Obecne pokrycie testami jest monitorowane i raportowane w procesie CI. 
+Celem projektu jest utrzymanie pokrycia testami na poziomie co najmniej 70%. Obecne pokrycie testami jest monitorowane i raportowane w procesie CI.

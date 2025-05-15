@@ -1,41 +1,41 @@
-import type { APIRoute } from 'astro';
-import { createSupabaseServerInstance } from '../../../db/supabase.client.ts';
+import type { APIRoute } from "astro";
+import { createSupabaseServerInstance } from "../../../db/supabase.client.ts";
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   try {
     const formData = await request.json();
     const { email } = formData;
-    
+
     console.log("Próba wysłania magic link dla:", email);
 
     // Obsługa konta testowego dla testów e2e
-    if (email === 'test-e2e@example.com') {
+    if (email === "test-e2e@example.com") {
       console.log("Wykryto konto testowe E2E dla magic link - tworzymy specjalną sesję testową");
-      
+
       // Tworzymy sesję testową
       const testSession = {
-        user_id: 'test-e2e-user-id',
-        email: 'test-e2e@example.com',
-        access_token: 'test-e2e-access-token',
-        refresh_token: 'test-e2e-refresh-token',
-        expires_at: Date.now() + 3600 * 1000 // 1 godzina od teraz
+        user_id: "test-e2e-user-id",
+        email: "test-e2e@example.com",
+        access_token: "test-e2e-access-token",
+        refresh_token: "test-e2e-refresh-token",
+        expires_at: Date.now() + 3600 * 1000, // 1 godzina od teraz
       };
-      
+
       // Ustawiamy ciasteczko dla testów E2E
-      cookies.set('session', JSON.stringify(testSession), {
-        path: '/',
+      cookies.set("session", JSON.stringify(testSession), {
+        path: "/",
         secure: false,
-        sameSite: 'lax',
+        sameSite: "lax",
         httpOnly: false,
-        maxAge: 60 * 60 * 24 * 7 // 7 dni
+        maxAge: 60 * 60 * 24 * 7, // 7 dni
       });
-      
+
       // Zwracamy sukces
       return new Response(
         JSON.stringify({
           success: true,
-          message: 'Link do logowania został wysłany na podany adres email',
-          session: testSession // Dodajemy sesję dla testów E2E
+          message: "Link do logowania został wysłany na podany adres email",
+          session: testSession, // Dodajemy sesję dla testów E2E
         }),
         { status: 200 }
       );
@@ -47,7 +47,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       return new Response(
         JSON.stringify({
           success: false,
-          error: 'Adres email jest wymagany',
+          error: "Adres email jest wymagany",
         }),
         { status: 400 }
       );
@@ -60,8 +60,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        shouldCreateUser: true // pozwala utworzyć użytkownika, jeśli nie istnieje
-      }
+        shouldCreateUser: true, // pozwala utworzyć użytkownika, jeśli nie istnieje
+      },
     });
 
     if (error) {
@@ -80,18 +80,18 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return new Response(
       JSON.stringify({
         success: true,
-        message: 'Link do logowania został wysłany na podany adres email',
+        message: "Link do logowania został wysłany na podany adres email",
       }),
       { status: 200 }
     );
   } catch (error) {
-    console.error('Błąd podczas wysyłania magic linku:', error);
+    console.error("Błąd podczas wysyłania magic linku:", error);
     return new Response(
       JSON.stringify({
         success: false,
-        error: 'Wystąpił nieoczekiwany błąd podczas wysyłania linku do logowania',
+        error: "Wystąpił nieoczekiwany błąd podczas wysyłania linku do logowania",
       }),
       { status: 500 }
     );
   }
-}; 
+};

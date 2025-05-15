@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import { Button } from "@/components/ui/button";
 
 interface HeaderProps {
   onAddClick: () => void;
@@ -17,4 +17,4 @@ export default function Header({ onAddClick }: HeaderProps) {
       </Button>
     </div>
   );
-} 
+}

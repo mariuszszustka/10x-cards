@@ -16,13 +16,7 @@ interface AuthFormOptions {
   redirect?: string;
 }
 
-export function useAuthForm({
-  initialState,
-  onSuccess,
-  onError,
-  endpoint,
-  redirect
-}: AuthFormOptions) {
+export function useAuthForm({ initialState, onSuccess, onError, endpoint, redirect }: AuthFormOptions) {
   const [formData, setFormData] = useState<AuthFormState>(initialState);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -33,9 +27,9 @@ export function useAuthForm({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     const newValue = type === "checkbox" ? checked : value;
-    
+
     setFormData((prev) => ({ ...prev, [name]: newValue }));
-    
+
     if (errors[name]) {
       setErrors((prev) => {
         const newErrors = { ...prev };
@@ -60,7 +54,7 @@ export function useAuthForm({
     if (!password) {
       return "Hasło jest wymagane";
     }
-    
+
     if (isRegistration) {
       if (password.length < 8) {
         return "Hasło musi mieć minimum 8 znaków";
@@ -72,7 +66,7 @@ export function useAuthForm({
         return "Hasło musi zawierać co najmniej jeden znak specjalny";
       }
     }
-    
+
     return "";
   };
 
@@ -95,26 +89,23 @@ export function useAuthForm({
   // Walidacja formularza
   const validateForm = (isRegistration = false) => {
     const newErrors: Record<string, string> = {};
-    
+
     const emailError = validateEmail(formData.email);
     if (emailError) newErrors.email = emailError;
-    
+
     const passwordError = validatePassword(formData.password, isRegistration);
     if (passwordError) newErrors.password = passwordError;
-    
+
     if (formData.confirmPassword !== undefined) {
-      const confirmPasswordError = validateConfirmPassword(
-        formData.password, 
-        formData.confirmPassword
-      );
+      const confirmPasswordError = validateConfirmPassword(formData.password, formData.confirmPassword);
       if (confirmPasswordError) newErrors.confirmPassword = confirmPasswordError;
     }
-    
+
     if (formData.acceptTerms !== undefined) {
       const termsError = validateTerms(formData.acceptTerms);
       if (termsError) newErrors.acceptTerms = termsError;
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -122,63 +113,62 @@ export function useAuthForm({
   // Wysłanie formularza
   const submitForm = async (e: React.FormEvent, isRegistration = false) => {
     e.preventDefault();
-    
+
     if (!validateForm(isRegistration)) {
       return;
     }
-    
+
     setIsLoading(true);
     setDebugInfo(null);
-    
+
     try {
       const response = await fetch(endpoint, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
-        credentials: 'include',
+        credentials: "include",
       });
-      
+
       const data = await response.json();
-      
+
       setDebugInfo({
         status: response.status,
-        data: data
+        data: data,
       });
-      
+
       if (!response.ok) {
-        throw new Error(data.error || 'Wystąpił błąd podczas przetwarzania żądania');
+        throw new Error(data.error || "Wystąpił błąd podczas przetwarzania żądania");
       }
-      
+
       setStatus("success");
-      
+
       if (data.success && data.session) {
-        localStorage.setItem('authSession', JSON.stringify(data.session));
-        
+        localStorage.setItem("authSession", JSON.stringify(data.session));
+
         if (data.session.expires_at) {
-          localStorage.setItem('sessionExpiresAt', data.session.expires_at.toString());
+          localStorage.setItem("sessionExpiresAt", data.session.expires_at.toString());
         }
-        
-        localStorage.setItem('userId', data.session.user_id);
-        localStorage.setItem('userEmail', data.session.email || '');
+
+        localStorage.setItem("userId", data.session.user_id);
+        localStorage.setItem("userEmail", data.session.email || "");
       }
-      
+
       if (redirect) {
         window.location.href = redirect;
       }
-      
+
       if (onSuccess) {
         onSuccess(data);
       }
-      
     } catch (error) {
       console.error("Błąd:", error);
       setStatus("error");
-      setErrors({ 
-        form: error instanceof Error ? error.message : "Wystąpił nieznany błąd"
+      setErrors({
+        form: error instanceof Error ? error.message : "Wystąpił nieznany błąd",
       });
-      
+
       if (onError && error instanceof Error) {
         onError(error);
       }
@@ -191,7 +181,7 @@ export function useAuthForm({
   const sendMagicLink = async () => {
     if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) {
       setErrors({
-        email: "Podaj prawidłowy adres email, aby otrzymać link do logowania"
+        email: "Podaj prawidłowy adres email, aby otrzymać link do logowania",
       });
       return;
     }
@@ -199,10 +189,10 @@ export function useAuthForm({
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/auth/magic-link', {
-        method: 'POST',
+      const response = await fetch("/api/auth/magic-link", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email: formData.email }),
       });
@@ -210,21 +200,21 @@ export function useAuthForm({
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Nie udało się wysłać linku do logowania');
+        throw new Error(data.error || "Nie udało się wysłać linku do logowania");
       }
 
       setStatus("success");
-      
+
       if (onSuccess) {
         onSuccess(data);
       }
     } catch (error) {
       console.error("Błąd wysyłania magicznego linku:", error);
       setStatus("error");
-      setErrors({ 
-        form: error instanceof Error ? error.message : "Wystąpił nieznany błąd podczas wysyłania linku" 
+      setErrors({
+        form: error instanceof Error ? error.message : "Wystąpił nieznany błąd podczas wysyłania linku",
       });
-      
+
       if (onError && error instanceof Error) {
         onError(error);
       }
@@ -254,6 +244,6 @@ export function useAuthForm({
     resetForm,
     setFormData,
     setErrors,
-    setStatus
+    setStatus,
   };
-} 
+}

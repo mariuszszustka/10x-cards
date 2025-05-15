@@ -5,22 +5,14 @@ import { InputField, FormError, DebugInfo, SuccessMessage } from "./FormElements
 
 export default function LoginForm() {
   const [magicLinkSent, setMagicLinkSent] = useState(false);
-  
-  const {
-    formData,
-    errors,
-    isLoading,
-    debugInfo,
-    handleChange,
-    submitForm,
-    sendMagicLink
-  } = useAuthForm({
+
+  const { formData, errors, isLoading, debugInfo, handleChange, submitForm, sendMagicLink } = useAuthForm({
     initialState: {
       email: "",
-      password: ""
+      password: "",
     },
-    endpoint: '/api/auth/login',
-    redirect: '/dashboard'
+    endpoint: "/api/auth/login",
+    redirect: "/dashboard",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -61,14 +53,11 @@ export default function LoginForm() {
 
         <div>
           <div className="flex items-center justify-between">
-            <label 
-              htmlFor="password" 
-              className="block text-sm font-medium text-blue-100 mb-1"
-            >
+            <label htmlFor="password" className="block text-sm font-medium text-blue-100 mb-1">
               Hasło
             </label>
-            <a 
-              href="/auth/reset-password" 
+            <a
+              href="/auth/reset-password"
               className="text-sm text-blue-300 hover:text-blue-200"
               data-testid="auth-forgot-password-link"
             >
@@ -88,9 +77,7 @@ export default function LoginForm() {
             data-testid="auth-password-input"
             style={{ caretColor: "transparent" }}
           />
-          {errors.password && (
-            <p className="mt-1 text-sm text-red-300">{errors.password}</p>
-          )}
+          {errors.password && <p className="mt-1 text-sm text-red-300">{errors.password}</p>}
         </div>
       </div>
 
@@ -98,12 +85,7 @@ export default function LoginForm() {
       <DebugInfo info={debugInfo} />
 
       <div className="flex flex-col gap-3">
-        <Button
-          type="submit"
-          className="w-full py-2"
-          disabled={isLoading}
-          data-testid="auth-submit-button"
-        >
+        <Button type="submit" className="w-full py-2" disabled={isLoading} data-testid="auth-submit-button">
           {isLoading ? "Logowanie..." : "Zaloguj się"}
         </Button>
 
@@ -119,4 +101,4 @@ export default function LoginForm() {
       </div>
     </form>
   );
-} 
+}

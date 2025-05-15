@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Button } from '@/components/ui/button';
-import type { FlashcardDTO } from '@/types';
+import React, { useState, useEffect, useCallback } from "react";
+import { Button } from "@/components/ui/button";
+import type { FlashcardDTO } from "@/types";
 
 interface EditableFlashcardProps {
   flashcard: FlashcardDTO;
@@ -15,82 +15,88 @@ export default function EditableFlashcard({ flashcard, onSave, onCancel }: Edita
   // Stan formularza
   const [formData, setFormData] = useState({
     front: flashcard.front,
-    back: flashcard.back
+    back: flashcard.back,
   });
-  
+
   // Stan błędów walidacji
   const [errors, setErrors] = useState({
-    front: '',
-    back: ''
+    front: "",
+    back: "",
   });
 
   // Reset formularza jeśli zmienia się edytowana fiszka
   useEffect(() => {
     setFormData({
       front: flashcard.front,
-      back: flashcard.back
+      back: flashcard.back,
     });
     setErrors({
-      front: '',
-      back: ''
+      front: "",
+      back: "",
     });
   }, [flashcard]);
 
   // Obsługa zmiany pól formularza
   const handleChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
-    
+
     // Walidacja
     if (!value.trim()) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: 'To pole jest wymagane'
+        [name]: "To pole jest wymagane",
       }));
     } else if (value.length > 500) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: 'Tekst nie może przekraczać 500 znaków'
+        [name]: "Tekst nie może przekraczać 500 znaków",
       }));
     } else {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: "",
       }));
     }
   }, []);
 
   // Obsługa zapisu fiszki
-  const handleSubmit = useCallback((e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Walidacja przed zapisem
-    const newErrors = {
-      front: '',
-      back: ''
-    };
-    
-    if (!formData.front.trim()) {
-      newErrors.front = 'To pole jest wymagane';
-    }
-    
-    if (!formData.back.trim()) {
-      newErrors.back = 'To pole jest wymagane';
-    }
-    
-    if (newErrors.front || newErrors.back) {
-      setErrors(newErrors);
-      return;
-    }
-    
-    onSave(formData);
-  }, [formData, onSave]);
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+
+      // Walidacja przed zapisem
+      const newErrors = {
+        front: "",
+        back: "",
+      };
+
+      if (!formData.front.trim()) {
+        newErrors.front = "To pole jest wymagane";
+      }
+
+      if (!formData.back.trim()) {
+        newErrors.back = "To pole jest wymagane";
+      }
+
+      if (newErrors.front || newErrors.back) {
+        setErrors(newErrors);
+        return;
+      }
+
+      onSave(formData);
+    },
+    [formData, onSave]
+  );
 
   return (
-    <form onSubmit={handleSubmit} className="border rounded-lg p-4 h-64 flex flex-col bg-slate-100 shadow-sm hover:shadow-md">
+    <form
+      onSubmit={handleSubmit}
+      className="border rounded-lg p-4 h-64 flex flex-col bg-slate-100 shadow-sm hover:shadow-md"
+    >
       <div className="mb-3">
         <label htmlFor="front" className="block text-sm font-medium mb-1 text-foreground">
           Przód
@@ -101,7 +107,7 @@ export default function EditableFlashcard({ flashcard, onSave, onCancel }: Edita
           value={formData.front}
           onChange={handleChange}
           className={`w-full p-2 border rounded-md text-foreground bg-white resize-none ${
-            errors.front ? 'border-destructive' : 'border-input'
+            errors.front ? "border-destructive" : "border-input"
           }`}
           style={{ height: "60px" }}
           aria-invalid={!!errors.front}
@@ -113,7 +119,7 @@ export default function EditableFlashcard({ flashcard, onSave, onCancel }: Edita
           </p>
         )}
       </div>
-      
+
       <div className="mb-2">
         <label htmlFor="back" className="block text-sm font-medium mb-1 text-foreground">
           Tył
@@ -124,7 +130,7 @@ export default function EditableFlashcard({ flashcard, onSave, onCancel }: Edita
           value={formData.back}
           onChange={handleChange}
           className={`w-full p-2 border rounded-md text-foreground bg-white resize-none ${
-            errors.back ? 'border-destructive' : 'border-input'
+            errors.back ? "border-destructive" : "border-input"
           }`}
           style={{ height: "60px" }}
           aria-invalid={!!errors.back}
@@ -136,23 +142,20 @@ export default function EditableFlashcard({ flashcard, onSave, onCancel }: Edita
           </p>
         )}
       </div>
-      
+
       <div className="flex justify-end gap-2 mt-auto">
-        <Button 
-          type="button" 
-          variant="outline" 
+        <Button
+          type="button"
+          variant="outline"
           onClick={onCancel}
           className="bg-white text-foreground hover:bg-slate-200"
         >
           Anuluj
         </Button>
-        <Button 
-          type="submit"
-          className="bg-primary text-primary-foreground hover:bg-primary/90"
-        >
+        <Button type="submit" className="bg-primary text-primary-foreground hover:bg-primary/90">
           Zapisz
         </Button>
       </div>
     </form>
   );
-} 
+}

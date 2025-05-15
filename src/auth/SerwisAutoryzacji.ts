@@ -4,15 +4,15 @@ export class SerwisAutoryzacji {
   async zaloguj(email: string, hasło: string) {
     try {
       const result = await this.supabase.auth.signIn({ email, password: hasło });
-      
+
       if (result.error) {
         return { sukces: false, błąd: result.error.message };
       }
-      
-      return { 
-        sukces: true, 
+
+      return {
+        sukces: true,
         użytkownik: result.data.user,
-        token: result.data.session.access_token
+        token: result.data.session.access_token,
       };
     } catch (error: any) {
       return { sukces: false, błąd: error.message };
@@ -22,15 +22,15 @@ export class SerwisAutoryzacji {
   async zarejestruj(email: string, hasło: string) {
     try {
       const result = await this.supabase.auth.signUp({ email, password: hasło });
-      
+
       if (result.error) {
         return { sukces: false, błąd: result.error.message };
       }
-      
-      return { 
-        sukces: true, 
+
+      return {
+        sukces: true,
         użytkownik: result.data.user,
-        token: result.data.session.access_token
+        token: result.data.session.access_token,
       };
     } catch (error: any) {
       return { sukces: false, błąd: error.message };
@@ -40,11 +40,11 @@ export class SerwisAutoryzacji {
   async wyloguj() {
     try {
       const result = await this.supabase.auth.signOut();
-      
+
       if (result.error) {
         return { sukces: false, błąd: result.error.message };
       }
-      
+
       return { sukces: true };
     } catch (error: any) {
       return { sukces: false, błąd: error.message };
@@ -54,14 +54,14 @@ export class SerwisAutoryzacji {
   async odświeżSesję(refreshToken: string) {
     try {
       const result = await this.supabase.auth.refreshSession(refreshToken);
-      
+
       if (result.error) {
         return { sukces: false, błąd: result.error.message };
       }
-      
-      return { 
-        sukces: true, 
-        nowyToken: result.data.session.access_token
+
+      return {
+        sukces: true,
+        nowyToken: result.data.session.access_token,
       };
     } catch (error: any) {
       return { sukces: false, błąd: error.message };
@@ -71,14 +71,14 @@ export class SerwisAutoryzacji {
   async resetujHasło(email: string) {
     try {
       const result = await this.supabase.auth.resetPasswordForEmail(email);
-      
+
       if (result.error) {
         return { sukces: false, błąd: result.error.message };
       }
-      
+
       return { sukces: true };
     } catch (error: any) {
       return { sukces: false, błąd: error.message };
     }
   }
-} 
+}

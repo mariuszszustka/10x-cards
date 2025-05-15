@@ -10,45 +10,55 @@ export const prerender = false;
 const { user } = Astro.locals;
 ---
 
-{user ? (
-  <MainLayout title="10x Cards - Strona główna">
-    <div class="max-w-4xl mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold text-center mb-8">Witaj, {user.email}!</h1>
-      
-      <div class="grid md:grid-cols-2 gap-6">
-        <a href="/generate" class="bg-blue-600 hover:bg-blue-700 p-6 rounded-lg shadow-md transition-colors">
-          <h2 class="text-xl font-bold mb-2">Kreator fiszek</h2>
-          <p>Twórz fiszki ręcznie lub z wykorzystaniem sztucznej inteligencji.</p>
+{
+  user ? (
+    <MainLayout title="10x Cards - Strona główna">
+      <div class="max-w-4xl mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Witaj, {user.email}!</h1>
+
+        <div class="grid md:grid-cols-2 gap-6">
+          <a href="/generate" class="bg-blue-600 hover:bg-blue-700 p-6 rounded-lg shadow-md transition-colors">
+            <h2 class="text-xl font-bold mb-2">Kreator fiszek</h2>
+            <p>Twórz fiszki ręcznie lub z wykorzystaniem sztucznej inteligencji.</p>
+          </a>
+
+          <a href="/flashcards" class="bg-purple-600 hover:bg-purple-700 p-6 rounded-lg shadow-md transition-colors">
+            <h2 class="text-xl font-bold mb-2">Zarządzaj fiszkami</h2>
+            <p>Przeglądaj, edytuj i organizuj swoje fiszki.</p>
+          </a>
+
+          <a href="/leitner" class="bg-green-600 hover:bg-green-700 p-6 rounded-lg shadow-md transition-colors">
+            <h2 class="text-xl font-bold mb-2">Nauka z systemem Leitnera</h2>
+            <p>Rozpocznij sesję nauki z wykorzystaniem systemu interwałów.</p>
+          </a>
+
+          <a href="/stats" class="bg-amber-600 hover:bg-amber-700 p-6 rounded-lg shadow-md transition-colors">
+            <h2 class="text-xl font-bold mb-2">Statystyki</h2>
+            <p>Sprawdź swoje postępy i skuteczność nauki.</p>
+          </a>
+        </div>
+      </div>
+    </MainLayout>
+  ) : (
+    <Layout title="10x Cards - Tworzenie i nauka z fiszkami napędzanymi przez AI">
+      <div class="fixed top-0 right-0 p-4 z-10">
+        <a
+          href="/auth/login"
+          class="text-white bg-blue-600 hover:bg-blue-700 py-2 px-4 rounded-md transition-colors mr-2"
+          data-testid="header-login-button"
+        >
+          Zaloguj się
         </a>
-        
-        <a href="/flashcards" class="bg-purple-600 hover:bg-purple-700 p-6 rounded-lg shadow-md transition-colors">
-          <h2 class="text-xl font-bold mb-2">Zarządzaj fiszkami</h2>
-          <p>Przeglądaj, edytuj i organizuj swoje fiszki.</p>
-        </a>
-        
-        <a href="/leitner" class="bg-green-600 hover:bg-green-700 p-6 rounded-lg shadow-md transition-colors">
-          <h2 class="text-xl font-bold mb-2">Nauka z systemem Leitnera</h2>
-          <p>Rozpocznij sesję nauki z wykorzystaniem systemu interwałów.</p>
-        </a>
-        
-        <a href="/stats" class="bg-amber-600 hover:bg-amber-700 p-6 rounded-lg shadow-md transition-colors">
-          <h2 class="text-xl font-bold mb-2">Statystyki</h2>
-          <p>Sprawdź swoje postępy i skuteczność nauki.</p>
+        <a
+          href="/auth/register"
+          class="text-blue-600 bg-white hover:bg-gray-100 py-2 px-4 rounded-md transition-colors"
+          data-testid="header-register-button"
+        >
+          Zarejestruj się
         </a>
       </div>
-    </div>
-  </MainLayout>
-) : (
-  <Layout title="10x Cards - Tworzenie i nauka z fiszkami napędzanymi przez AI">
-    <div class="fixed top-0 right-0 p-4 z-10">
-      <a href="/auth/login" class="text-white bg-blue-600 hover:bg-blue-700 py-2 px-4 rounded-md transition-colors mr-2" data-testid="header-login-button">
-        Zaloguj się
-      </a>
-      <a href="/auth/register" class="text-blue-600 bg-white hover:bg-gray-100 py-2 px-4 rounded-md transition-colors" data-testid="header-register-button">
-        Zarejestruj się
-      </a>
-    </div>
-    
-    <Welcome />
-  </Layout>
-)}
+
+      <Welcome />
+    </Layout>
+  )
+}

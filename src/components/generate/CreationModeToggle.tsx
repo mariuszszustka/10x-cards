@@ -1,6 +1,6 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { CreationMode } from './GenerateView';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { CreationMode } from "./GenerateView";
 
 interface CreationModeToggleProps {
   currentMode: CreationMode;
@@ -39,4 +39,4 @@ export default function CreationModeToggle({ currentMode, onChange }: CreationMo
       </button>
     </div>
   );
-} 
+}

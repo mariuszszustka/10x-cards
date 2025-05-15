@@ -41,4 +41,4 @@ export default function AuthGuard({
 
   // Jeśli jest zalogowany, renderujemy dzieci
   return <>{children}</>;
-} 
+}
