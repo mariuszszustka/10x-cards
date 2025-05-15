@@ -52,18 +52,29 @@ export default defineConfig({
   use: {
     // Bazowy URL aplikacji
     baseURL: process.env.PLAYWRIGHT_BASE_URL || "http://localhost:3000",
-    // Przechwytuj zrzuty ekranu zawsze
-    screenshot: "on",
-    // Nagrywaj filmy z przebiegu testów zawsze
-    video: "on",
-    // Rejestruj ślad wykonania testu (trace)
-    trace: "on",
+    // Przechwytuj zrzuty ekranu tylko przy niepowodzeniu (zamiast zawsze)
+    screenshot: "only-on-failure",
+    // Nagrywaj filmy z przebiegu testów tylko przy niepowodzeniu (zamiast zawsze)
+    video: "retain-on-failure",
+    // Rejestruj ślad wykonania testu (trace) tylko przy niepowodzeniu
+    trace: "retain-on-failure",
     // Dodawaj znaczniki czasowe do logów
     actionTimeout: 20000,
     navigationTimeout: 40000,
     // Dodatkowe opcje konfiguracyjne
     launchOptions: {
       slowMo: 100,
+      // Dodaj limity pamięci dla przeglądarki
+      args: [
+        '--js-flags=--max-old-space-size=2048',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--no-sandbox'
+      ],
+    },
+    // Ustawienie kontekstu przeglądarki aby zmniejszyć zużycie pamięci
+    contextOptions: {
+      reducedMotion: 'reduce',
     },
   },
 
@@ -74,15 +85,21 @@ export default defineConfig({
       name: "setup db",
       testMatch: "**/global.setup.ts",
     },
+    // Projekt dla zakończenia testów i sprzątania
+    {
+      name: "teardown",
+      testMatch: "**/global.teardown.ts",
+    },
     // Projekt dla Google Chrome
     {
       name: "chromium",
       use: {
         ...devices["Desktop Chrome"],
       },
-      testIgnore: "**/global.setup.ts",
+      testIgnore: ["**/global.setup.ts", "**/global.teardown.ts"],
       // W trybie UI i debug dependencies powodują problemy, więc dodajemy warunek
       dependencies: process.env.PLAYWRIGHT_UI_MODE || process.env.PLAYWRIGHT_DEBUG_MODE ? [] : ["setup db"],
+      teardown: "teardown",
     },
     // Projekt dla szybkiego debugowania pojedynczych testów
     {
@@ -90,7 +107,8 @@ export default defineConfig({
       use: {
         ...devices["Desktop Chrome"],
       },
-      testIgnore: "**/global.setup.ts",
+      testIgnore: ["**/global.setup.ts", "**/global.teardown.ts"],
+      teardown: "teardown",
     },
   ],
 
