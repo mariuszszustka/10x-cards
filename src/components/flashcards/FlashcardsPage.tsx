@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import useFlashcards from '@/lib/hooks/useFlashcards';
 import type { SearchParams, SortOptions } from '@/lib/hooks/useFlashcards';
 import useToast from '@/lib/hooks/useToast';
@@ -11,7 +11,7 @@ import Pagination from './Pagination';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
 import ToastNotifications from './ToastNotifications';
 import FlashcardForm from './FlashcardForm';
-import type { FlashcardFormData } from './FlashcardForm';
+import type { FlashcardFormData } from '@/lib/hooks/useFlashcardForm';
 import type { FlashcardDTO } from '@/types';
 
 // Domyślne parametry wyszukiwania

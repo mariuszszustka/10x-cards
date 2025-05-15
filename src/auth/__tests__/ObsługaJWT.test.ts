@@ -1,9 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ObsługaJWT } from '../ObsługaJWT';
 
+interface MockStorage {
+  getItem: ReturnType<typeof vi.fn>;
+  setItem: ReturnType<typeof vi.fn>;
+  removeItem: ReturnType<typeof vi.fn>;
+}
+
 describe('ObsługaJWT', () => {
-  let obsługaJWT;
-  let mockLocalStorage;
+  let obsługaJWT: ObsługaJWT;
+  let mockLocalStorage: MockStorage;
   
   beforeEach(() => {
     // Mock localStorage
@@ -13,6 +19,7 @@ describe('ObsługaJWT', () => {
       removeItem: vi.fn()
     };
     
+    // @ts-ignore - pomijamy błąd typowania dla localStorage w testach
     global.localStorage = mockLocalStorage;
     obsługaJWT = new ObsługaJWT();
   });

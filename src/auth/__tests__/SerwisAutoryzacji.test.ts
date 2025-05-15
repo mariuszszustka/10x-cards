@@ -1,6 +1,19 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { SerwisAutoryzacji } from '../SerwisAutoryzacji';
 
+// Interfejs dla mocka Supabase
+interface MockSupabaseAuth {
+  signUp: ReturnType<typeof vi.fn>;
+  signIn: ReturnType<typeof vi.fn>;
+  signOut: ReturnType<typeof vi.fn>;
+  refreshSession: ReturnType<typeof vi.fn>;
+  resetPasswordForEmail: ReturnType<typeof vi.fn>;
+}
+
+interface MockSupabase {
+  auth: MockSupabaseAuth;
+}
+
 // Mock Supabase
 vi.mock('@supabase/supabase-js', () => ({
   createClient: () => ({
@@ -15,8 +28,8 @@ vi.mock('@supabase/supabase-js', () => ({
 }));
 
 describe('SerwisAutoryzacji', () => {
-  let serwisAutoryzacji;
-  let mockSupabase;
+  let serwisAutoryzacji: SerwisAutoryzacji;
+  let mockSupabase: MockSupabase;
   
   beforeEach(() => {
     mockSupabase = {

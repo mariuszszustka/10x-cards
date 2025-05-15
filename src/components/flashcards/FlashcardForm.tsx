@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
 import { useFlashcardForm, type FlashcardFormData } from '@/lib/hooks/useFlashcardForm';
