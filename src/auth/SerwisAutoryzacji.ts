@@ -1,6 +1,6 @@
 export interface DaneUżytkownika {
   id: string;
-  email: string;
+  email?: string;
   name?: string;
   role?: string;
   [key: string]: unknown;
@@ -12,6 +12,7 @@ export interface OdpowiedźAutoryzacji {
   błąd?: string;
   token?: string;
   dane?: DaneUżytkownika;
+  użytkownik?: DaneUżytkownika;
   nowyToken?: string;
 }
 
@@ -22,8 +23,8 @@ export interface SupabaseError {
 
 export interface SupabaseUser {
   id: string;
-  user_metadata: {
-    email: string;
+  user_metadata?: {
+    email?: string;
     name?: string;
   };
 }
@@ -35,8 +36,8 @@ export interface SupabaseSession {
 export interface SupabaseResult {
   error?: SupabaseError;
   data?: {
-    user: SupabaseUser;
-    session: SupabaseSession;
+    user?: SupabaseUser;
+    session?: SupabaseSession;
   };
 }
 
@@ -60,6 +61,7 @@ export class SerwisAutoryzacji {
       if (result.error) {
         return {
           sukces: false,
+          błąd: result.error.message,
           komunikat: result.error.message,
         };
       }
@@ -67,6 +69,7 @@ export class SerwisAutoryzacji {
       if (!result.data || !result.data.session || !result.data.user) {
         return {
           sukces: false,
+          błąd: "Brak danych autentykacji",
           komunikat: "Brak danych autentykacji",
         };
       }
@@ -76,14 +79,16 @@ export class SerwisAutoryzacji {
         token: result.data.session.access_token,
         dane: {
           id: result.data.user.id,
-          email: result.data.user.user_metadata.email,
-          name: result.data.user.user_metadata.name,
+          email: result.data.user?.user_metadata?.email,
+          name: result.data.user?.user_metadata?.name,
         },
+        użytkownik: { id: result.data.user.id }
       };
     } catch (error: unknown) {
       const err = error as Error;
       return {
         sukces: false,
+        błąd: err.message,
         komunikat: err.message,
       };
     }
@@ -96,6 +101,7 @@ export class SerwisAutoryzacji {
       if (result.error) {
         return {
           sukces: false,
+          błąd: result.error.message,
           komunikat: result.error.message,
         };
       }
@@ -103,6 +109,7 @@ export class SerwisAutoryzacji {
       if (!result.data || !result.data.session || !result.data.user) {
         return {
           sukces: false,
+          błąd: "Brak danych rejestracji",
           komunikat: "Brak danych rejestracji",
         };
       }
@@ -112,14 +119,16 @@ export class SerwisAutoryzacji {
         token: result.data.session.access_token,
         dane: {
           id: result.data.user.id,
-          email: result.data.user.user_metadata.email,
-          name: result.data.user.user_metadata.name,
+          email: result.data.user?.user_metadata?.email,
+          name: result.data.user?.user_metadata?.name,
         },
+        użytkownik: { id: result.data.user.id }
       };
     } catch (error: unknown) {
       const err = error as Error;
       return {
         sukces: false,
+        błąd: err.message,
         komunikat: err.message,
       };
     }
@@ -130,13 +139,21 @@ export class SerwisAutoryzacji {
       const result = await this.supabase.auth.signOut();
 
       if (result.error) {
-        return { sukces: false, błąd: result.error.message };
+        return { 
+          sukces: false, 
+          błąd: result.error.message,
+          komunikat: result.error.message 
+        };
       }
 
       return { sukces: true };
     } catch (error: unknown) {
       const err = error as Error;
-      return { sukces: false, błąd: err.message };
+      return { 
+        sukces: false, 
+        błąd: err.message,
+        komunikat: err.message 
+      };
     }
   }
 
@@ -145,13 +162,18 @@ export class SerwisAutoryzacji {
       const result = await this.supabase.auth.refreshSession(refreshToken);
 
       if (result.error) {
-        return { sukces: false, błąd: result.error.message };
+        return { 
+          sukces: false, 
+          błąd: result.error.message,
+          komunikat: result.error.message 
+        };
       }
 
       if (!result.data || !result.data.session) {
-        return {
-          sukces: false,
+        return { 
+          sukces: false, 
           błąd: "Nie można odświeżyć sesji",
+          komunikat: "Nie można odświeżyć sesji"
         };
       }
 
@@ -161,7 +183,11 @@ export class SerwisAutoryzacji {
       };
     } catch (error: unknown) {
       const err = error as Error;
-      return { sukces: false, błąd: err.message };
+      return { 
+        sukces: false, 
+        błąd: err.message,
+        komunikat: err.message 
+      };
     }
   }
 
@@ -172,6 +198,7 @@ export class SerwisAutoryzacji {
       if (result.error) {
         return {
           sukces: false,
+          błąd: result.error.message,
           komunikat: result.error.message,
         };
       }
@@ -184,6 +211,7 @@ export class SerwisAutoryzacji {
       const err = error as Error;
       return {
         sukces: false,
+        błąd: err.message,
         komunikat: err.message,
       };
     }
