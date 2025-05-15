@@ -74,13 +74,23 @@ export default defineConfig({
       name: 'setup db',
       testMatch: '**/global.setup.ts',
     },
-    // Projekt dla Google Chrome z zależnością od konfiguracji bazy
+    // Projekt dla Google Chrome
     {
       name: 'chromium',
       use: { 
         ...devices['Desktop Chrome'],
       },
-      dependencies: ['setup db']
+      testIgnore: '**/global.setup.ts',
+      // W trybie UI i debug dependencies powodują problemy, więc dodajemy warunek
+      dependencies: process.env.PLAYWRIGHT_UI_MODE || process.env.PLAYWRIGHT_DEBUG_MODE ? [] : ['setup db']
+    },
+    // Projekt dla szybkiego debugowania pojedynczych testów
+    {
+      name: 'direct-chromium',
+      use: { 
+        ...devices['Desktop Chrome'],
+      },
+      testIgnore: '**/global.setup.ts',
     },
   ],
 
