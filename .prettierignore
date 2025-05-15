@@ -1,0 +1,14 @@
+# Ignorowanie plików podczas formatowania Prettier
+
+# Pliki z błędami parsowania
+src/pages/auth/login.astro
+
+# Pliki wygenerowane automatycznie
+node_modules
+.DS_Store
+dist
+.astro
+coverage
+
+# Pliki konfiguracyjne
+tsconfig.json 
