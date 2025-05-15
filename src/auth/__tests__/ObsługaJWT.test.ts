@@ -19,7 +19,7 @@ describe("ObsługaJWT", () => {
       removeItem: vi.fn(),
     };
 
-    // @ts-ignore - pomijamy błąd typowania dla localStorage w testach
+    // @ts-expect-error - pomijamy błąd typowania dla localStorage w testach
     global.localStorage = mockLocalStorage;
     obsługaJWT = new ObsługaJWT();
   });

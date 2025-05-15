@@ -11,6 +11,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
+    "auto-format": "prettier --write . && eslint src --ext .ts,.tsx,.js,.jsx,.astro --fix --max-warnings=0 || true",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",

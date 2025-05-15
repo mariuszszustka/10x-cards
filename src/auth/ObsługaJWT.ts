@@ -18,7 +18,7 @@ export class ObsługaJWT {
     localStorage.removeItem(this.TOKEN_KEY);
   }
 
-  zweryfikujToken(token: string): { ważny: boolean; dane?: any; błąd?: string } {
+  zweryfikujToken(token: string): { ważny: boolean; dane?: Record<string, unknown>; błąd?: string } {
     if (!token || token === "nieprawidłowy_token") {
       return { ważny: false, błąd: "Token ma nieprawidłowy format" };
     }
@@ -38,7 +38,7 @@ export class ObsługaJWT {
       }
 
       return { ważny: true, dane: payload };
-    } catch (error) {
+    } catch {
       return { ważny: false, błąd: "Błąd podczas weryfikacji tokenu" };
     }
   }
@@ -58,7 +58,7 @@ export class ObsługaJWT {
       }
 
       return payload.exp - teraz;
-    } catch (error) {
+    } catch {
       return -1;
     }
   }
