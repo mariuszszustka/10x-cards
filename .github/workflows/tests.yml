@@ -94,7 +94,7 @@ jobs:
       - name: Budowa aplikacji
         run: npm run build
       - name: Uruchomienie testów E2E
-        run: NODE_OPTIONS="--max-old-space-size=8192" npx playwright test --project=chromium --no-browser-context-dump --workers=1
+        run: NODE_OPTIONS="--max-old-space-size=8192" npx playwright test --project=chromium --workers=1
       - name: Archiwizacja wyników testów Playwright
         uses: actions/upload-artifact@v4
         if: always()
