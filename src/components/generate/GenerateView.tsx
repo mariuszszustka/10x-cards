@@ -40,7 +40,7 @@ export default function GenerateView() {
     try {
       setIsSubmitting(true);
 
-      const response = await fetch("/api/management-fc", {
+      const response = await fetch("/api/flashcards", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -20,21 +20,50 @@ const PUBLIC_PATHS = [
   "/api/auth/check",
 ];
 
+// ID testowego użytkownika do developmentu
+const DEFAULT_USER_ID = "123e4567-e89b-12d3-a456-426614174000";
+
 export const onRequest = defineMiddleware(async (context, next) => {
   const { locals, cookies, url, request } = context;
   console.log("[Middleware] Przetwarzanie ścieżki:", url.pathname);
 
   try {
-    // Dla ścieżek API - przyspieszone przetwarzanie bez modyfikacji ciasteczek
+    // Dla ścieżek API - przyspieszone przetwarzanie z obsługą tymczasowego użytkownika
     if (url.pathname.startsWith('/api/')) {
       console.log("[Middleware] Ścieżka API - przyspieszona obsługa");
-      // Tworzymy instancję Supabase tylko do odczytu
+      // Tworzymy instancję Supabase
       locals.supabase = createSupabaseServerInstance({
         cookies,
         headers: request.headers,
       });
-      const response = await next();
-      return response;
+
+      // W trybie development dla API zawsze dodajemy testowego użytkownika
+      // To upraszcza testowanie API bez konieczności uwierzytelniania
+      if (import.meta.env.DEV) {
+        console.log("[Middleware] Tryb DEV - ustawiam testowego użytkownika dla API");
+        locals.user = {
+          id: DEFAULT_USER_ID,
+          email: "test@example.com",
+        };
+      } else {
+        // W trybie produkcyjnym konieczne prawdziwe uwierzytelnianie
+        // Sprawdzenie sesji użytkownika z Supabase
+        const { data: sessionData } = await locals.supabase.auth.getSession();
+        const session = sessionData.session;
+
+        if (session) {
+          const { data: userData } = await locals.supabase.auth.getUser();
+          if (userData.user) {
+            locals.user = {
+              id: userData.user.id,
+              email: userData.user.email || null,
+            };
+            console.log("[Middleware] API z zalogowanym użytkownikiem:", userData.user.id);
+          }
+        }
+      }
+      
+      return await next();
     }
 
     // Wykrywanie testów E2E ulepszone
