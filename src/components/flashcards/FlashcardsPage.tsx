@@ -155,8 +155,10 @@ export default function FlashcardsPage() {
 
   // Pobierz fiszki przy pierwszym renderowaniu
   useEffect(() => {
+    console.log("[FlashcardsPage] Pierwsze pobranie fiszek");
     fetchFlashcards();
-  }, [fetchFlashcards]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);  // Puste zależności - efekt wykona się tylko raz przy montowaniu komponentu
 
   /**
    * Obsługa dodawania nowej fiszki

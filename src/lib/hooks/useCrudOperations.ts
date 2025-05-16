@@ -48,6 +48,7 @@ export function useCrudOperations<T, CreateData = Partial<T>, UpdateData = Parti
 
   // Pobieranie danych
   const fetchItems = useCallback(async () => {
+    console.log(`[useCrudOperations] Wywołano fetchItems dla ${fetchEndpoint}`);
     setLoading(true);
     setError(null);
 
@@ -61,6 +62,7 @@ export function useCrudOperations<T, CreateData = Partial<T>, UpdateData = Parti
         }
       });
 
+      console.log(`[useCrudOperations] Wykonuję fetch do ${fetchEndpoint}?${queryString.toString()}`);
       const response = await fetch(`${fetchEndpoint}?${queryString.toString()}`);
 
       if (!response.ok) {
@@ -69,6 +71,7 @@ export function useCrudOperations<T, CreateData = Partial<T>, UpdateData = Parti
       }
 
       const data = await response.json();
+      console.log(`[useCrudOperations] Otrzymano dane z ${fetchEndpoint}: ${data.items?.length || 0} elementów`);
 
       setItems(data.items || data.data || []);
 
@@ -146,7 +149,7 @@ export function useCrudOperations<T, CreateData = Partial<T>, UpdateData = Parti
       setError(null);
 
       try {
-        const response = await fetch(`${updateEndpoint}/${id}`, {
+        const response = await fetch(`${updateEndpoint}?id=${id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -191,7 +194,7 @@ export function useCrudOperations<T, CreateData = Partial<T>, UpdateData = Parti
       setError(null);
 
       try {
-        const response = await fetch(`${deleteEndpoint}/${id}`, {
+        const response = await fetch(`${deleteEndpoint}?id=${id}`, {
           method: "DELETE",
         });
 

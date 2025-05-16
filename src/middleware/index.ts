@@ -1,6 +1,7 @@
 import { defineMiddleware } from "astro:middleware";
 import { createSupabaseServerInstance } from "../db/supabase.client.ts";
 import { getSessionCookieName, getAdjustedSupabaseUrl } from "../utils/auth-helper.ts";
+import type { MiddlewareHandler } from "astro";
 
 // Ścieżki publiczne - dostępne bez logowania
 const PUBLIC_PATHS = [
@@ -23,7 +24,7 @@ const PUBLIC_PATHS = [
 // ID testowego użytkownika do developmentu
 const DEFAULT_USER_ID = "123e4567-e89b-12d3-a456-426614174000";
 
-export const onRequest = defineMiddleware(async (context, next) => {
+export const onRequest: MiddlewareHandler = async (context, next) => {
   const { locals, cookies, url, request } = context;
   console.log("[Middleware] Przetwarzanie ścieżki:", url.pathname);
 
@@ -313,7 +314,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     console.error("[Middleware] Błąd podczas przetwarzania ścieżki:", e);
     return context.redirect("/auth/login");
   }
-});
+};
 
 // Funkcja pomocnicza do parsowania ciasteczek
 function parseCookieString(cookieStr: string): Record<string, string> {
