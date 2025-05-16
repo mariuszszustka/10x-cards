@@ -10,6 +10,10 @@ Nowoczesna aplikacja webowa do tworzenia, zarządzania i przeglądania fiszek ed
 - [Dostępne skrypty](#dostępne-skrypty)
 - [Zakres projektu](#zakres-projektu)
 - [Status projektu](#status-projektu)
+- [Struktura projektu](#struktura-projektu)
+- [Struktura bazy danych](#struktura-bazy-danych)
+- [Uwierzytelnianie](#uwierzytelnianie)
+- [Testy E2E](#testy-e2e)
 - [Licencja](#licencja)
 
 ## Opis projektu
@@ -30,13 +34,18 @@ Nowoczesna aplikacja webowa do tworzenia, zarządzania i przeglądania fiszek ed
 
 - [Astro](https://astro.build/) v5.5.5
 - [React](https://react.dev/) v19.0.0
-- [TypeScript](https://www.typescriptlang.org/) v5
+- [TypeScript](https://www.typescriptlang.org/) v5.8.3
 - [Tailwind CSS](https://tailwindcss.com/) v4.0.17
 - [Shadcn/UI](https://ui.shadcn.com/) - biblioteka komponentów UI
 
 ### Backend
 
 - [Supabase](https://supabase.com/) - zarządzana baza danych i uwierzytelnianie
+- [Node.js](https://nodejs.org/) adapter dla Astro
+
+### Zarządzanie stanem aplikacji
+
+- [Zustand](https://github.com/pmndrs/zustand) v5.0.3 - biblioteka do zarządzania stanem
 
 ### Integracja AI
 
@@ -46,14 +55,13 @@ Nowoczesna aplikacja webowa do tworzenia, zarządzania i przeglądania fiszek ed
 
 - **Testy jednostkowe:**
 
-  - [Vitest](https://vitest.dev/) - szybki framework do testów jednostkowych, dobrze integrujący się z Astro
-  - [Testing Library](https://testing-library.com/) - do testowania komponentów React
-  - [jsdom](https://github.com/jsdom/jsdom) - implementacja środowiska DOM dla testów w Node.js
-  - [SuperTest](https://github.com/visionmedia/supertest) - do testowania API
+  - [Vitest](https://vitest.dev/) v1.3.1 - szybki framework do testów jednostkowych, dobrze integrujący się z Astro
+  - [Testing Library](https://testing-library.com/) v15.0.0 - do testowania komponentów React
+  - [jsdom](https://github.com/jsdom/jsdom) v24.0.0 - implementacja środowiska DOM dla testów w Node.js
 
 - **Testy end-to-end:**
 
-  - [Playwright](https://playwright.dev/) - nowoczesny framework do testów E2E z przeglądarką Google Chrome
+  - [Playwright](https://playwright.dev/) v1.43.1 - nowoczesny framework do testów E2E z przeglądarką Google Chrome
   - Testy E2E wykorzystują uproszczone podejście MVP - koncentracja na kluczowych funkcjonalnościach z testowaniem na jednej przeglądarce
 
 - **Narzędzia CI/CD:**
@@ -101,7 +109,7 @@ cp .env.example .env
 npm run dev
 ```
 
-6. Otwórz przeglądarkę i przejdź do `http://localhost:4321`
+6. Otwórz przeglądarkę i przejdź do `http://localhost:3000`
 
 ## Dostępne skrypty
 
@@ -112,6 +120,7 @@ npm run dev
 - `npm run lint` - Uruchomienie ESLint
 - `npm run lint:fix` - Naprawienie problemów ESLint
 - `npm run format` - Formatowanie kodu przy użyciu Prettier
+- `npm run auto-format` - Automatyczne formatowanie kodu przy użyciu Prettier i naprawa problemów ESLint
 - `npm run test` - Uruchomienie testów jednostkowych z Vitest
 - `npm run test:watch` - Uruchomienie testów w trybie obserwowania zmian
 - `npm run test:ui` - Uruchomienie testów z interfejsem użytkownika
@@ -119,7 +128,14 @@ npm run dev
 - `npm run test:e2e` - Uruchomienie testów E2E z Playwright na przeglądarce Google Chrome
 - `npm run test:e2e:ui` - Uruchomienie testów E2E z interfejsem UI na przeglądarce Google Chrome
 - `npm run test:e2e:debug` - Uruchomienie testów E2E w trybie debugowania na przeglądarce Google Chrome
+- `npm run test:e2e:windows` - Uruchomienie testów E2E na platformie Windows
 - `npm run test:e2e:setup` - Uruchomienie tylko fazy konfiguracyjnej testów E2E
+- `npm run test:e2e:direct` - Bezpośrednie uruchomienie testów E2E
+- `npm run test:e2e:smoke` - Uruchomienie testów smoke
+- `npm run test:e2e:auth` - Uruchomienie testów uwierzytelniania
+- `npm run test:e2e:flashcards` - Uruchomienie testów fiszek
+- `npm run test:e2e:basic` - Uruchomienie podstawowych testów, w tym smoke, uwierzytelniania i fiszek
+- `npm run clean:tmp` - Czyszczenie plików tymczasowych
 
 ## Zakres projektu
 
@@ -142,9 +158,99 @@ npm run dev
 - Rozbudowane mechanizmy gamifikacji oraz zaawansowane funkcje powiadomień
 - Zaawansowane wyszukiwanie fiszek po słowach kluczowych (standardowe pełnotekstowe wyszukiwanie z paginacją)
 
-## Status projektu
+## Struktura projektu
 
-Projekt jest obecnie w fazie rozwoju. MVP jest aktywnie budowane z naciskiem na podstawową funkcjonalność fiszek, integrację AI oraz implementację systemu Leitnera dla efektywnej nauki.
+Projekt jest oparty na standardowej strukturze Astro z rozszerzonym wsparciem TypeScript:
+
+- `/src` - Kod źródłowy
+  - `/auth` - Serwisy i narzędzia uwierzytelniania
+  - `/components` - Komponenty Astro i React
+    - `/ui` - Komponenty Shadcn UI
+    - `/auth` - Komponenty uwierzytelniania
+    - `/flashcards` - Komponenty związane z fiszkami
+    - `/generate` - Komponenty do generacji AI
+    - `/common` - Współdzielone komponenty
+  - `/db` - Klient bazy danych i definicje typów
+  - `/layouts` - Layouty Astro
+  - `/lib` - Funkcje narzędziowe i serwisy
+  - `/middleware` - Middleware Astro do uwierzytelniania i routingu
+  - `/pages` - Strony Astro i endpointy API
+    - `/api` - Endpointy API
+    - `/auth` - Strony uwierzytelniania
+  - `/stores` - Magazyny stanów Zustand
+  - `/styles` - Globalne style CSS i narzędzia Tailwind
+  - `/utils` - Funkcje pomocnicze
+- `/supabase` - Konfiguracja Supabase i migracje
+- `/tests` - Pliki testów i narzędzia
+- `/public` - Statyczne zasoby
+
+## Struktura bazy danych
+
+Struktura bazy danych zawiera tabele dla:
+
+- Użytkowników (zarządzanych przez Supabase Auth)
+- Fiszek
+- Kolekcji (do organizowania fiszek)
+- Systemu Leitnera (do powtórek)
+- Statystyk użytkownika i metryki wykorzystania
+
+## Uwierzytelnianie
+
+Uwierzytelnianie jest zaimplementowane przy użyciu Supabase Auth z:
+
+- Logowaniem przez email/hasło
+- Logowaniem przez magic link
+- Funkcjonalnością resetowania hasła
+- Zarządzaniem sesją opartym na JWT
+- Ochroną bezpiecznych tras poprzez middleware po stronie serwera
+
+## Testy E2E
+
+### Problemy i rozwiązania
+
+Podczas implementacji testów E2E napotkaliśmy na problemy z middleware i przekierowaniami automatycznymi, które uniemożliwiały prawidłowe działanie testów formularza logowania. Oto rozwiązania, które wdrożyliśmy:
+
+1. **Nagłówki specjalne dla testów**:
+
+   - `X-Test-E2E: true` - identyfikuje żądania pochodzące z testów E2E
+   - `X-Test-Login-Form: true` - wymusza wyświetlenie formularza logowania
+
+2. **Modyfikacja middleware**:
+
+   - Wykrywanie testów przez nagłówki i User-Agent
+   - Wyłączenie przekierowań dla żądań testowych
+   - Usuwanie ciasteczek sesji dla testów formularza logowania
+   - Specjalna obsługa dla testów na platformie Windows
+
+3. **Zmiany w stronach i komponentach**:
+
+   - Dodanie meta tagów dla stron w trybie testowym
+   - Zapewnienie wszystkim elementom atrybutów `data-testid`
+   - Dodanie skryptów diagnostycznych do śledzenia hydratacji komponentów
+   - Dodanie wskaźnika gotowości formularza (`data-test-login-form-ready`)
+
+4. **Usprawnienia testów**:
+   - Czyszczenie ciasteczek i localStorage przed testami
+   - Oczekiwanie na załadowanie formularza i jego gotowość
+   - Dodanie testów diagnostycznych do sprawdzania stanu formularza
+
+### Uruchamianie testów E2E
+
+Aby uruchomić testy E2E:
+
+```bash
+# Wszystkie testy E2E
+npm run test:e2e
+
+# Tylko testy autoryzacji
+npx playwright test tests/e2e/auth.spec.ts
+
+# Testy w trybie debugowania
+npx playwright test tests/e2e/auth.spec.ts --debug
+
+# Testy specyficzne dla Windows
+npm run test:e2e:windows
+```
 
 ## Licencja
 
