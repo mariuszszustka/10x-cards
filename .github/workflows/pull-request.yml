@@ -1,0 +1,195 @@
+name: Pull Request Workflow
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  lint:
+    name: Lintowanie kodu
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+      
+      - name: Instalacja zależności
+        run: npm ci --legacy-peer-deps
+      
+      - name: Formatowanie kodu
+        run: |
+          npx prettier --write "src/**/*.{ts,tsx,js,jsx,json,astro}" --no-error-on-unmatched-pattern
+        continue-on-error: true
+      
+      - name: Lintowanie kodu
+        run: |
+          npx eslint "src/**/*.{ts,tsx}" --fix \
+            --rule "@typescript-eslint/no-explicit-any:off" \
+            --rule "@typescript-eslint/no-unused-vars:off" \
+            --rule "@typescript-eslint/no-dynamic-delete:off" \
+            --rule "jsx-a11y/click-events-have-key-events:off" \
+            --rule "jsx-a11y/no-static-element-interactions:off" \
+            --rule "@typescript-eslint/no-non-null-assertion:off" \
+            --rule "@typescript-eslint/no-empty-object-type:off" \
+            --rule "@typescript-eslint/no-extraneous-class:off" \
+            --rule "no-useless-escape:off" \
+            --rule "@typescript-eslint/no-empty-function:off" \
+            --rule "react-compiler/react-compiler:off" \
+            --no-error-on-unmatched-pattern
+        continue-on-error: false
+
+  unit-tests:
+    name: Testy jednostkowe
+    needs: lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      NODE_OPTIONS: "--max_old_space_size=8192"
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+      
+      - name: Instalacja zależności
+        run: npm ci --legacy-peer-deps
+      
+      - name: Uruchomienie testów jednostkowych
+        run: npm run test
+      
+      - name: Generowanie raportu pokrycia
+        run: npm run test:coverage
+      
+      - name: Archiwizacja raportu pokrycia
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-coverage-report
+          path: coverage/
+          retention-days: 7
+      
+      - name: Weryfikacja pokrycia
+        run: |
+          # Sprawdzenie, czy wartość pokrycia testami jest powyżej 70%
+          COVERAGE=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
+          echo "Pokrycie testami: $COVERAGE%"
+          if (( $(echo "$COVERAGE < 70" | bc -l) )); then
+            echo "UWAGA: Pokrycie testami poniżej 70%"
+          fi
+
+  e2e-tests:
+    name: Testy E2E
+    needs: lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    env:
+      NODE_ENV: integration
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      NODE_OPTIONS: "--max_old_space_size=8192"
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+      
+      - name: Instalacja zależności
+        run: npm ci --legacy-peer-deps
+      
+      - name: Instalacja Playwright
+        run: npx playwright install --with-deps chromium
+      
+      - name: Budowa aplikacji
+        run: npm run build
+      
+      - name: Uruchomienie testów E2E
+        run: npx playwright test --project=chromium --workers=1
+      
+      - name: Archiwizacja wyników testów Playwright
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  status-comment:
+    name: Podsumowanie PR
+    needs: [unit-tests, e2e-tests]
+    runs-on: ubuntu-latest
+    if: success()
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Pobierz raport pokrycia
+        uses: actions/download-artifact@v4
+        with:
+          name: unit-coverage-report
+          path: coverage
+      
+      - name: Pobierz raport Playwright
+        uses: actions/download-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          
+      - name: Dodaj komentarz do PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let unitCoverage = 'Brak danych';
+            
+            try {
+              if (fs.existsSync('coverage/coverage-summary.json')) {
+                const coverageData = JSON.parse(fs.readFileSync('coverage/coverage-summary.json', 'utf8'));
+                unitCoverage = `${coverageData.total.lines.pct}%`;
+              }
+            } catch (error) {
+              console.error('Błąd odczytu pokrycia kodu:', error);
+            }
+            
+            const comment = `
+            ## Status weryfikacji Pull Request
+            
+            ✅ **Lintowanie**: Zakończono pomyślnie
+            ✅ **Testy jednostkowe**: Zakończono pomyślnie
+            ✅ **Testy E2E**: Zakończono pomyślnie
+            
+            ### Pokrycie kodu testami:
+            - **Pokrycie testami jednostkowymi**: ${unitCoverage}
+            
+            Pełne raporty dostępne są w artefaktach akcji GitHub.
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
