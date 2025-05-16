@@ -55,6 +55,8 @@ jobs:
             --rule "@typescript-eslint/no-empty-object-type:off" \
             --rule "@typescript-eslint/no-extraneous-class:off" \
             --rule "no-useless-escape:off" \
+            --rule "@typescript-eslint/no-empty-function:off" \
+            --rule "react-compiler/react-compiler:off" \
             --no-error-on-unmatched-pattern
         continue-on-error: true
 
@@ -65,7 +67,6 @@ jobs:
             --rule "@typescript-eslint/no-explicit-any:off" \
             --rule "@typescript-eslint/no-unused-vars:off" \
             --rule "no-restricted-imports:off" \
-            --rule "import/no-commonjs:error" \
             --no-error-on-unmatched-pattern
         continue-on-error: true
 

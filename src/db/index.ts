@@ -7,8 +7,16 @@ const createEmptyCookies = (): AstroCookies => {
     get: () => ({ value: "", json: () => null, number: () => null, boolean: () => null }),
     getAll: () => [],
     has: () => false,
-    set: () => {},
-    delete: () => {}
+    // Te metody są celowo puste, ponieważ w kontekście API nie potrzebujemy modyfikować ciasteczek
+    // Implementacja jest minimalna wyłącznie dla kompatybilności z typem AstroCookies
+    set: () => {
+      // Pusta implementacja - w tym kontekście nie ustawiamy ciasteczek
+      return;
+    },
+    delete: () => {
+      // Pusta implementacja - w tym kontekście nie usuwamy ciasteczek
+      return;
+    }
   } as unknown as AstroCookies;
 };
 
