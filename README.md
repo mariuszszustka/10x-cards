@@ -66,6 +66,7 @@ A modern web application for creating, managing, and reviewing educational flash
 
 - **CI/CD Tools:**
   - GitHub Actions - For test and deployment automation
+  - Pull Request workflow - Separate checks for linting, unit testing and E2E testing
   - v8 coverage - For code coverage reporting
 
 ### CI/CD & Hosting

@@ -187,9 +187,17 @@ jobs:
             Pełne raporty dostępne są w artefaktach akcji GitHub.
             `;
             
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: comment
-            });
+            // Sprawdź czy mamy numer PR w kontekście
+            const pullRequest = context.payload.pull_request;
+            if (pullRequest) {
+              github.rest.issues.createComment({
+                issue_number: pullRequest.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+              console.log(`Dodano komentarz do PR #${pullRequest.number}`);
+            } else {
+              console.log("Brak kontekstu PR, pomijam tworzenie komentarza");
+              console.log("To normalne podczas ręcznego uruchomienia workflow.");
+            }
