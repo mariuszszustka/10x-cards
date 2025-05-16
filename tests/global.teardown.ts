@@ -8,7 +8,7 @@ import type { Database } from "../src/db/database.types";
  * Usuwa wszystkie dane testowe, które mogły zostać utworzone podczas testów,
  * zachowując odpowiednią kolejność usuwania by respektować klucze obce.
  */
-teardown("Czyszczenie bazy danych po testach", async ({}) => {
+teardown("Czyszczenie bazy danych po testach", async (_) => {
   console.log("Rozpoczynam czyszczenie bazy danych testowej...");
 
   // Tworzenie klienta Supabase z danymi testowymi

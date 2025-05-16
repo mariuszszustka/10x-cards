@@ -8,7 +8,7 @@ import type { Database } from "../src/db/database.types";
  * Upewnia się, że użytkownik testowy istnieje w bazie danych
  * i jest gotowy do wykorzystania w testach.
  */
-setup("Przygotowanie środowiska testowego", async ({}) => {
+setup("Przygotowanie środowiska testowego", async (_) => {
   console.log("Inicjalizacja środowiska testowego...");
 
   // Tworzenie klienta Supabase z danymi testowymi

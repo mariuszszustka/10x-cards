@@ -67,6 +67,7 @@ jobs:
             --rule "@typescript-eslint/no-explicit-any:off" \
             --rule "@typescript-eslint/no-unused-vars:off" \
             --rule "no-restricted-imports:off" \
+            --rule "no-empty-pattern:off" \
             --no-error-on-unmatched-pattern
         continue-on-error: true
 
