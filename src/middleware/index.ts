@@ -83,13 +83,15 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
     const isPlaywright = userAgent.includes("Playwright");
     const hasTestHeader = request.headers.get("X-Test-E2E") === "true";
     const wantsLoginForm = request.headers.get("X-Test-Login-Form") === "true";
-    const isTestRequest = isPlaywright || hasTestHeader;
+    const isWindowsTest = request.headers.get("X-Test-Windows") === "true" || request.headers.get("X-Platform") === "windows";
+    const isTestRequest = isPlaywright || hasTestHeader || isWindowsTest;
 
     if (isTestRequest) {
       console.log("[Middleware] Wykryto żądanie z testów E2E");
       console.log("[Middleware] User-Agent:", userAgent);
       console.log("[Middleware] Nagłówek X-Test-E2E:", request.headers.get("X-Test-E2E"));
       console.log("[Middleware] Nagłówek X-Test-Login-Form:", request.headers.get("X-Test-Login-Form"));
+      console.log("[Middleware] Nagłówek X-Test-Windows:", request.headers.get("X-Test-Windows"));
       console.log("[Middleware] Ścieżka:", url.pathname);
       console.log("[Middleware] Platforma:", IS_WINDOWS ? "Windows" : "Linux/Unix");
 

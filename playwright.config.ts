@@ -3,6 +3,10 @@ import * as path from "path";
 import * as dotenv from "dotenv";
 import * as fs from "fs";
 
+// Sprawdzamy platformę
+const isPlatformWindows = process.env.PLATFORM === 'windows' || process.platform === 'win32';
+console.log(`[Playwright Config] Wykryta platforma: ${isPlatformWindows ? 'Windows' : 'Linux/Unix'}`);
+
 // Utworzenie katalogów tymczasowych, jeśli nie istnieją
 const tmpDir = path.resolve(process.cwd(), "tmp");
 const screenshotsDir = path.resolve(tmpDir, "test-screenshots");
@@ -76,6 +80,10 @@ export default defineConfig({
     contextOptions: {
       reducedMotion: 'reduce',
     },
+    // Dodajemy specjalne nagłówki dla Windows jeśli wykryto tę platformę
+    extraHTTPHeaders: isPlatformWindows 
+      ? { 'X-Test-Windows': 'true', 'X-Test-E2E': 'true' } 
+      : { 'X-Test-E2E': 'true' },
   },
 
   // Konfiguracje projektów testowych
@@ -110,6 +118,20 @@ export default defineConfig({
       testIgnore: ["**/global.setup.ts", "**/global.teardown.ts"],
       teardown: "teardown",
     },
+    // Specjalny projekt dla testów na Windows
+    ...(isPlatformWindows ? [{
+      name: "windows-chromium",
+      use: {
+        ...devices["Desktop Chrome"],
+        extraHTTPHeaders: { 
+          'X-Test-Windows': 'true', 
+          'X-Test-E2E': 'true',
+          'X-Platform': 'windows' 
+        },
+      },
+      testIgnore: ["**/global.setup.ts", "**/global.teardown.ts"],
+      teardown: "teardown",
+    }] : []),
   ],
 
   // Modyfikuję konfigurację webServer, aby wykorzystać istniejący serwer
